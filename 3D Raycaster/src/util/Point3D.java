@@ -38,7 +38,7 @@ public class Point3D {
 		this.z_position += vec.getZOffset();
 	}
 
-	public Point3D clone() {
+	public Point3D copy() {
 		return new Point3D(this.x_position, this.y_position, this.z_position);
 	}
 

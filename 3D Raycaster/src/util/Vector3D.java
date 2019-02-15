@@ -42,7 +42,7 @@ public class Vector3D {
 		return this.magnitude * Math.cos(Math.toRadians(angle2));
 	}
 	
-	public Vector3D clone() {
+	public Vector3D copy() {
 		return new Vector3D(this.angle1, this.angle2, this.magnitude);
 	}
 	

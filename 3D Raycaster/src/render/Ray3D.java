@@ -11,8 +11,8 @@ public class Ray3D {
 	private Vector3D vector;
 	
 	public Ray3D(Point3D pnt, Vector3D vec) {
-		this.point = pnt.clone();
-		this.vector = vec.clone();
+		this.point = pnt.copy();
+		this.vector = vec.copy();
 	}
 	
 	public void override(Point3D pnt, Vector3D vec) {

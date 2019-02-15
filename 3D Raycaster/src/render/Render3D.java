@@ -37,7 +37,7 @@ public class Render3D {
 		for(int x = 0; x < this.width; x++) {
 			for(int y = 0; y < this.height; y++) {
 				
-				ray = new Ray3D(point.clone(), new Vector3D(this.vector.getAngle1() + (FOV * ((((double)x)/this.width) - 0.5)), this.vector.getAngle2() + (FOV * ((((double)y)/this.height) - 0.5)), 1));
+				ray = new Ray3D(point.copy(), new Vector3D(this.vector.getAngle1() + (FOV * ((((double)x)/this.width) - 0.5)), this.vector.getAngle2() + (FOV * ((((double)y)/this.height) - 0.5)), 1));
 				voxel = ray.render(world);
 				//System.out.println(x);
 				if (voxel != null) {
