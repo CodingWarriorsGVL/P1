@@ -9,8 +9,8 @@ public class Potion extends Item {
 	//Class Variables
 	int quantity, healAmount;
 
-	public Potion(String name, int dropChance, int sellValue, int buyValue, int quantity, int healAmount) {
-		super(name, dropChance, sellValue, buyValue);
+	public Potion(String name, int dropChance, int sellValue, int buyValue, int quantity, int healAmount, int equippedItemSlot) {
+		super(name, dropChance, sellValue, buyValue, equippedItemSlot);
 		this.quantity = quantity;
 		this.healAmount = healAmount;
 	}
@@ -35,6 +35,10 @@ public class Potion extends Item {
 	//Other Methods
 	public int heal(){
 		return rand.nextInt(healAmount) + 1;
+	}
+	
+	public String toString(){
+		return name + ": " + quantity;
 	}
 	
 }//End Class Potion

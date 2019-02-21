@@ -5,6 +5,7 @@ import java.util.Scanner;
 import characters.Entity;
 import characters.Player;
 import item.Armor;
+import item.Potion;
 import item.Weapon;
 import level.Floor;
 
@@ -18,6 +19,37 @@ public class MainGame {
 	int QUIT_MOVE = 0;
 	
 
+	
+	
+	//Armor Objects
+	
+	//public Armor(String name, int dropChance, int sellValue, int buyValue, int defense, boolean isEquipped, int equippedItemSlot)
+	Armor ruggedHelmet = new Armor("Rugged Helmet", 1, 1, 0, 1, true, 0);
+	Armor ruggedArmor = new Armor("Rugged Armor", 1, 1, 0, 3, true, 1);
+	Armor ruggedLeggings = new Armor("Rugged Leggings", 1, 1, 0, 2, true, 2);
+	Armor ruggedShield = new Armor("Rugged Shield", 1, 1, 0, 1, true, 3);
+	
+	//These are for testing purposes
+	Armor testHelmet = new Armor("Test Helmet", 1, 1, 1, 500, false, 0);
+	Armor testArmor = new Armor("Test Armor", 1, 1, 0, 500, false, 1);
+	Armor testLeggings = new Armor("Test Leggings", 1, 1, 0, 500, false, 2);
+	Armor testShield = new Armor("Test Shield", 1, 1, 0, 500, false, 3);
+	Weapon testSword = new Weapon("Test Sword", 1, 1, 0, 500, false, 4);
+	
+	
+	
+	//Weapon Objects
+	
+	//public Weapon(String name, int dropChance, int sellValue, int buyValue, int attack, boolean isEquipped, int equippedItemSlot)
+	Weapon ruggedSword = new Weapon("Rugged Sword", 1, 1, 0, 3, true, 4);
+	
+	//Potion Objects
+	
+	//Potion(String name, int dropChance, int sellValue, int buyValue, int quantity, int healAmount, int equippedItemSlot)
+	Potion healthPotion = new Potion("Health Potion", 5, 5, 10, 1, 100, 5);
+
+	
+
 	public static void main(String[] args) {
 		new MainGame();
 	}//End Main Method
@@ -25,16 +57,7 @@ public class MainGame {
 	public MainGame() {
 		map = new Floor();
 		
-		//Game Objects
 		
-		//public Armor(String name, int dropChance, int sellValue, int buyValue, int defense, boolean isEquipped)
-		/*Armor ruggedHelmet = new Armor("Rugged Helmet", 1, 1, 0, 1, true);
-		Armor ruggedArmor = new Armor("Rugged Armor", 1, 1, 0, 3, true);
-		Armor ruggedLeggings = new Armor("Rugged Leggings", 1, 1, 0, 2, true);
-		Armor ruggedShield = new Armor("Rugged Shield", 1, 1, 0, 1, true);*/
-		
-		//public Weapon(String name, int dropChance, int sellValue, int buyValue, int attack, boolean isEquipped)
-		Weapon ruggedSword = new Weapon("Rugged Sword", 1, 1, 0, 3, true);
 		
 		scan = new Scanner(System.in);
 		//String name = getName();
@@ -188,7 +211,32 @@ public class MainGame {
 					spendingPoints = false;
 	
 			}//End while(spendingPoints)
+			//System.out.println("Current Attack Rating: " + player1.getPlayerDamage() + "\nCurrent Defense: " + player1.getPlayerBlocking());
+			System.out.println("# Now let's get you some starter gear! #");
 			
+			player1.setEquippedItems(ruggedHelmet.getEquippedItemSlot(), ruggedHelmet);
+			player1.setEquippedItems(ruggedArmor.getEquippedItemSlot(), ruggedArmor);
+			player1.setEquippedItems(ruggedLeggings.getEquippedItemSlot(), ruggedLeggings);
+			player1.setEquippedItems(ruggedShield.getEquippedItemSlot(), ruggedShield);
+			player1.setEquippedItems(ruggedSword.getEquippedItemSlot(), ruggedSword);
+			player1.setPlayerBlocking(player1.getEquippedItems());
+			player1.setPlayerDamage(player1.getEquippedItems());
+			
+			player1.setPlayerInventory(healthPotion);
+			healthPotion.setQuantity(3);
+			
+			//Testing Purposes Only
+			player1.setPlayerInventory(testHelmet);
+			player1.setPlayerInventory(testArmor);
+			player1.setPlayerInventory(testLeggings);
+			player1.setPlayerInventory(testShield);
+			player1.setPlayerInventory(testSword);
+			
+			System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions, check your inventory"
+					+ " to see them. #");
+			player1.displayEquippedItems(player1.getEquippedItems());
+			player1.displayPlayerInventory(player1, player1.getPlayerInventory());
+			//System.out.println("Current Attack Rating: " + player1.getPlayerDamage() + "\nCurrent Defense: " + player1.getPlayerBlocking());		
 		}//End while(buildingCharacter)
 		return player1;
 	}//End buildCharacter

@@ -6,8 +6,8 @@ public class Weapon extends Item {
 	int attack;
 	boolean isEquipped;
 
-	public Weapon(String name, int dropChance, int sellValue, int buyValue, int attack, boolean isEquipped) {
-		super(name, dropChance, sellValue, buyValue);
+	public Weapon(String name, int dropChance, int sellValue, int buyValue, int attack, boolean isEquipped, int equippedItemSlot) {
+		super(name, dropChance, sellValue, buyValue, equippedItemSlot);
 		this.attack = attack;
 		this.isEquipped = isEquipped;
 	}
@@ -29,5 +29,8 @@ public class Weapon extends Item {
 		this.isEquipped = isEquipped;
 	}
 	
+	public String toString(){
+		return name + " Attack: " + attack;
+	}
 
 }//End Class Weapon
