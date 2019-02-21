@@ -225,11 +225,20 @@ public class MainGame {
 			player1.setPlayerInventory(testLeggings);
 			player1.setPlayerInventory(testShield);
 			player1.setPlayerInventory(testSword);
+			player1.setEquippedSpells(0, fireBall);
+			player1.setPlayerSpells(fireBall);
+			player1.setPlayerSpells(lightHealing);
 			
 			System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions, check your inventory"
 					+ " to see them. #");
-			player1.displayEquippedItems(player1.getEquippedItems());
-			player1.displayPlayerInventory(player1.getPlayerInventory());
+			
+			//For testing different player methods.
+			
+			//player1.displayEquippedItems(player1.getEquippedItems());
+			//player1.displayPlayerInventory(player1.getPlayerInventory());
+			player1.changeEquippedItems(player1, player1.getEquippedItems(), player1.getPlayerInventory());
+			//player1.changeEquippedSpells(player1, player1.getEquippedSpells(), player1.getPlayerSpells());
+			
 			buildingCharacter = false;	
 		}//End while(buildingCharacter)
 		return player1;
