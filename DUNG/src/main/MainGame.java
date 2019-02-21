@@ -85,11 +85,13 @@ public class MainGame {
 				while(isEnemyAlive) {
 					
 					enemy.display();
+					
+					
 					move =  player.getAttack();
-					enemy.attack(move);
+					enemy.damage(move);
 					
 					move = enemy.getAttack();
-					player.attack(move);
+					player.damage(move);
 				}
 			} */
 		}

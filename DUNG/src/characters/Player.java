@@ -21,6 +21,13 @@ public class Player extends Entity {
 
 	Item[] equippedItems = new Item[5];
 	MagicSpell[] equippedSpells = new MagicSpell[1];
+	
+	static final int
+		HELMET = 0,
+		ARMOR = 1,
+		LEGGINGS = 2,
+		SHIELD = 3,
+		WEAPON = 4;
 
 	public Player(String name, int health, int mana, int attackRating, int defense, int intellect, int perception,
 			int experience, int level) {
