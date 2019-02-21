@@ -2,6 +2,9 @@ package main;
 
 import java.util.Scanner;
 
+import characters.AttackSpell;
+import characters.HealingSpell;
+import characters.MagicSpell;
 import characters.Player;
 import item.Armor;
 import item.Potion;
@@ -37,6 +40,10 @@ public class MainGame {
 	//Potion Objects 
 	Potion manaPotion = new Potion("Mana Potion", 5, 5, 10, 1, 100, 5);
 	Potion healthPotion = new Potion("Health Potion", 5, 5, 10, 1, 100, 5);
+	
+	//Spell Objects
+	HealingSpell lightHealing = new HealingSpell("Light Healing", 10, "cast Light Healing", 15);
+	AttackSpell fireBall = new AttackSpell("Fire Ball", 10, "cast Fire Ball", 15);
 	
 
 	public static void main(String[] args) {
@@ -100,8 +107,7 @@ public class MainGame {
 	
 	private Player buildCharacter(){
 		
-		//Player(String name, int health, int mana, int attackRating, int defense, int intellect, int perception, int experience)
-		Player player1 = new Player(" ", 0, 0, 0, 0, 0, 0, 0);
+		Player player1 = new Player(" ", 0, 0, 0, 0, 0, 0, 0, 1);
 		
 		boolean buildingCharacter = true;
 		
@@ -223,7 +229,7 @@ public class MainGame {
 			System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions, check your inventory"
 					+ " to see them. #");
 			player1.displayEquippedItems(player1.getEquippedItems());
-			player1.displayPlayerInventory(player1, player1.getPlayerInventory());
+			player1.displayPlayerInventory(player1.getPlayerInventory());
 			buildingCharacter = false;	
 		}//End while(buildingCharacter)
 		return player1;
