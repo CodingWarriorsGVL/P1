@@ -38,6 +38,7 @@ public class MainGame {
 	int ENEMY_WAIT = 1;
 	int QUIT_MOVE = 0;
 	
+	//This is my random comment somewhere
 	public Player player1;
 	
 	public static void main(String[] args) {
