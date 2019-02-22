@@ -38,6 +38,8 @@ public class MainGame {
 	int ENEMY_WAIT = 1;
 	int QUIT_MOVE = 0;
 	
+	public Player player1;
+	
 	public static void main(String[] args) {
 		System.setOut(System.out);
 		// Print Logo
@@ -55,14 +57,18 @@ public class MainGame {
 	}
 	
 	public MainGame() {
+		scan = new Scanner(System.in);
+		player1 = buildCharacter(scan);
 		
-		//player = buildCharacter(scan);
+		//For Testing
+		//player1 = new Player("", 50,50,50,50,50,50,50,2);
+		
+		
 		//dungeon = new Dungeon();
 		
-		scan = new Scanner(System.in);
+		
 		//String name = getName();
 		//player = new Entity(name, map);
-		//buildCharacter(scan);
 		
 		
 		
