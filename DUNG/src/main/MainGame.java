@@ -1,5 +1,6 @@
 package main;
-
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import characters.AttackSpell;
@@ -38,22 +39,37 @@ public class MainGame {
 	int QUIT_MOVE = 0;
 	
 	public static void main(String[] args) {
+		System.setOut(System.out);
+		// Print Logo
+		try {
+			Scanner input;
+			input = new Scanner(new File("src/data/DUNG ASCII Logo.txt"));
+			while (input.hasNextLine()) {
+				System.out.println(input.nextLine());
+			}
+
+		} catch (FileNotFoundException e) {
+			System.out.println("Error Loading Logo");
+		}
 		new MainGame();
 	}
 	
 	public MainGame() {
 		
+		//player = buildCharacter(scan);
 		//dungeon = new Dungeon();
 		
 		scan = new Scanner(System.in);
 		//String name = getName();
 		//player = new Entity(name, map);
-		buildCharacter(scan);
+		//buildCharacter(scan);
 		
 		
 		
 		//FOR TESTING PLAYER SPELL INVENTORY
-		/*player1.setPlayerSpells(fireBall);
+		/*player1.setEquippedSpells(0, fireBall);
+		player1.setEquippedSpells(1, lightHealing);
+		player1.setPlayerSpells(fireBall);
 		player1.setPlayerSpells(lightHealing);
 		player1.setPlayerSpells(testAttack);
 		player1.setPlayerSpells(testHealing);
