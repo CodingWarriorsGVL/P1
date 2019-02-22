@@ -1,5 +1,7 @@
 package main;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import characters.AttackSpell;
@@ -45,66 +47,46 @@ public class MainGame {
 	HealingSpell lightHealing = new HealingSpell("Light Healing", 10, "cast Light Healing", 15);
 	AttackSpell fireBall = new AttackSpell("Fire Ball", 10, "cast Fire Ball", 15);
 	
+	Player player;
+	
 
 	public static void main(String[] args) {
+		System.setOut(System.out);
+		//Print Logo
+		try {
+			Scanner input;
+			input = new Scanner(new File("src/data/DUNG ASCII Logo.txt"));
+			while (input.hasNextLine())
+			{
+				System.out.println(input.nextLine());
+			}
+
+		} catch (FileNotFoundException e) {
+			System.out.println("Error Loading Logo");
+		}
+		
 		new MainGame();
 	}
 	
 	public MainGame() {
 		
-		//dungeon = new Dungeon();
-		
 		scan = new Scanner(System.in);
-		//String name = getName();
-		//player = new Entity(name, map);
-		buildCharacter();
-		boolean play = true;
+		player = buildCharacter();
 		
-		//Entity enemy;
+		boolean play = true;
 		int move;
-		//boolean isEnemyAlive;
+
+		
+		
+		
+		
+
+		
 		
 		while (play) {
-			//map.displayRoom(player.getPosition());
-			print("You are in a room");
-			input("What do you want to do?");
-			
-			//enemy = getEnemy();
-			
-			//if (enemy == null) { //Move mode
-				
-				//getClass().int move = player.getMove();
-				//player.Move(move);
-				
-			/*} else { //Fight Mode
-				
-				Thread.sleep(ENEMY_WAIT);
-				
-				isEnemyAlive = true;
-				
-				while(isEnemyAlive) {
-					
-					enemy.display();
-					
-					
-					move =  player.getAttack();
-					enemy.damage(move);
-					
-					move = enemy.getAttack();
-					player.damage(move);
-				}
-			} */
+
 		}
 		
-	}
-	
-	public void print(String str) {
-		System.out.println("------------------------------\n" + str);
-	}
-	
-	public String input(String str) {
-		System.out.println("------------------------------\n" + str + ":");
-		return scan.nextLine();
 	}
 	
 	private Player buildCharacter(){
