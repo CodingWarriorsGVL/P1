@@ -4,6 +4,9 @@ public class AttackSpell extends MagicSpell {
 	
 	//Class Variables
 	int damage;
+	
+	public static final AttackSpell fireBall = new AttackSpell("Fire Ball", 10, "cast Fire Ball", 15);
+	public static final AttackSpell testAttack = new AttackSpell("Test Attack Spell", 1, "For Testing", 500);
 
 	public AttackSpell(String name, int manaCost, String description, int damage) {
 		super(name, manaCost, description);
