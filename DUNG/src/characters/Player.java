@@ -10,6 +10,7 @@ import static characters.HealingSpell.*;
 import static characters.AttackSpell.*;
 import static item.Weapon.*;
 import static item.Potion.*;
+import static item.Currency.*;
 
 public class Player extends Entity {
 
@@ -31,7 +32,8 @@ public class Player extends Entity {
 
 	MagicSpell[] equippedSpells;
 
-	static final int
+	//Locations in the equippedItems array that specific equipment is assigned to.
+	public static final int
 	HELMET = 0,
 	ARMOR = 1,
 	LEGGINGS = 2,
@@ -65,13 +67,6 @@ public class Player extends Entity {
 
 	public void setEquippedItems(int location, Item item) {
 		equippedItems[location] = item;
-		if (item instanceof Armor) {
-			((Armor) item).setEquipped(true);
-		}
-
-		else if (item instanceof Weapon) {
-			((Weapon) item).setEquipped(true);
-		}
 	}
 
 	public void setPlayerSpells(MagicSpell spell) {
@@ -91,13 +86,6 @@ public class Player extends Entity {
 	}
 
 	public void removeEquippedItems(int location) {
-		if (equippedItems[location] instanceof Armor) {
-			((Armor) equippedItems[location]).setEquipped(false);
-		}
-
-		else if (equippedItems[location] instanceof Weapon) {
-			((Weapon) equippedItems[location]).setEquipped(false);
-		}
 		equippedItems[location] = null;
 	}
 
@@ -423,14 +411,17 @@ public class Player extends Entity {
 		player.setPlayerDamage(player.getEquippedItems());
 
 		player.setPlayerInventory(healthPotion);
+		player.setPlayerInventory(goldCoin);
 		healthPotion.setQuantity(3);
+		goldCoin.setQuantity(10);
 
 
 
-		System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions, check your inventory"
-				+ " to see them. #");
+		System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
+		 " Gold coins to get you started check your inventory to see them. #");
 
 		player.displayEquippedItems();
+		player.displayPlayerInventory();
 
 		System.out.println("# Wait! Before you leave out on your adventure, I wanted to tell you that you have 2 starter spells. #");
 		System.out.println("# These are your starter spells. #");
