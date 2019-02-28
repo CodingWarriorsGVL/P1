@@ -18,13 +18,13 @@ public class Player extends Entity {
 	// Class Variables
 	int intellect, perception, experience, mana, level;
 
-	int damage = attackRating;
+	int meleeDamage = melee;
 	int blocking = defense;
 
 
 
-	public ArrayList playerInventory = new ArrayList();
-	public ArrayList playerSpells = new ArrayList();
+	public ArrayList inventory = new ArrayList();
+	public ArrayList spells = new ArrayList();
 
 
 	Item[] equippedItems = new Item[5];
@@ -39,8 +39,8 @@ public class Player extends Entity {
 	WEAPON = 4;
 
 
-	public Player(String name, int health, int mana, int attackRating, int defense, int intellect, int perception,int experience, int level) {
-		super(name, health, attackRating, defense);
+	public Player(String name, int health, int mana, int melee, int defense, int intellect, int perception,int experience, int level) {
+		super(name, health, melee, defense);
 		this.intellect = intellect;
 		this.perception = perception;
 		this.experience = experience;
@@ -74,20 +74,20 @@ public class Player extends Entity {
 		}
 	}
 
-	public void setPlayerSpells(MagicSpell spell) {
-		playerSpells.add(spell);
+	public void setSpells(MagicSpell spell) {
+		spells.add(spell);
 	}
 
-	public ArrayList getPlayerSpells() {
-		return playerSpells;
+	public ArrayList getSpells() {
+		return spells;
 	}
 
-	public void setPlayerInventory(Item item) {
-		playerInventory.add(item);
+	public void setInventory(Item item) {
+		inventory.add(item);
 	}
 
-	public ArrayList getPlayerInventory() {
-		return playerInventory;
+	public ArrayList getInventory() {
+		return inventory;
 	}
 
 	public void removeEquippedItems(int location) {
@@ -133,16 +133,16 @@ public class Player extends Entity {
 		return mana;
 	}
 
-	public void setPlayerDamage(Item[] equippedItems) {
-		damage = 0;
-		damage = ((Weapon) equippedItems[4]).getAttack() + attackRating;
+	public void setMeleeDamage(Item[] equippedItems) {
+		meleeDamage = 0;
+		meleeDamage = ((Weapon) equippedItems[WEAPON]).getAttack() + melee;
 	}
 
-	public int getPlayerDamage() {
-		return damage;
+	public int getMeleeDamage() {
+		return meleeDamage;
 	}
 
-	public void setPlayerBlocking(Item[] equippedItems) {
+	public void setBlocking(Item[] equippedItems) {
 		int equipmentDefense = 0;
 		blocking = 0;
 		for (int i = 0; i < 3; i++) {
@@ -151,7 +151,7 @@ public class Player extends Entity {
 		blocking = equipmentDefense + defense;
 	}
 
-	public int getPlayerBlocking() {
+	public int getBlocking() {
 		return blocking;
 	}
 
@@ -175,18 +175,18 @@ public class Player extends Entity {
 		System.out.println("--------------------------------------------------------------------");
 	}
 
-	public void displayPlayerInventory() {
+	public void displayInventory() {
 
 		System.out.println("--------------------------------------------------------------------");
-		System.out.println("* Player Inventory *");
+		System.out.println("* Inventory *");
 
-		for (int i = 0; i < playerInventory.size(); i++) {
-			System.out.println(i + 1 + ". " + ((Item) playerInventory.get(i)));
+		for (int i = 0; i < inventory.size(); i++) {
+			System.out.println(i + 1 + ". " + ((Item) inventory.get(i)));
 		}
 
 		System.out.println("--------------------------------------------------------------------");
 
-	}// End displayPlayerInventory
+	}// End displayInventory
 
 	public void displayEquippedSpells() {
 		System.out.println("--------------------------------------------------------------------");
@@ -199,13 +199,13 @@ public class Player extends Entity {
 		System.out.println("--------------------------------------------------------------------");
 	}
 
-	public void displayPlayerSpells() {
+	public void displaySpells() {
 
 		System.out.println("--------------------------------------------------------------------");
-		System.out.println("* Spells that you know *");
+		System.out.println("* Spell  Book *");
 
-		for (int i = 0; i < playerSpells.size(); i++) {
-			System.out.println(i + 1 + ". " + ((MagicSpell) playerSpells.get(i)).getName());
+		for (int i = 0; i < spells.size(); i++) {
+			System.out.println(i + 1 + ". " + ((MagicSpell) spells.get(i)).getName());
 		}
 		System.out.println("--------------------------------------------------------------------");
 
@@ -219,28 +219,28 @@ public class Player extends Entity {
 
 		while (equippingItems) {
 
-			this.displayPlayerInventory();
+			this.displayInventory();
 			this.displayEquippedItems();
 
 			System.out.println("* Which item would you like to equip? *");
 			System.out.println("* Enter 0 when you're finished equipping items. *");
 			input = scan.nextInt();
 
-			if (input > 0 && input <= playerInventory.size() && ((Item) playerInventory.get(input - 1)).getEquippedItemSlot() < 5) {
-				playerInventory.add(equippedItems[((Item) playerInventory.get(input - 1)).getEquippedItemSlot()]);
-				this.removeEquippedItems(((Item) playerInventory.get(input - 1)).getEquippedItemSlot());
-				this.setEquippedItems(((Item) playerInventory.get(input - 1)).getEquippedItemSlot(),
-						((Item) playerInventory.get(input - 1)));
-				playerInventory.remove(((Item) playerInventory.get(input - 1)));
+			if (input > 0 && input <= inventory.size() && ((Item) inventory.get(input - 1)).getEquippedItemSlot() < 5) {
+				inventory.add(equippedItems[((Item) inventory.get(input - 1)).getEquippedItemSlot()]);
+				this.removeEquippedItems(((Item) inventory.get(input - 1)).getEquippedItemSlot());
+				this.setEquippedItems(((Item) inventory.get(input - 1)).getEquippedItemSlot(),
+						((Item) inventory.get(input - 1)));
+				inventory.remove(((Item) inventory.get(input - 1)));
 
-				this.setPlayerDamage(equippedItems);
-				this.setPlayerBlocking(equippedItems);
+				this.setMeleeDamage(equippedItems);
+				this.setBlocking(equippedItems);
 
-				System.out.println("* Your new Attack Rating is: " + this.getPlayerDamage() + " *");
-				System.out.println("* Your new Defense Rating is: " + this.getPlayerBlocking() + " *");
+				System.out.println("* Your new Attack Rating is: " + this.getMeleeDamage() + " *");
+				System.out.println("* Your new Defense Rating is: " + this.getBlocking() + " *");
 			}
 
-			else if (input > 0 && ((Item) playerInventory.get(input - 1)).getEquippedItemSlot() > 4) {
+			else if (input > 0 && ((Item) inventory.get(input - 1)).getEquippedItemSlot() > 4) {
 				System.out.println("* This item can not be equipped. *");
 			}
 
@@ -263,7 +263,7 @@ public class Player extends Entity {
 			System.out.println("* You're allowed to equip a total of " + equippedSpells.length + " spells. *");
 			System.out.println("* Which spell would you like to equip? *");
 			System.out.println("* Enter 0 when you're finished equipping items. *");
-			displayPlayerSpells();
+			displaySpells();
 			displayEquippedSpells();
 			input = scan.nextInt();
 
@@ -275,7 +275,7 @@ public class Player extends Entity {
 			}
 
 			else if (equippedSpells[equippedSpells.length - 1] == null) {
-				setEquippedSpells(equippedSpells.length - 1, ((MagicSpell) playerSpells.get(input - 1)));
+				setEquippedSpells(equippedSpells.length - 1, ((MagicSpell) spells.get(input - 1)));
 			}
 
 			else {
@@ -285,20 +285,15 @@ public class Player extends Entity {
 				input = scan.nextInt();
 				int ogLocation = input - 1;
 				removeEquippedSpell(ogLocation);
-				setEquippedSpells(ogLocation, ((MagicSpell) playerSpells.get(ogInput - 1)));
+				setEquippedSpells(ogLocation, ((MagicSpell) spells.get(ogInput - 1)));
 			}
-
-
-
-			//System.out.println("* Your new Attack Rating is: " + this.getPlayerDamage() + " *");
-			//System.out.println("* Your new Defense Rating is: " + this.getPlayerBlocking() + " *");
 
 			if (input == 0) {
 				equippingSpells = false;
 			}
 
 			//else
-			//System.out.println("* Invalid Selection! *");
+				//System.out.println("* Invalid Selection! *");
 		} // End while(equippingSpells)
 
 	}//End changeEquippedSPells
@@ -309,7 +304,7 @@ public class Player extends Entity {
 
 	public String toString() {
 		return "\nName: " + name + "\nLevel: " + level + "\nExperience: " + experience + "\nHealth: " + health
-				+ "\nMana: " + mana + "\nAttack Rating: " + attackRating + "\nDefense: " + defense + "\nIntellect: "
+				+ "\nMana: " + mana + "\nMelee: " + melee + "\nDefense: " + defense + "\nIntellect: "
 				+ intellect + "\nPerception: " + perception;
 	}
 
@@ -346,7 +341,7 @@ public class Player extends Entity {
 				answer = " ";
 
 				System.out.println("# Ok " + player.getName() + " you have " + spendablePoints + " points to spend in: Health, Mana, "
-						+ "Attack Rating, Defense, Intellect, and Perception. #"
+						+ "Melee, Defense, Intellect, and Perception. #"
 						+ "\n# Use them wisley! #");
 
 				System.out.println("\n# How many points would you like to spend in health? #");
@@ -364,9 +359,9 @@ public class Player extends Entity {
 				}
 
 				if(spendablePoints > 0){
-					System.out.println("\n# How many points would you like to spend in attack rating? #");
+					System.out.println("\n# How many points would you like to spend in melee? #");
 					input = scan.nextInt();
-					player.setAttackRating(input);
+					player.setMelee(input);
 					spendablePoints -= input;
 					System.out.println("# You now have " + spendablePoints + " points left. #");
 				}
@@ -419,10 +414,10 @@ public class Player extends Entity {
 		player.setEquippedItems(ruggedLeggings.getEquippedItemSlot(), ruggedLeggings);
 		player.setEquippedItems(ruggedShield.getEquippedItemSlot(), ruggedShield);
 		player.setEquippedItems(ruggedSword.getEquippedItemSlot(), ruggedSword);
-		player.setPlayerBlocking(player.getEquippedItems());
-		player.setPlayerDamage(player.getEquippedItems());
+		player.setBlocking(player.getEquippedItems());
+		player.setMeleeDamage(player.getEquippedItems());
 
-		player.setPlayerInventory(healthPotion);
+		player.setInventory(healthPotion);
 		healthPotion.setQuantity(3);
 
 
@@ -436,10 +431,10 @@ public class Player extends Entity {
 		System.out.println("# These are your starter spells. #");
 		player.setEquippedSpells(0, fireBall);
 		player.setEquippedSpells(1, lightHealing);
-		player.setPlayerSpells(fireBall);
-		player.setPlayerSpells(lightHealing);
-		player.setPlayerSpells(testAttack);
-		player.setPlayerSpells(testHealing);
+		player.setSpells(fireBall);
+		player.setSpells(lightHealing);
+		player.setSpells(testAttack);
+		player.setSpells(testHealing);
 		//player.changeEquippedSpells();
 		player.displayEquippedSpells();
 
