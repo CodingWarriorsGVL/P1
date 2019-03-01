@@ -1,6 +1,6 @@
 /*
  * **************************************************************************************************************
- * Floor.java | Author: brandonlewis | Date: 2019.02.15 | Rev: 2019.02.16
+ * Floor.java | Author: brandonlewis | Date: 2019.02.15 | Rev: 2019.03.01
  * This file is a class of the navigation package for the "Dungeons of UNG" text-based game.
  * **************************************************************************************************************
  */
@@ -8,36 +8,57 @@ package navigation;
 
 public class Floor {
   
-  private Room[] rooms;
-  //Change to LinkedList non-linear data structure
-  private Room activeRoom;
+  private Room[][] rooms;
   
   /*
    * ------------------------------------------------------------------------------------------------------------
-   * Constructor - Instantiates a floor object with the specified number of rooms and active room.
+   * Constructor - Instantiates a floor object with an empty 2D array of rooms of the specified size.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public Floor(int roomCount, int activeRoomIndex) {
-	this.rooms = new Room[roomCount];
-	this.activeRoom = rooms[activeRoomIndex];
+  public Floor(int gridSizeX, int gridSizeY) {
+	this.rooms = new Room[gridSizeX][gridSizeY];
   }
   
   /*
    * ------------------------------------------------------------------------------------------------------------
-   * Returns the active room of this floor.
+   * Returns the room at the specified location in the 2D room array.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public String getRoom() {
-	return this.activeRoom.toString();
+  public String getRoom(int xIndex, int yIndex) {
+	return this.rooms[xIndex][yIndex];
   }
   
   /*
    * ------------------------------------------------------------------------------------------------------------
-   * Sets the active room of this floor.
+   * Assigns the specified room to the specified location in the 2D room array.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public void setRoom(Room activeRoom) {
-	this.activeRoom = activeRoom;
+  public void setRoom(Room room, int xIndex, int yIndex) {
+	this.rooms[xIndex][yIndex] = room;
+  }
+  
+  /*
+   * ------------------------------------------------------------------------------------------------------------
+   * Clears the specified location in the 2D room array.
+   * ------------------------------------------------------------------------------------------------------------
+   */
+  public void clearRoom(int xIndex, int yIndex) {
+	this.rooms[xIndex][yIndex] = null;
+  }
+  
+  /*
+   * ------------------------------------------------------------------------------------------------------------
+   * Returns a string description of this floor object's rooms.
+   * ------------------------------------------------------------------------------------------------------------
+   */
+  public String toString() {
+	String result = "Rooms:\n";
+	for (room : rooms) {
+	  result += room.toString() + "\n";
+	}
+	
+	result += "\n";
+	return result;
   }
 
 }

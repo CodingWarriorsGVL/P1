@@ -1,6 +1,6 @@
 /*
  * **************************************************************************************************************
- * Door.java | Author: brandonlewis | Date: 2019.02.15 | Rev: 2019.02.15
+ * Door.java | Author: brandonlewis | Date: 2019.02.15 | Rev: 2019.03.01
  * This file is a class of the navigation package for the "Dungeons of UNG" text-based game.
  * **************************************************************************************************************
  */

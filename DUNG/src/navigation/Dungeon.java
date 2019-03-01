@@ -1,6 +1,6 @@
 /*
  * **************************************************************************************************************
- * Dungeon.java | Author: brandonlewis | Date: 2019.02.15 | Rev: 2019.02.16
+ * Dungeon.java | Author: brandonlewis | Date: 2019.02.15 | Rev: 2019.03.01
  * This file is a class of the navigation package for the "Dungeons of UNG" text-based game.
  * **************************************************************************************************************
  */
@@ -10,7 +10,6 @@ public class Dungeon {
   
   private String name;
   private Floor[] floors;
-  private Floor activeFloor;
   
   /*
    * ------------------------------------------------------------------------------------------------------------
@@ -20,7 +19,6 @@ public class Dungeon {
   public Dungeon(String name) {
 	this.name = name;
 	this.floors = new Floor[1];
-	this.activeFloor = floors[0];
   }
 
   /*
@@ -31,18 +29,6 @@ public class Dungeon {
   public Dungeon(String name, int floorCount) {
 	this.name = name;
 	this.floors = new Floor[floorCount];
-	this.activeFloor = floors[0];
-  }
-  
-  /*
-   * ------------------------------------------------------------------------------------------------------------
-   * Constructor - Instantiates a dungeon object with the specified name, floorCount, and activeFloor.
-   * ------------------------------------------------------------------------------------------------------------
-   */
-  public Dungeon(String name, int floorCount, int activeFloorIndex) {
-	this.name = name;
-	this.floors = new Floor[floorCount];
-	this.activeFloor = floors[activeFloorIndex];
   }
   
   /*
