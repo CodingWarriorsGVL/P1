@@ -9,6 +9,7 @@ package navigation;
 public class Floor {
   
   private Room[] rooms;
+  //Change to LinkedList non-linear data structure
   private Room activeRoom;
   
   /*
