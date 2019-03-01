@@ -86,7 +86,7 @@ public class MainGame {
 		player1.setEquippedSpells(1, lightHealing);
 		player1.displayEquippedSpells();*/
 		
-		//System.out.println("Equipped Spells size: " + player1.getEquippedSpells().length);
+		
 		//FOR TESTING PLAYER ITEM INVENTORY
 		/*player1.setEquippedItems(ruggedHelmet.getEquippedItemSlot(), ruggedHelmet);
 		player1.setEquippedItems(ruggedArmor.getEquippedItemSlot(), ruggedArmor);
