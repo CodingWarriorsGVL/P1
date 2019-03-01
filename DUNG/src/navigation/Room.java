@@ -6,11 +6,14 @@
  */
 package navigation;
 
+//import chacters.Entity;
+
 public class Room {
   
   private ItemContainer[] itemContainers;
   private Entity[] entities; // This class is not defined in the navigation package.
   private RoomFeature[] roomFeatures;
+  private final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
   
   /*
    * ------------------------------------------------------------------------------------------------------------
