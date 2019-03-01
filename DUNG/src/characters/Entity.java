@@ -6,12 +6,12 @@ public class Entity {
 	
 	//Class Variables
 	String name;
-	int health, attackRating, defense;
+	int health, melee, defense;
 
-	public Entity(String name, int health, int attackRating, int defense) {
+	public Entity(String name, int health, int melee, int defense) {
 		this.name = name;
 		this.health = health;
-		this.attackRating = attackRating;
+		this.melee = melee;
 		this.defense = defense;
 		
 	}
@@ -38,12 +38,12 @@ public class Entity {
 		this.health = health;
 	}
 
-	public int getAttackRating() {
-		return attackRating;
+	public int getMelee() {
+		return melee;
 	}
 
-	public void setAttackRating(int attackRating) {
-		this.attackRating = attackRating;
+	public void setMelee(int melee) {
+		this.melee = melee;
 	}
 
 	public int getDefense() {
