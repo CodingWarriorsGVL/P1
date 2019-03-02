@@ -54,8 +54,8 @@ public class Dungeon {
    * Returns the active floor of this dungeon.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public String getFloor() {
-	return this.activeFloor.toString();
+  public Floor getFloor(int index) {
+	return this.floors[index];
   }
   
   /*
@@ -63,8 +63,8 @@ public class Dungeon {
    * Sets the active floor of this dungeon.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public void setFloor(int activeFloorIndex) {
+  /*public void setFloor(int activeFloorIndex) {
 	this.activeFloor = floors[activeFloorIndex];
-  }
+  }*/
   
 }
