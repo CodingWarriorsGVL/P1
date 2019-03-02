@@ -1,0 +1,9 @@
+package display;
+
+import characters.Entity;
+
+public class Display {
+	
+	
+
+}
