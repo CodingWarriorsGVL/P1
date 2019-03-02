@@ -1,6 +1,6 @@
 package characters;
 
-import level.Floor;
+import navigation.Floor;
 
 public class Entity {
 	

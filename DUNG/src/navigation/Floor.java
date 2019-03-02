@@ -24,7 +24,7 @@ public class Floor {
    * Returns the room at the specified location in the 2D room array.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public String getRoom(int xIndex, int yIndex) {
+  public Room getRoom(int xIndex, int yIndex) {
 	return this.rooms[xIndex][yIndex];
   }
   
@@ -53,8 +53,10 @@ public class Floor {
    */
   public String toString() {
 	String result = "Rooms:\n";
-	for (room : rooms) {
-	  result += room.toString() + "\n";
+	for (Room[] rooms1d : this.rooms) {
+		for (Room room : rooms1d) {
+			  result += room.toString() + "\n";
+			}
 	}
 	
 	result += "\n";

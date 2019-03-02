@@ -7,7 +7,7 @@
 package navigation;
 
 import java.util.LinkedList;
-import chacters.Entity;
+import characters.Entity;
 
 public class Room {
   
@@ -32,7 +32,10 @@ public class Room {
    */
   public Room(RoomFeature north, RoomFeature east, RoomFeature south, RoomFeature west) {
 	this.entities = new LinkedList<Entity>();
-	this.roomFeatures = {north, east, south, west};
+	this.roomFeatures[NORTH] = north;
+	this.roomFeatures[SOUTH] = south;
+	this.roomFeatures[EAST] = east;
+	this.roomFeatures[WEST] = west;
   }
   
   /*
@@ -41,8 +44,8 @@ public class Room {
    * ------------------------------------------------------------------------------------------------------------
    */
   public void addEntities(Entity... newEntities) {
-	for (int i = 0; i < newEntities.length) {
-	  this.entities.add(entity);
+	for (int i = 0; i < newEntities.length; i++) {
+	  this.entities.add(newEntities[i]);
 	}
   }
   
@@ -107,12 +110,12 @@ public class Room {
    */
   public String toString() {
 	String result = "Features:\n";
-	for (roomFeature : roomFeatures) {
+	for (RoomFeature roomFeature : roomFeatures) {
 	  result += roomFeature.toString() + "\n";
 	}
 	
 	result += "\nEntities:\n";
-	for (entity : entities) {
+	for (Entity entity : entities) {
 	  result += entity.toString() + "\n";
 	}
 	
