@@ -8,7 +8,6 @@ import item.Item;
 import navigation.Decor;
 import navigation.Door;
 import navigation.Room;
-import navigation.RoomFeature;
 import navigation.Staircase;
 import navigation.Wall;
 
@@ -68,35 +67,19 @@ public class Display {
 	public static void print(Room room) {
 		println("You are in a room");
 		print("The North side is ");
-		print(room.getNorth());
+		println(room.getNorth());
 		
 		print("The East side is ");
-		print(room.getEast());
+		println(room.getEast());
 		
 		print("The South side is ");
-		print(room.getSouth());
+		println(room.getSouth());
 		
 		print("The West side is ");
 		print(room.getWest());
 		
 	}
 	
-	public static void print(RoomFeature feature) {
-		if (feature instanceof Door) {
-			print((Door)feature);
-		}
-		if (feature instanceof Decor) {
-			print((Decor)feature);
-		}
-		if (feature instanceof Wall) {
-			print((Wall)feature);
-		}
-		if (feature instanceof Staircase) {
-			print((Staircase)feature);
-		}
-		
-	}
-
 	public static void print(Door door) {
 		println("Is a " + ((door.isLocked())? "locked" : "" ) + door.getMaterial() + " door");
 	}

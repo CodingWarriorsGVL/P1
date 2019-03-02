@@ -155,36 +155,36 @@ public class Player extends Entity {
 	// Other Methods
 
 	public void displayEquippedItems() {
-		System.out.println("--------------------------------------------------------------------");
-		System.out.println("* Equipped Items *");
+		println("--------------------------------------------------------------------");
+		println("* Equipped Items *");
 		for (int i = 0; i < equippedItems.length; i++) {
 			print(equippedItems[i]);
 		}
-		System.out.println("--------------------------------------------------------------------");
+		println("--------------------------------------------------------------------");
 	}
 
 	public void displayInventory() {
 
-		System.out.println("--------------------------------------------------------------------");
-		System.out.println("* Inventory *");
+		println("--------------------------------------------------------------------");
+		println("* Inventory *");
 
 		for (int i = 0; i < inventory.size(); i++) {
 			println(i + 1 + ". " + ((Item) inventory.get(i)).getName());
 		}
 
-		System.out.println("--------------------------------------------------------------------");
+		println("--------------------------------------------------------------------");
 
 	}// End displayInventory
 
 	public void displayEquippedSpells() {
-		System.out.println("--------------------------------------------------------------------");
-		System.out.println("* Equipped Spells *");
+		println("--------------------------------------------------------------------");
+		println("* Equipped Spells *");
 		for (int i = 0; i < equippedSpells.length; i++) {
 			if (equippedSpells[i] != null) {
 				println((i+1) + ". " + equippedSpells[i].getName());
 			}
 		}
-		System.out.println("--------------------------------------------------------------------");
+		println("--------------------------------------------------------------------");
 	}
 
 	public void displaySpells() {
@@ -212,7 +212,7 @@ public class Player extends Entity {
 
 			println("* Which item would you like to equip? *");
 			println("* Enter 0 when you're finished equipping items. *");
-			input = scan.nextInt();
+			input = inputInt("");
 
 			if (input > 0 && input <= inventory.size() && ((Item) inventory.get(input - 1)).getEquippedItemSlot() < 5) {
 				inventory.add(equippedItems[((Item) inventory.get(input - 1)).getEquippedItemSlot()]);
@@ -237,7 +237,7 @@ public class Player extends Entity {
 			}
 
 			else
-				System.out.println("* Invalid Selection! *");
+				println("* Invalid Selection! *");
 		} // End while(equippingItems)
 
 	}// End changeEquippedItems
@@ -294,7 +294,7 @@ public class Player extends Entity {
 				+ intellect + "\nPerception: " + perception;
 	}
 
-	public static Player buildCharacter(Scanner scan){	
+	public static Player buildCharacter(){	
 
 
 		Player player = new Player(" ", 0, 0, 0, 0, 0, 0, 0, 1);
@@ -347,7 +347,7 @@ public class Player extends Entity {
 				}
 
 				if(spendablePoints > 0){
-					input = scan.inputInt("\n# How many points would you like to spend in defense? #");
+					input = inputInt("\n# How many points would you like to spend in defense? #");
 					player.setDefense(input);
 					spendablePoints -= input;
 					println("# You now have " + spendablePoints + " points left. #");
@@ -362,7 +362,6 @@ public class Player extends Entity {
 
 				if(spendablePoints > 0){
 					input = inputInt("\n# How many points would you like to spend in perception? #");
-					scan.nextLine();
 					player.setPerception(input);
 					spendablePoints -= input;
 					println("# You now have " + spendablePoints + " points left. #");
@@ -370,7 +369,7 @@ public class Player extends Entity {
 
 				println("\n# Ok " + player.getName() + " here is your character build. #");
 				println("--------------------------------------------------------------------");
-				println(player);
+				print(player);
 				println("--------------------------------------------------------------------");
 				answer = input("\n# Are you happy with your character build? #\n1.Yes\n2.No");
 
@@ -406,7 +405,7 @@ public class Player extends Entity {
 		 " Gold coins to get you started check your inventory to see them. #");
 
 		player.displayEquippedItems();
-		player.displayPlayerInventory();
+		player.displayInventory();
 
 		println("# Wait! Before you leave out on your adventure, I wanted to tell you that you have 2 starter spells. #");
 		println("# These are your starter spells. #");
