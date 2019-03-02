@@ -3,6 +3,8 @@ package display;
 import java.util.Scanner;
 
 import characters.Entity;
+import characters.Player;
+import item.Item;
 import navigation.Decor;
 import navigation.Door;
 import navigation.Room;
@@ -26,6 +28,24 @@ public class Display {
 		return scan.nextLine();
 	}
 	
+	public static int inputInt(String str) {
+		println(str);
+		String in;
+		int out = 0;;
+		boolean valid;
+		do {
+			valid = true;
+			in = scan.nextLine();
+			try {
+				out = Integer.parseInt(in);
+			} catch (NumberFormatException e) {
+				valid = false;
+			}
+
+		} while (valid);
+		return out;
+	}
+	
 	public static void print(Entity ent) {
 		String name = ent.getName();
 		char firstletter = name.toLowerCase().charAt(0);
@@ -34,6 +54,14 @@ public class Display {
 		} else {
 			println("There is a " + name);
 		}
+	}
+	
+	public static void print(Player player) {
+		println(player.toString());
+	}
+	
+	public static void print(Item item) {
+		println(item.getName());
 	}
 	
 	public static void print(Room room) {
