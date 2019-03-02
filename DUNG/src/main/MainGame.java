@@ -29,6 +29,8 @@ import item.Armor;
 import item.Potion;
 import item.Weapon;
 
+import static display.Display.*;
+
 public class MainGame {
 	
 	//Dungeon dungeon;
@@ -48,18 +50,17 @@ public class MainGame {
 			Scanner input;
 			input = new Scanner(new File("src/data/DUNG ASCII Logo.txt"));
 			while (input.hasNextLine()) {
-				System.out.println(input.nextLine());
+				println(input.nextLine());
 			}
 
 		} catch (FileNotFoundException e) {
-			System.out.println("Error Loading Logo");
+			println("Error Loading Logo");
 		}
 		new MainGame();
 	}
 	
 	public MainGame() {
-		scan = new Scanner(System.in);
-		player1 = buildCharacter(scan);
+		player1 = buildCharacter();
 		
 		//For Testing
 		//player1 = new Player("", 50,50,50,50,50,50,50,2);
@@ -113,7 +114,7 @@ public class MainGame {
 		
 		while (play) {
 			//map.displayRoom(player.getPosition());
-			print("You are in a room");
+			println("You are in a room");
 			input("What do you want to do?");
 			
 			//enemy = getEnemy();
@@ -141,15 +142,6 @@ public class MainGame {
 			} */
 		}
 		
-	}
-	
-	public void print(String str) {
-		System.out.println("------------------------------\n" + str);
-	}
-	
-	public String input(String str) {
-		System.out.println("------------------------------\n" + str + ":");
-		return scan.nextLine();
 	}
 	
 	
