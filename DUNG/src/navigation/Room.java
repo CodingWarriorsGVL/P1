@@ -1,84 +1,114 @@
 /*
  * **************************************************************************************************************
- * Room.java | Author: brandonlewis | Date: 2019.02.15 | Rev: 2019.02.16
+ * Room.java | Author: brandonlewis | Date: 2019.02.15 | Rev: 2019.03.01
  * This file is a class of the navigation package for the "Dungeons of UNG" text-based game. The room class interfaces with the Entity class which is not a part of the navigation package.
  * **************************************************************************************************************
  */
 package navigation;
 
-//import chacters.Entity;
+import java.util.LinkedList;
+import chacters.Entity;
 
 public class Room {
   
-  private ItemContainer[] itemContainers;
-  private Entity[] entities; // This class is not defined in the navigation package.
+  private LinkedList<Entity> entities;
   private RoomFeature[] roomFeatures;
   private final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
   
   /*
    * ------------------------------------------------------------------------------------------------------------
-   * Constructor - Instantiates a room object with empty arrays to hold containers, entities, and room features.
+   * Constructor - Instantiates a room object with an empty list of entities and an empty array of roomFeatures.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public Room(int itemContainerCount, int entityCount, int featureCount) {
-	this.itemContainers = new ItemContainer[itemContainerCount];
-	this.entities = new Entity[entityCount];
-	this.roomFeatures = new RoomFeature[featureCount];
+  public Room() {
+	this.entities = new LinkedList<Entity>();
+	this.roomFeatures = new RoomFeature[4];
   }
   
   /*
    * ------------------------------------------------------------------------------------------------------------
-   * Sets the room's container array to the specified array of containers.
+   * Overloaded Constructor - Instantiates a room object with an empty list of entities and an specified array of roomFeatures.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public void setItemContainers(ItemContainer[] itemContainers) {
-	if ( itemContainers.length() == this.itemContainers.length() ) {
-	  this.itemContainers = itemContainers;
-	} else {
-	  System.out.println("setItemContainers error: itemContainers.length() != this.itemContainers.length()");
+  public Room(RoomFeature north, RoomFeature east, RoomFeature south, RoomFeature west) {
+	this.entities = new LinkedList<Entity>();
+	this.roomFeatures = {north, east, south, west};
+  }
+  
+  /*
+   * ------------------------------------------------------------------------------------------------------------
+   * Adds the specified entity object(s) to the room.
+   * ------------------------------------------------------------------------------------------------------------
+   */
+  public void addEntities(Entity... newEntities) {
+	for (int i = 0; i < newEntities.length) {
+	  this.entities.add(entity);
 	}
   }
   
   /*
    * ------------------------------------------------------------------------------------------------------------
-   * Sets the room's entity array to the specified array of entities.
+   * Sets the roomFeature at the specified location to the specified roomFeature.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public void setEntities(Entity[] entities) {
-	if ( entities.length() == this.entities.length() ) {
-	  this.entities = entities;
-	} else {
-	  System.out.println("setEntities error: entities.length() != this.entities.length()");
-	}
+  public void setRoomFeature(int location, RoomFeature roomFeature) {
+	this.roomFeatures[location] = roomFeature;
   }
   
   /*
    * ------------------------------------------------------------------------------------------------------------
-   * Sets the room's feature array to the specified array of features.
+   * Gets the roomFeature at the specified location.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public void setRoomFeatures(RoomFeature[] roomFeatures) {
-	if ( roomFeatures.length() == this.roomFeatures.length() ) {
-	  this.roomFeatures = roomFeatures;
-	} else {
-	  System.out.println("setRoomFeatures error: roomFeatures.length() != this.roomFeatures.length()");
-	}
+  public RoomFeature getRoomFeature(int location) {
+	return this.roomFeatures[location];
   }
   
   /*
    * ------------------------------------------------------------------------------------------------------------
-   * Returns a string description of this room object.
+   * Gets the north roomFeature.
+   * ------------------------------------------------------------------------------------------------------------
+   */
+  public RoomFeature getNorth() {
+	return this.roomFeatures[NORTH];
+  }
+  
+  /*
+   * ------------------------------------------------------------------------------------------------------------
+   * Gets the east roomFeature.
+   * ------------------------------------------------------------------------------------------------------------
+   */
+  public RoomFeature getEast() {
+	return this.roomFeatures[EAST];
+  }
+  
+  /*
+   * ------------------------------------------------------------------------------------------------------------
+   * Gets the south roomFeature.
+   * ------------------------------------------------------------------------------------------------------------
+   */
+  public RoomFeature getSouth() {
+	return this.roomFeatures[SOUTH];
+  }
+  
+  /*
+   * ------------------------------------------------------------------------------------------------------------
+   * Gets the west roomFeature.
+   * ------------------------------------------------------------------------------------------------------------
+   */
+  public RoomFeature getWest() {
+	return this.roomFeatures[WEST];
+  }
+  
+  /*
+   * ------------------------------------------------------------------------------------------------------------
+   * Returns a string description of this room object's roomFeatures and entities.
    * ------------------------------------------------------------------------------------------------------------
    */
   public String toString() {
 	String result = "Features:\n";
 	for (roomFeature : roomFeatures) {
 	  result += roomFeature.toString() + "\n";
-	}
-	
-	result += "\nContainers:\n";
-	for (itemContainer : itemContainers) {
-	  result += itemContainer.toString() + "\n";
 	}
 	
 	result += "\nEntities:\n";
