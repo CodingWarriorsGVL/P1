@@ -28,6 +28,11 @@ import static item.Weapon.testSword;
 import item.Armor;
 import item.Potion;
 import item.Weapon;
+import navigation.Door;
+import navigation.Dungeon;
+import navigation.Floor;
+import navigation.Room;
+import navigation.Wall;
 
 import static display.Display.*;
 
@@ -42,6 +47,7 @@ public class MainGame {
 	
 	//This is my random comment somewhere
 	public Player player1;
+	public Dungeon dungeon;
 	
 	public static void main(String[] args) {
 		System.setOut(System.out);
@@ -61,6 +67,21 @@ public class MainGame {
 	
 	public MainGame() {
 		player1 = buildCharacter();
+		
+		
+		dungeon = new Dungeon("Scary Dungeon", 1);   //Quick and dirty dungeon build, all wall and door objects are the same which would mess up locking/unlocking, in the doors case
+		dungeon.setFloor(0, new Floor(2,2));
+		Door door = new Door(false, "wood");
+		Wall wall = new Wall();
+		
+		dungeon.getFloor(0).setRoom(new Room(wall, door, door, wall),  0, 0);
+		dungeon.getFloor(0).setRoom(new Room(wall, wall, door, door),  1, 0);
+		dungeon.getFloor(0).setRoom(new Room(door, door, wall, wall),  0, 1);
+		dungeon.getFloor(0).setRoom(new Room(door, wall, wall, door),  1, 1);
+		
+		player1.setXPosition(0);
+		player1.setYPosition(0);
+
 		
 		//For Testing
 		//player1 = new Player("", 50,50,50,50,50,50,50,2);
@@ -109,14 +130,49 @@ public class MainGame {
 		
 		
 		//Entity enemy;
-		int move;
+		//int move;
+		Room currentRoom;
 		//boolean isEnemyAlive;
 		
 		while (play) {
-			//map.displayRoom(player.getPosition());
-			println("You are in a room");
-			input("What do you want to do?");
+			//print(player.getPosition());
 			
+			currentRoom = dungeon.getFloor(0).getRoom(player1.getXPosition(), player1.getYPosition());
+			
+			println("Your options are:");
+			
+			if (currentRoom.getNorth() instanceof Door) {
+				println("You can go north");
+			}
+			if (currentRoom.getEast() instanceof Door) {
+				println("You can go east");
+			}
+			if (currentRoom.getSouth() instanceof Door) {
+				println("You can go south");
+			}
+			if (currentRoom.getWest() instanceof Door) {
+				println("You can go west");
+			}
+			println("You can quit");
+			
+			
+			String input = input("Where would you like to go?");
+			
+			if (input.toLowerCase().charAt(0)=='n') {
+				player1.setYPosition(player1.getYPosition() - 1);
+			}
+			if (input.toLowerCase().charAt(0)=='e') {
+				player1.setXPosition(player1.getXPosition() + 1);
+			}
+			if (input.toLowerCase().charAt(0)=='s') {
+				player1.setYPosition(player1.getYPosition() + 1);
+			}
+			if (input.toLowerCase().charAt(0)=='w') {
+				player1.setXPosition(player1.getXPosition() - 1);
+			}
+			if (input.toLowerCase().charAt(0)=='q') {
+				play = false;
+			}
 			//enemy = getEnemy();
 			
 			//if (enemy == null) { //Move mode

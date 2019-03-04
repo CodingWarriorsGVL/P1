@@ -63,8 +63,8 @@ public class Dungeon {
    * Sets the active floor of this dungeon.
    * ------------------------------------------------------------------------------------------------------------
    */
-  /*public void setFloor(int activeFloorIndex) {
-	this.activeFloor = floors[activeFloorIndex];
-  }*/
+  public void setFloor(int index, Floor floor) {
+	this.floors[index] = floor;
+  }
   
 }
