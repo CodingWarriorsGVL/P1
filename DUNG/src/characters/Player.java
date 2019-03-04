@@ -21,6 +21,9 @@ public class Player extends Entity {
 
 	int meleeDamage = melee;
 	int blocking = defense;
+	
+	int xPosition;
+	int yPosition;
 
 
 
@@ -286,6 +289,19 @@ public class Player extends Entity {
 
 	public void removeEquippedSpell(int location) {
 		equippedSpells[location] = null;
+	}
+	
+	public int getXPosition() {
+		return this.xPosition;
+	}
+	public void setXPosition(int x) {
+		this.xPosition = x;
+	}
+	public int getYPosition() {
+		return this.yPosition;
+	}
+	public void setYPosition(int y) {
+		this.yPosition = y;
 	}
 
 	public String toString() {

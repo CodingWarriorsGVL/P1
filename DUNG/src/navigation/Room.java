@@ -32,6 +32,7 @@ public class Room {
    */
   public Room(RoomFeature north, RoomFeature east, RoomFeature south, RoomFeature west) {
 	this.entities = new LinkedList<Entity>();
+	this.roomFeatures = new RoomFeature[4];
 	this.roomFeatures[NORTH] = north;
 	this.roomFeatures[SOUTH] = south;
 	this.roomFeatures[EAST] = east;
