@@ -1,19 +1,50 @@
 package characters;
 
+import java.util.ArrayList;
+
+import item.Armor;
+import item.Item;
+import item.Weapon;
 import navigation.Floor;
 
 public class Entity {
 	
 	//Class Variables
 	String name;
-	int health, melee, defense;
+	int health, melee, defense, intellect, perception, experience, mana, level;
 
-	public Entity(String name, int health, int melee, int defense) {
+	boolean isAI;
+	
+	int meleeDamage = melee;
+	int blocking = defense;
+	
+	public ArrayList inventory = new ArrayList();
+	public ArrayList spells = new ArrayList();
+
+
+	Item[] equippedItems = new Item[5];
+
+	MagicSpell[] equippedSpells;
+
+	//Locations in the equippedItems array that specific equipment is assigned to.
+	public static final int
+	HELMET = 0,
+	ARMOR = 1,
+	LEGGINGS = 2,
+	SHIELD = 3,
+	WEAPON = 4;
+
+	public Entity(String name, int health, int mana, int melee, int defense, int intellect, int perception, int level, boolean isAI) {
 		this.name = name;
 		this.health = health;
 		this.melee = melee;
 		this.defense = defense;
-		
+		this.intellect = intellect;
+		this.perception = perception;
+		this.mana = mana;
+		this.level = level;
+		equippedSpells = new MagicSpell[level+1];
+		this.isAI = isAI;
 	}
 	
 	//Getters and Setters
@@ -57,9 +88,115 @@ public class Entity {
 	public int getMove() {
 		return 1;
 	}
+	
+	public MagicSpell[] getEquippedSpells() {
+		return equippedSpells;
+	}
+
+	public void setEquippedSpells(int location, MagicSpell spell) {
+		equippedSpells[location] = spell;
+	}
+
+	public Item[] getEquippedItems() {
+		return equippedItems;
+	}
+
+	public void setEquippedItems(int location, Item item) {
+		equippedItems[location] = item;
+	}
+
+	public void setSpells(MagicSpell spell) {
+		spells.add(spell);
+	}
+
+	public ArrayList getSpells() {
+		return spells;
+	}
+
+	public void setInventory(Item item) {
+		inventory.add(item);
+	}
+
+	public ArrayList getInventory() {
+		return inventory;
+	}
+
+	public void removeEquippedItems(int location) {
+		equippedItems[location] = null;
+	}
+
+	public int getIntellect() {
+		return intellect;
+	}
+
+	public void setIntellect(int intellect) {
+		this.intellect = intellect;
+	}
+
+	public int getPerception() {
+		return perception;
+	}
+
+	public void setPerception(int perception) {
+		this.perception = perception;
+	}
+
+	public int getExperience() {
+		return experience;
+	}
+
+	public void setExperience(int experience) {
+		this.experience = experience;
+	}
+
+	public void setMana(int mana) {
+		this.mana = mana;
+	}
+
+	public int getMana() {
+		return mana;
+	}
+
+	public void setMeleeDamage(Item[] equippedItems) {
+		meleeDamage = 0;
+		meleeDamage = ((Weapon) equippedItems[WEAPON]).getAttack() + melee;
+	}
+
+	public int getMeleeDamage() {
+		return meleeDamage;
+	}
+
+	public void setBlocking(Item[] equippedItems) {
+		int equipmentDefense = 0;
+		blocking = 0;
+		for (int i = 0; i < 3; i++) {
+			equipmentDefense += ((Armor) equippedItems[i]).getDefense();
+		}
+		blocking = equipmentDefense + defense;
+	}
+
+	public int getBlocking() {
+		return blocking;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	
+	public boolean isAI() {
+		return isAI;
+	}
 		
 	//Other Methods	
 	public void attack(int attack) {
 		
+	}
+	
+	public boolean isAlive() {
+		return health > 0;
 	}
 }// End Class Entity
