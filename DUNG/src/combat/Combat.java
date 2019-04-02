@@ -2,31 +2,18 @@
 
 package combat;
 
-
 import java.util.ArrayList;
 import display.Display;
 import characters.Entity;
 import item.*;
-//import java.util.Collections;
-//import static java.util.Comparator.comparing;
 
 public class Combat extends Instance {
-	protected int victor; //
+	protected int victor; // Number of the team that has won this Combat
 	protected boolean isActive = true; //is this combat still active?
 	protected ArrayList<Entity> dead = new ArrayList<Entity>(); //holds all the dead people, for counting and looting
 	protected ArrayList<Item> droppedLoot = new ArrayList<Item>(); //for clean up looting inventories.
-	private boolean allDead = false;
-	private Entity currentEntity;
-
-	public Combat(int numT) {
-		for (int i=0; i<numT; i++)
-			team.add(new ArrayList<Entity>());
-	}
-
-	public Combat() {
-		team.add(new ArrayList<Entity>());
-		team.add(new ArrayList<Entity>());
-	}
+	private boolean allDead = false; //changes to true if everyone dies at the same time and is an extra check at the end to prevent an infinite loop.
+	private Entity currentEntity; //the Entity currently taking a turn.
 
 	public void launch() {
 		currentTeam = 0;
@@ -62,16 +49,15 @@ public class Combat extends Instance {
 			currentAction = null; // In theory we should be overriding this no matter what in a moment, and clearing it like this is pointless.
 			//RPG.gui.guiPrimary.actionPanel.clearAction(); // I do not like where this is currently, but I couldn't find a place to set it in the GUI that didn't clear it too early.
 
-			if (currentEntity.isAI()) { // TODO Change to checking subclass of Entity that we are using for enemies?
-
-				// A very rudimentary and temporary AI.
-				do {
-					do { // Temporary AI-ish random function to attack someone not on your team (or dead)s.
-						whoToAtk =  (int)Math.round((float)(Math.random()*(InitiativeList.size()-1))); //choose a random person to attack
-						//Display.print("Random Target: " + whoToAtk + "\n");
-					} while ((team.get(currentTeam).contains(InitiativeList.get(whoToAtk))) ); //makes sure target isn't on same team.
-				} while (InitiativeList.get(whoToAtk).isAlive() == false); //makes sure target is alive.
-
+			if (currentEntity.isAI()) {
+				// A very rudimentary and temporary AI. Random function to attack someone not on your team (or dead)
+				ArrayList<Entity> potentialTargets = new ArrayList<Entity>(InitiativeList); // Does this load properly?
+				for (Entity i: dead) //makes sure target is alive.
+					potentialTargets.remove(i);
+				for (Entity i: team.get(currentTeam)) //makes sure target isn't on same team.
+					potentialTargets.remove(i);
+				whoToAtk =  (int)Math.round((float)(Math.random()*(potentialTargets.size()-1))); //choose a random person to attack
+				//Display.print("Random Target: " + whoToAtk + "\n");
 				ArrayList<Entity> tempTargets = new ArrayList<Entity>();
 				tempTargets.add(InitiativeList.get(whoToAtk));
 				currentAction = new RPGAction("attack", tempTargets);
@@ -197,8 +183,7 @@ public class Combat extends Instance {
 		return isActive; 
 	}
 
-	public void checkDead() {
-		// Checks to add dead to the dead list and declare them dead.
+	public void checkDead() { // Checks to add dead to the dead list and declare them dead.
 		for (int i=0; i<team.size(); i++) {
 			for (int j=0; j<team.get(i).size(); j++) {
 				if ((team.get(i).get(j).isAlive() == false) && (dead.contains(team.get(i).get(j)) == false)) {
@@ -217,7 +202,7 @@ public class Combat extends Instance {
 			int xpPreSplit = 0;
 			for (Entity i: dead) // total up the xp value of the kills.
 				if (team.get(victor).contains(i) == false)
-					xpPreSplit += i.getLevel(); // TODO add level to all Entitys
+					xpPreSplit += i.getLevel(); 
 
 			int xpSplitWays = 0;
 			for (Entity i: team.get(victor))
@@ -227,7 +212,7 @@ public class Combat extends Instance {
 			int xpSplit = xpPreSplit/xpSplitWays;
 			for (Entity i: team.get(victor))
 				if (i.isAlive())
-					i.addXP(xpSplit); // TODO make a system for adding experience to Entity/Player, can be conditional
+					i.addXP(xpSplit);
 
 			Display.print(xpPreSplit + "xp is split between all " + xpSplitWays + " of the victors recieve who each recieve " + xpSplit + "xp.\n");
 			//Display.print(dead.toString() + "\n");
@@ -245,7 +230,7 @@ public class Combat extends Instance {
 				if (i.isAlive()) {
 					for(Item j: droppedLoot)
 						i.getInventory().add(j);
-					//i.setStat("money", i.getStatI("money") + moneyDroped); 
+					i.setMoney(i.getMoney() + moneyDroped); 
 					Display.print(i.getName() + " picks up all of the loot, and " + moneyDroped + " coins.\n");
 					break;
 				}

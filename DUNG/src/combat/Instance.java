@@ -1,13 +1,12 @@
 package combat;
 
 import java.util.ArrayList;
-import java.util.List;
 import characters.Entity;
 import display.Display;
 
 public abstract class Instance {
 	public boolean awaitingInput;
-	protected List<List<Entity>> team = new ArrayList<List<Entity>>(); //array for teams that holds array for Entitys
+	protected ArrayList<ArrayList<Entity>> team = new ArrayList<ArrayList<Entity>>(); //array for teams that holds array for Entitys
 	protected ArrayList<Entity> InitiativeList = new ArrayList<Entity>();
 	protected RPGAction currentAction;
 	protected int currentTeam;
@@ -15,7 +14,7 @@ public abstract class Instance {
 	public ArrayList<Entity> getInitiativeList() {
 		return InitiativeList;
 	}
-	public List<List<Entity>> getTeams() {
+	public ArrayList<ArrayList<Entity>> getTeams() {
 		return team;
 	}
 	public int getCurrentTeam() {
@@ -33,9 +32,17 @@ public abstract class Instance {
 		team.get(teamNum).add(add);
 		Display.print(add.getName() + " was added to combat.\n"); // Change this line if we add more people.
 		
-		InitiativeList.add(add);
-		//Collections.sort(InitiativeList, )
-		//InitiativeList.sort(Comparator.comparing(Entity::getStatI("init")));
+		// Adds sorted to IntiativeList.
+		boolean found = false;
+		int index=0;
+		while(index<InitiativeList.size() && !found) { // Someone check this and remove this note or tell me. I'm not sure about this.
+			if (add.getPerception()>InitiativeList.get(index).getPerception()) {
+				if (!(add.getPerception()<=InitiativeList.get(index+1).getPerception())) {
+					InitiativeList.add(index+1, add);
+					found = true;
+				}
+			}
+		}
 	}
 	
 }
