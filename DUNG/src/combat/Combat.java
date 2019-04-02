@@ -128,15 +128,18 @@ public class Combat extends Instance {
 
 		String output = "";
 		int damage, damageFinal;
-
+		Weapon weapon;
+		
 		if (defender.isAlive()) {
-			damage = (int)(Math.random()*(attacker.getStatI(attacker.getWeapon().getStatS("primaryStat"))/2)+(attacker.getStatI(attacker.getWeapon().getStatS("primaryStat"))/2)) + attacker.getWeapon().getAttack();
+			//damage = (int)(Math.random()*(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)+(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)) + attacker.getEquippedItems()[4].getAttack();
+			weapon = (Weapon)attacker.getEquippedItems()[4];
+			damage = (int)(Math.random()*weapon.getAttack())+1; // Damage will be from 1 to weapon attack.
 			if (damage < 0) damage = 0;
 			double damageReduction = (defender.getBlocking()+100)/100; // Move blocking up to entity?
 			damageFinal = (int) (damage/damageReduction);
 			defender.setHealth(defender.getHealth() - damageFinal);
 
-			output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getWeapon().getName() + " dealing " + damageFinal + " damage.\n";
+			output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n";
 			output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
 
 		}
@@ -232,14 +235,16 @@ public class Combat extends Instance {
 
 			// All dead loot goes in one pile that the victor can pick it up.
 			for(Entity i: dead) 
-				droppedLoot.add(i.getInventory()); // TODO move inventory up to all Entitys
+				for(Item j: i.getInventory())
+					droppedLoot.add(j);
 			int moneyDroped = 0;
 			for (Entity i: dead)
-				moneyDroped += i.getStatI("money"); //TODO money stat?
+				moneyDroped += i.getMoney();
 
 			for(Entity i: team.get(victor)) {
 				if (i.isAlive()) {
-					i.getInventory().add(droppedLoot);
+					for(Item j: droppedLoot)
+						i.getInventory().add(j);
 					//i.setStat("money", i.getStatI("money") + moneyDroped); 
 					Display.print(i.getName() + " picks up all of the loot, and " + moneyDroped + " coins.\n");
 					break;

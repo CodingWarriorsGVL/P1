@@ -1,25 +1,24 @@
 package characters;
 
 import java.util.ArrayList;
-
 import item.Armor;
 import item.Item;
 import item.Weapon;
-import navigation.Floor;
 
 public class Entity {
 	
 	//Class Variables
 	String name;
 	int health, melee, defense, intellect, perception, experience, mana, level;
+	int maxHealth, money;
 
 	boolean isAI;
 	
 	int meleeDamage = melee;
 	int blocking = defense;
 	
-	public ArrayList inventory = new ArrayList();
-	public ArrayList spells = new ArrayList();
+	public ArrayList<Item> inventory = new ArrayList<Item>();
+	public ArrayList<MagicSpell> spells = new ArrayList<MagicSpell>();
 
 
 	Item[] equippedItems = new Item[5];
@@ -37,6 +36,7 @@ public class Entity {
 	public Entity(String name, int health, int mana, int melee, int defense, int intellect, int perception, int level, boolean isAI) {
 		this.name = name;
 		this.health = health;
+		maxHealth = health;
 		this.melee = melee;
 		this.defense = defense;
 		this.intellect = intellect;
@@ -59,6 +59,10 @@ public class Entity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public int getMaxHealth() {
+		return maxHealth;
 	}
 
 	public int getHealth() {
@@ -109,7 +113,7 @@ public class Entity {
 		spells.add(spell);
 	}
 
-	public ArrayList getSpells() {
+	public ArrayList<MagicSpell> getSpells() {
 		return spells;
 	}
 
@@ -117,7 +121,7 @@ public class Entity {
 		inventory.add(item);
 	}
 
-	public ArrayList getInventory() {
+	public ArrayList<Item> getInventory() {
 		return inventory;
 	}
 
@@ -178,15 +182,26 @@ public class Entity {
 	public int getBlocking() {
 		return blocking;
 	}
-
-	public int getLevel() {
-		return level;
+	
+	public void setMoney(int money) {
+		this.money = money;
 	}
-
+	public int getMoney() {
+		return money;
+	}
+	
 	public void setLevel(int level) {
 		this.level = level;
 	}
+	public int getLevel() {
+		return level;
+	}
 	
+	public void addXP(int xp) {
+		experience += xp;
+		//TODO add level up here?
+	}
+
 	public boolean isAI() {
 		return isAI;
 	}
