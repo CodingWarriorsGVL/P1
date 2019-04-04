@@ -1,4 +1,4 @@
-package combat;
+package instance;
 
 import java.util.ArrayList;
 import characters.Entity;

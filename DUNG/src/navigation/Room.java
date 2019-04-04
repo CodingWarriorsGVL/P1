@@ -9,7 +9,7 @@ package navigation;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import characters.Entity;
-import combat.Instance;
+import instance.Instance;
 
 public class Room {
   
@@ -57,9 +57,13 @@ public class Room {
   // Adds an Instance to the room.
   public void addInstances(Instance... newInstances) {
 	  for (int i=0; i<newInstances.length; i++)
-		  this.instances.add(newInstances[i]);
+		  this.instances.add(newInstances[i]); 
   }
   
+  // Retrieves the Instances the room holds. 
+  public ArrayList<Instance> getInstances() {
+	  return instances; //Could change to just Instance return later, with the number call for the Instance being input.
+  }
   
   /*
    * ------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-package combat;
+package instance;
 
 import java.util.ArrayList;
 import characters.Entity;
@@ -23,14 +23,13 @@ public abstract class Instance {
 	public Entity getEntity(int i, int teamNum) { //unclear why anything would request this as of yet.
 		return team.get(teamNum).get(i);
 	}
-
 	
 	public void addEntity(Entity add, int teamNum) { // Add people to the combat.
 		if (teamNum>(team.size()-1))
-			for (int i=0; i<(teamNum-(team.size()-1)); i++)
+			for (int i=0; i<=(teamNum-(team.size()-1)); i++)
 				team.add(new ArrayList<Entity>());
 		team.get(teamNum).add(add);
-		Display.print(add.getName() + " was added to combat.\n"); // Change this line if we add more people.
+		Display.print(add.getName() + " was added to instance.\n"); // Change this line if we add more people.
 		
 		// Adds sorted to IntiativeList.
 		boolean found = false;
@@ -44,5 +43,7 @@ public abstract class Instance {
 			}
 		}
 	}
+	
+	public abstract void launch();
 	
 }

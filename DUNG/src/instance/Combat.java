@@ -1,6 +1,6 @@
 // Written originally by Jared Hawkins, and copied over from another project to here with some heavy edits. 
 
-package combat;
+package instance;
 
 import java.util.ArrayList;
 import display.Display;
