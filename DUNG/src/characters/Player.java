@@ -218,6 +218,7 @@ public class Player extends Entity {
 
 				input = inputInt("\n# How many points would you like to spend in health? #");
 				player.setHealth(input);
+				player.setMaxHealth(input);
 				spendablePoints -= input;
 				println("# You now have " + spendablePoints + " points left. #");
 
@@ -275,7 +276,7 @@ public class Player extends Entity {
 		player.setEquippedItems(ruggedArmor.getEquippedItemSlot(), ruggedArmor);
 		player.setEquippedItems(ruggedLeggings.getEquippedItemSlot(), ruggedLeggings);
 		player.setEquippedItems(ruggedShield.getEquippedItemSlot(), ruggedShield);
-		player.setEquippedItems(ruggedSword.getEquippedItemSlot(), ruggedSword);
+		player.setEquippedItems(testSword.getEquippedItemSlot(), testSword);
 		player.setBlocking(player.getEquippedItems());
 		player.setMeleeDamage(player.getEquippedItems());
 
