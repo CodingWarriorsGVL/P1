@@ -17,142 +17,16 @@ import static display.Display.*;
 public class Player extends Entity {
 
 	// Class Variables
-	int intellect, perception, experience, mana, level;
-
-	int meleeDamage = melee;
-	int blocking = defense;
-	
 	int xPosition;
 	int yPosition;
 
-
-
-	public ArrayList inventory = new ArrayList();
-	public ArrayList spells = new ArrayList();
-
-
-	Item[] equippedItems = new Item[5];
-
-	MagicSpell[] equippedSpells;
-
-	//Locations in the equippedItems array that specific equipment is assigned to.
-	public static final int
-	HELMET = 0,
-	ARMOR = 1,
-	LEGGINGS = 2,
-	SHIELD = 3,
-	WEAPON = 4;
-
-
-	public Player(String name, int health, int mana, int melee, int defense, int intellect, int perception,int experience, int level) {
-		super(name, health, melee, defense);
-		this.intellect = intellect;
-		this.perception = perception;
-		this.experience = experience;
-		this.mana = mana;
-		this.level = level;
-		equippedSpells = new MagicSpell[level+1];
+	public Player(String name, int health, int mana, int melee, int defense, int intellect, int perception, int level) {
+		super(name, health, mana, melee, defense, intellect, perception, level, false);
 	}
 
 	// Getters and Setters
 
-	public MagicSpell[] getEquippedSpells() {
-		return equippedSpells;
-	}
 
-	public void setEquippedSpells(int location, MagicSpell spell) {
-		equippedSpells[location] = spell;
-	}
-
-	public Item[] getEquippedItems() {
-		return equippedItems;
-	}
-
-	public void setEquippedItems(int location, Item item) {
-		equippedItems[location] = item;
-	}
-
-	public void setSpells(MagicSpell spell) {
-		spells.add(spell);
-	}
-
-	public ArrayList getSpells() {
-		return spells;
-	}
-
-	public void setInventory(Item item) {
-		inventory.add(item);
-	}
-
-	public ArrayList getInventory() {
-		return inventory;
-	}
-
-	public void removeEquippedItems(int location) {
-		equippedItems[location] = null;
-	}
-
-	public int getIntellect() {
-		return intellect;
-	}
-
-	public void setIntellect(int intellect) {
-		this.intellect = intellect;
-	}
-
-	public int getPerception() {
-		return perception;
-	}
-
-	public void setPerception(int perception) {
-		this.perception = perception;
-	}
-
-	public int getExperience() {
-		return experience;
-	}
-
-	public void setExperience(int experience) {
-		this.experience = experience;
-	}
-
-	public void setMana(int mana) {
-		this.mana = mana;
-	}
-
-	public int getMana() {
-		return mana;
-	}
-
-	public void setMeleeDamage(Item[] equippedItems) {
-		meleeDamage = 0;
-		meleeDamage = ((Weapon) equippedItems[WEAPON]).getAttack() + melee;
-	}
-
-	public int getMeleeDamage() {
-		return meleeDamage;
-	}
-
-	public void setBlocking(Item[] equippedItems) {
-		int equipmentDefense = 0;
-		blocking = 0;
-		for (int i = 0; i < 3; i++) {
-			equipmentDefense += ((Armor) equippedItems[i]).getDefense();
-		}
-		blocking = equipmentDefense + defense;
-	}
-
-	public int getBlocking() {
-		return blocking;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
 
 
 	// Other Methods
@@ -313,7 +187,7 @@ public class Player extends Entity {
 	public static Player buildCharacter(){	
 
 
-		Player player = new Player(" ", 0, 0, 0, 0, 0, 0, 0, 1);
+		Player player = new Player(" ", 0, 0, 0, 0, 0, 0, 1);
 
 		player.setName(input("# Hello traveler, what is your name? #"));
 		String answer = " ";
@@ -332,7 +206,6 @@ public class Player extends Entity {
 
 		boolean spendingPoints = true;
 
-		SPEND_POINTS:
 			while(spendingPoints){
 
 				int spendablePoints = 240;
@@ -390,10 +263,8 @@ public class Player extends Entity {
 				answer = input("\n# Are you happy with your character build? #\n1.Yes\n2.No");
 
 				if(answer.equals("2")){
-					continue SPEND_POINTS;
-				}
-
-				else
+					spendingPoints = true;
+				} else 
 					spendingPoints = false;
 
 			}//End while(spendingPoints)
