@@ -158,7 +158,14 @@ public class MainGame {
 			for (Instance i: currentRoom.getInstances()) {
 				i.addEntity(player1, 0);
 				i.launch();
+				if (player1.isAlive() == false) {
+					print(player1.getName() + " is dead. \nGame Over\n");
+					play = false;
+					break;
+				}
 			}
+			
+			if (player1.isAlive()) {
 			
 			println("Your options are:");
 			
@@ -217,6 +224,7 @@ public class MainGame {
 					player.attack(move);
 				}
 			} */
+			}
 		}
 		
 	}

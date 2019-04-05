@@ -19,7 +19,6 @@ public class Combat extends Instance {
 	public void launch() {
 		currentTeam = 0;
 		int turnCount = 0;
-		int whoToAtk = 0; // Index on the InitiativeList of who the current target is. This system should probably be replaced later, and currently is just for the AI and players in a poor format.
 		int currentInitiative = -1; // Set to negative one due to how initiative loops around. Could be changed, but works nicely for now, and there was some reason I decided this was better.
 		int lastInitiative = 0;
 		RPGAction currentAction;
@@ -58,10 +57,10 @@ public class Combat extends Instance {
 					potentialTargets.remove(i);
 				for (Entity i: team.get(currentTeam)) //makes sure target isn't on same team.
 					potentialTargets.remove(i);
-				whoToAtk =  (int)Math.round((float)(Math.random()*(potentialTargets.size()-1))); //choose a random person to attack
+				int whoToAtk =  (int)Math.round((float)(Math.random()*(potentialTargets.size()-1))); //choose a random person to attack
 				//Display.print("Random Target: " + whoToAtk + "\n");
 				ArrayList<Entity> tempTargets = new ArrayList<Entity>();
-				tempTargets.add(InitiativeList.get(whoToAtk));
+				tempTargets.add(potentialTargets.get(whoToAtk));
 				currentAction = new RPGAction("attack", tempTargets);
 			}
 
@@ -71,26 +70,29 @@ public class Combat extends Instance {
 				//refreshGUI();
 				do {
 					String tempActionType = Display.input("Input action (attack, special, run, inventory): ");
-					Display.print(tempActionType);
-					if ((tempActionType == "attack")||(tempActionType == "special")) {
+					//Display.println(tempActionType);
+					if ((tempActionType.equals("attack"))||(tempActionType.equals("special"))||(tempActionType.equals("run"))) {
 						ArrayList<Entity> targets = new ArrayList<Entity>();
 						targets.add(InitiativeList.get(0)); // TODO target selector. This is temporary and needs some work.
 						currentAction = new RPGAction(tempActionType, targets);
 					}
-					else ;
+					/*
+					else if (tempActionType.equals("run")) {
+						currentAction = new RPGAction(tempActionType, targets);
+					}*/
 				} while(currentAction.isValid() == false);
 			}
 
 			// Redirect to perform currentAction
-			if (currentAction.getActionType() == "attack")
+			if (currentAction.getActionType().equals("attack"))
 				Display.print(fight(currentEntity, currentAction.getTargets().get(0)));
-			else if (currentAction.getActionType() == "special")
+			else if (currentAction.getActionType().equals("special"))
 				; //TODO special
-			else if (currentAction.getActionType() == "run") {
+			else if (currentAction.getActionType().equals("run")) {
 				if (run(currentEntity))
 					currentInitiative--;
 			}
-			else if (currentAction.getActionType() == "inventory")
+			else if (currentAction.getActionType().equals("inventory"))
 				accessInventory(currentEntity);
 
 			checkDead();

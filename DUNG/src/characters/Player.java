@@ -206,7 +206,6 @@ public class Player extends Entity {
 
 		boolean spendingPoints = true;
 
-		SPEND_POINTS:
 			while(spendingPoints){
 
 				int spendablePoints = 240;
@@ -264,10 +263,8 @@ public class Player extends Entity {
 				answer = input("\n# Are you happy with your character build? #\n1.Yes\n2.No");
 
 				if(answer.equals("2")){
-					continue SPEND_POINTS;
-				}
-
-				else
+					spendingPoints = true;
+				} else 
 					spendingPoints = false;
 
 			}//End while(spendingPoints)
