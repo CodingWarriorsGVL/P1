@@ -25,7 +25,7 @@ public class Room {
    */
   public Room() {
 	this.entities = new LinkedList<Entity>();
-	this.instances = new ArrayList<Instance>();
+	this.instances = new ArrayList<Instance>(); 
 	this.roomFeatures = new RoomFeature[4];
   }
   
@@ -36,6 +36,7 @@ public class Room {
    */
   public Room(RoomFeature north, RoomFeature east, RoomFeature south, RoomFeature west) {
 	this.entities = new LinkedList<Entity>();
+	this.instances = new ArrayList<Instance>(); 
 	this.roomFeatures = new RoomFeature[4];
 	this.roomFeatures[NORTH] = north;
 	this.roomFeatures[SOUTH] = south;

@@ -14,13 +14,15 @@ public class Combat extends Instance {
 	protected ArrayList<Item> droppedLoot = new ArrayList<Item>(); //for clean up looting inventories.
 	private boolean allDead = false; //changes to true if everyone dies at the same time and is an extra check at the end to prevent an infinite loop.
 	private Entity currentEntity; //the Entity currently taking a turn.
+	
 
 	public void launch() {
 		currentTeam = 0;
 		int turnCount = 0;
-		int whoToAtk = 0;
-		int currentInitiative = -1;
+		int whoToAtk = 0; // Index on the InitiativeList of who the current target is. This system should probably be replaced later, and currently is just for the AI and players in a poor format.
+		int currentInitiative = -1; // Set to negative one due to how initiative loops around. Could be changed, but works nicely for now, and there was some reason I decided this was better.
 		int lastInitiative = 0;
+		RPGAction currentAction;
 
 		Display.print("Entering Combat!\n");
 		//Display.setInstance(this); // Updates the current instance. Marked out from a previous project, but something that might need to stay.
@@ -65,16 +67,18 @@ public class Combat extends Instance {
 
 			// Start Player Action Menu
 			if (currentEntity.isAI() == false) { // For players to input.
-				Display.print("Choose an action for " + currentEntity.getName() + ": \n");
+				Display.println("Choose an action for " + currentEntity.getName() + ": \n");
 				//refreshGUI();
-				while(currentAction.isValid() == false){
+				do {
 					String tempActionType = Display.input("Input action (attack, special, run, inventory): ");
+					Display.print(tempActionType);
 					if ((tempActionType == "attack")||(tempActionType == "special")) {
 						ArrayList<Entity> targets = new ArrayList<Entity>();
+						targets.add(InitiativeList.get(0)); // TODO target selector. This is temporary and needs some work.
 						currentAction = new RPGAction(tempActionType, targets);
 					}
 					else ;
-				}
+				} while(currentAction.isValid() == false);
 			}
 
 			// Redirect to perform currentAction

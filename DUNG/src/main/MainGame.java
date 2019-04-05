@@ -88,14 +88,14 @@ public class MainGame {
 		player1.setYPosition(0);
 		
 		// Combat Test, Noted out to prevent, outOfBountsException in Room adding Instances
-		/*
+		
 		Entity giantRoach = new Entity("Giant Roach", 40, 0, 3, 6, 1, 2, 1, true); // Make Enemy
 		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 4); // Make Weapon for Enemy
 		giantRoach.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
 		Instance testInstance = new Combat(); // Make Instance
 		testInstance.addEntity(giantRoach, 1); // Add Enemy to Instance
 		dungeon.getFloor(0).getRoom(1, 1).addInstances(testInstance); // Place Instance Somewhere.
-		*/ 
+		
 		
 		//For Testing
 		//player1 = new Player("", 50,50,50,50,50,50,50,2);
@@ -153,12 +153,12 @@ public class MainGame {
 			
 			currentRoom = dungeon.getFloor(0).getRoom(player1.getXPosition(), player1.getYPosition());
 			
-			// Activate Instances // This seems like best location for now, just after you have entered the room.
-			/* more outOfBounds
+			// Activate Instances.
+			//This seems like best location for now, just after you have entered the room.
 			for (Instance i: currentRoom.getInstances()) {
 				i.addEntity(player1, 0);
 				i.launch();
-			}*/
+			}
 			
 			println("Your options are:");
 			

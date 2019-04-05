@@ -29,19 +29,21 @@ public abstract class Instance {
 			for (int i=0; i<=(teamNum-(team.size()-1)); i++)
 				team.add(new ArrayList<Entity>());
 		team.get(teamNum).add(add);
-		Display.print(add.getName() + " was added to instance.\n"); // Change this line if we add more people.
+		System.out.print(add.getName() + " was added to instance.\n"); // Change this line if we add more people. Also more of a console thing rather than interface, intentionally.
 		
 		// Adds sorted to IntiativeList.
+		/*
 		boolean found = false;
 		int index=0;
-		while(index<InitiativeList.size() && !found) { // Someone check this and remove this note or tell me. I'm not sure about this.
+		while(index<=InitiativeList.size() && !found) { // Someone check this and remove this note or tell me. I'm not sure about this.
 			if (add.getPerception()>InitiativeList.get(index).getPerception()) {
 				if (!(add.getPerception()<=InitiativeList.get(index+1).getPerception())) {
 					InitiativeList.add(index+1, add);
 					found = true;
 				}
 			}
-		}
+		}*/
+		InitiativeList.add(add); // Temp
 	}
 	
 	public abstract void launch();
