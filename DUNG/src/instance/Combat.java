@@ -14,7 +14,7 @@ public class Combat extends Instance {
 	protected ArrayList<Item> droppedLoot = new ArrayList<Item>(); //for clean up looting inventories.
 	private boolean allDead = false; //changes to true if everyone dies at the same time and is an extra check at the end to prevent an infinite loop.
 	private Entity currentEntity; //the Entity currently taking a turn.
-	
+
 
 	public void launch() {
 		currentTeam = 0;
@@ -31,10 +31,10 @@ public class Combat extends Instance {
 
 			do { // Cycle through InitiativeList
 				currentInitiative++;
-				if (currentInitiative >= InitiativeList.size())
+				if (currentInitiative >= initiativeList.size())
 					currentInitiative = 0;
-			} while (InitiativeList.get(currentInitiative).isAlive() == false);
-			currentEntity = InitiativeList.get(currentInitiative);
+			} while (initiativeList.get(currentInitiative).isAlive() == false);
+			currentEntity = initiativeList.get(currentInitiative);
 
 			for (int i=0; i<team.size(); i++) // Find the team of the current Entity.
 				if (team.get(i).contains(currentEntity)) 
@@ -46,17 +46,20 @@ public class Combat extends Instance {
 				Display.print("Turn " + turnCount + ".\n");
 			}
 
-			// Action Discision Time
+			// Action Decision Time
 			currentAction = null; // In theory we should be overriding this no matter what in a moment, and clearing it like this is pointless.
 			//RPG.gui.guiPrimary.actionPanel.clearAction(); // I do not like where this is currently, but I couldn't find a place to set it in the GUI that didn't clear it too early.
 
+			//Find available targets
+			ArrayList<Entity> potentialTargets = new ArrayList<Entity>(initiativeList); // Does this load properly?
+			for (Entity i: dead) //makes sure target is alive.
+				potentialTargets.remove(i);
+			for (Entity i: team.get(currentTeam)) //makes sure target isn't on same team.
+				potentialTargets.remove(i);
+
 			if (currentEntity.isAI()) {
 				// A very rudimentary and temporary AI. Random function to attack someone not on your team (or dead)
-				ArrayList<Entity> potentialTargets = new ArrayList<Entity>(InitiativeList); // Does this load properly?
-				for (Entity i: dead) //makes sure target is alive.
-					potentialTargets.remove(i);
-				for (Entity i: team.get(currentTeam)) //makes sure target isn't on same team.
-					potentialTargets.remove(i);
+
 				int whoToAtk =  (int)Math.round((float)(Math.random()*(potentialTargets.size()-1))); //choose a random person to attack
 				//Display.print("Random Target: " + whoToAtk + "\n");
 				ArrayList<Entity> tempTargets = new ArrayList<Entity>();
@@ -73,7 +76,26 @@ public class Combat extends Instance {
 					//Display.println(tempActionType);
 					if ((tempActionType.equals("attack"))||(tempActionType.equals("special"))||(tempActionType.equals("run"))) {
 						ArrayList<Entity> targets = new ArrayList<Entity>();
-						targets.add(InitiativeList.get(0)); // TODO target selector. This is temporary and needs some work.
+
+
+						//targets.add(potentialTargets.get(0)); // TODO target selector. This is temporary and needs some work.
+						Display.println("Targets:");
+						for (Entity i: potentialTargets) {
+							Display.print(i);
+						}
+
+						int choice;
+
+						if (potentialTargets.size() > 1) {
+							do {
+								choice = Display.inputInt("Choose what to attack: (1 - " + potentialTargets.size() + ")");
+							} while (!(choice > 0 && choice <= potentialTargets.size()));
+						} else {
+							choice = 1;
+						}
+
+						targets.add(potentialTargets.get(choice-1));
+
 						currentAction = new RPGAction(tempActionType, targets);
 					}
 					/*
@@ -121,7 +143,7 @@ public class Combat extends Instance {
 		String output = "";
 		int damage, damageFinal;
 		Weapon weapon;
-		
+
 		if (defender.isAlive()) {
 			//damage = (int)(Math.random()*(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)+(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)) + attacker.getEquippedItems()[4].getAttack();
 			weapon = (Weapon)attacker.getEquippedItems()[4];
@@ -151,7 +173,7 @@ public class Combat extends Instance {
 						highestEnemyDex = team.get(i).get(j).getPerception();
 		if (runner.getPerception() >= highestEnemyDex) {
 			Display.print(" Sucess!\n");
-			InitiativeList.remove(runner);
+			initiativeList.remove(runner);
 			team.get(currentTeam).remove(runner);
 			return true;
 		}

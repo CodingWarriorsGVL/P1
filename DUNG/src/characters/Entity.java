@@ -64,6 +64,9 @@ public class Entity {
 	public int getMaxHealth() {
 		return maxHealth;
 	}
+	public void setMaxHealth(int max) {
+		this.maxHealth = max;
+	}
 
 	public int getHealth() {
 		return health;

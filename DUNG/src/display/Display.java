@@ -106,4 +106,8 @@ public class Display {
 	public static void print(Staircase stair) {
 		println("Staircase to another floor!");
 	}
+	
+	public static void debug(String str) {
+		println("Debug: " + str);
+	}
 }

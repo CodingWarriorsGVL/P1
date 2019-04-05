@@ -7,4 +7,5 @@
 <fullyQualifiedTypeName name="navigation.Door"/>
 <fullyQualifiedTypeName name="navigation.Room"/>
 <fullyQualifiedTypeName name="combat.Instance"/>
+<fullyQualifiedTypeName name="display.Display"/>
 </qualifiedTypeNameHistroy>
