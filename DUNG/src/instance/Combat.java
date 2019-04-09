@@ -9,7 +9,6 @@ import item.*;
 
 public class Combat extends Instance {
 	protected int victor; // Number of the team that has won this Combat
-	protected boolean isActive = true; //is this combat still active?
 	protected ArrayList<Entity> dead = new ArrayList<Entity>(); //holds all the dead people, for counting and looting
 	protected ArrayList<Item> droppedLoot = new ArrayList<Item>(); //for clean up looting inventories.
 	private boolean allDead = false; //changes to true if everyone dies at the same time and is an extra check at the end to prevent an infinite loop.
@@ -33,7 +32,7 @@ public class Combat extends Instance {
 				currentInitiative++;
 				if (currentInitiative >= initiativeList.size())
 					currentInitiative = 0;
-			} while (initiativeList.get(currentInitiative).isAlive() == false);
+			} while (!initiativeList.get(currentInitiative).isAlive());
 			currentEntity = initiativeList.get(currentInitiative);
 
 			for (int i=0; i<team.size(); i++) // Find the team of the current Entity.
@@ -43,12 +42,11 @@ public class Combat extends Instance {
 
 			if ((currentInitiative < lastInitiative) || (turnCount == 0))  { // Tick at the end of the turn of the first person currently in the initiative (but not the first time)
 				turnCount++;
-				Display.print("Turn " + turnCount + ".\n");
+				Display.print("\nTurn " + turnCount + ".\n");
 			}
 
 			// Action Decision Time
-			currentAction = null; // In theory we should be overriding this no matter what in a moment, and clearing it like this is pointless.
-			//RPG.gui.guiPrimary.actionPanel.clearAction(); // I do not like where this is currently, but I couldn't find a place to set it in the GUI that didn't clear it too early.
+			currentAction = null; // In theory we should be overriding this no matter what in a moment, and clearing it like this is pointless. but....
 
 			//Find available targets
 			ArrayList<Entity> potentialTargets = new ArrayList<Entity>(initiativeList); // Does this load properly?
@@ -58,27 +56,24 @@ public class Combat extends Instance {
 				potentialTargets.remove(i);
 
 			if (currentEntity.isAI()) {
-				// A very rudimentary and temporary AI. Random function to attack someone not on your team (or dead)
-
+				// A very rudimentary and temporary AI. Random function to attack someone in the potentialTargets list.
 				int whoToAtk =  (int)Math.round((float)(Math.random()*(potentialTargets.size()-1))); //choose a random person to attack
-				//Display.print("Random Target: " + whoToAtk + "\n");
+				//Display.debug("Random Target: " + whoToAtk);
 				ArrayList<Entity> tempTargets = new ArrayList<Entity>();
 				tempTargets.add(potentialTargets.get(whoToAtk));
 				currentAction = new RPGAction("attack", tempTargets);
 			}
 
 			// Start Player Action Menu
-			if (currentEntity.isAI() == false) { // For players to input.
-				Display.println("Choose an action for " + currentEntity.getName() + ": \n");
+			if (!currentEntity.isAI()) { // For players to input.
+				Display.println("Choose an action for " + currentEntity.getName() + ": ");
 				//refreshGUI();
 				do {
-					String tempActionType = Display.input("Input action (attack, special, run, inventory): ");
+					String tempActionType = Display.input("Input action (attack, special(WIP), run, inventory(WIP)): ");
 					//Display.println(tempActionType);
-					if ((tempActionType.equals("attack"))||(tempActionType.equals("special"))||(tempActionType.equals("run"))) {
+					if (tempActionType.equals("attack")||tempActionType.equals("special")) {
 						ArrayList<Entity> targets = new ArrayList<Entity>();
 
-
-						//targets.add(potentialTargets.get(0)); // TODO target selector. This is temporary and needs some work.
 						Display.println("Targets:");
 						for (Entity i: potentialTargets) {
 							Display.print(i);
@@ -98,11 +93,11 @@ public class Combat extends Instance {
 
 						currentAction = new RPGAction(tempActionType, targets);
 					}
-					/*
-					else if (tempActionType.equals("run")) {
-						currentAction = new RPGAction(tempActionType, targets);
-					}*/
-				} while(currentAction.isValid() == false);
+					else if (tempActionType.equals("run")||tempActionType.equals("inventory")) {
+						currentAction = new RPGAction(tempActionType, null);
+					}
+					else Display.println("Invalid input, please enter again...");
+				} while(!currentAction.isValid());
 			}
 
 			// Redirect to perform currentAction
@@ -135,7 +130,7 @@ public class Combat extends Instance {
 			//Display.print(output);
 		}
 		endCombat();
-		Display.print("End of combat.\n");
+		Display.print("End of combat.\n\n");
 	}
 
 	public String fight(Entity attacker, Entity defender) {
@@ -147,13 +142,13 @@ public class Combat extends Instance {
 		if (defender.isAlive()) {
 			//damage = (int)(Math.random()*(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)+(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)) + attacker.getEquippedItems()[4].getAttack();
 			weapon = (Weapon)attacker.getEquippedItems()[4];
-			damage = (int)(Math.random()*weapon.getAttack())+1; // Damage will be from 1 to weapon attack.
+			damage = (int)(Math.random()*((weapon.getAttack()+attacker.getMelee())/2) + (weapon.getAttack()+attacker.getMelee())/2 +1); // Damage will be from half weapon attack + melee to full weapon attack + melee. TODO Adjust damage?
 			if (damage < 0) damage = 0;
-			double damageReduction = (defender.getBlocking()+100)/100; // Move blocking up to entity?
+			double damageReduction = (defender.getBlocking()+300)/300; // Move blocking up to entity?
 			damageFinal = (int) (damage/damageReduction);
 			defender.setHealth(defender.getHealth() - damageFinal);
 
-			output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n";
+			output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n"; 
 			output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
 
 		}
@@ -169,9 +164,11 @@ public class Combat extends Instance {
 		for (int i=0; i<team.size(); i++)
 			for (int j=0; j<team.get(i).size(); j++) //should add something here to skip over the entire currentTeam
 				if (currentTeam != i)
-					if (team.get(i).get(j).getPerception() > highestEnemyDex) // TODO replace perception with something that makes more sense.
+					if (team.get(i).get(j).getPerception() > highestEnemyDex) // TODO replace perception with something that makes more sense?
 						highestEnemyDex = team.get(i).get(j).getPerception();
-		if (runner.getPerception() >= highestEnemyDex) {
+		int runAttempt = (int)Math.round(Math.random()*runner.getPerception()*2); // TODO Adjust equation
+		Display.debug(runAttempt + "\n");
+		if (runAttempt >= highestEnemyDex) {
 			Display.print(" Sucess!\n");
 			initiativeList.remove(runner);
 			team.get(currentTeam).remove(runner);
@@ -190,6 +187,7 @@ public class Combat extends Instance {
 
 	public boolean checkActive() { // TODO redo something here, I think there might be issue.
 		int deadCount = 0, deadTeams = 0;
+		boolean isActive = true; //is this combat still active?
 
 		for (int i=0; i<team.size(); i++) {
 			deadCount = 0;
@@ -203,18 +201,21 @@ public class Combat extends Instance {
 					deadTeams++;
 				}
 			}
+			if (team.get(i).size() == 0)
+				deadTeams++;
 		}
-		if (deadTeams >= team.size()-1)
+		if (deadTeams >= team.size()-1 || team.size() == 1)
 			isActive = false;
 		if (deadTeams >= team.size())
 			allDead = true;
+		//Display.debug("Check active return: isActive: " + isActive + ". deadTeams: " + deadTeams + ". allDead: " + allDead);
 		return isActive; 
 	}
 
 	public void checkDead() { // Checks to add dead to the dead list and declare them dead.
 		for (int i=0; i<team.size(); i++) {
 			for (int j=0; j<team.get(i).size(); j++) {
-				if ((team.get(i).get(j).isAlive() == false) && (dead.contains(team.get(i).get(j)) == false)) {
+				if (!team.get(i).get(j).isAlive() && !dead.contains(team.get(i).get(j))) {
 					Display.print(team.get(i).get(j).getName() + " has died.\n");
 					dead.add(team.get(i).get(j));
 				}
@@ -229,7 +230,7 @@ public class Combat extends Instance {
 
 			int xpPreSplit = 0;
 			for (Entity i: dead) // total up the xp value of the kills.
-				if (team.get(victor).contains(i) == false)
+				if (!team.get(victor).contains(i))
 					xpPreSplit += i.getLevel(); 
 
 			int xpSplitWays = 0;
@@ -268,7 +269,6 @@ public class Combat extends Instance {
 			Display.print("All teams are dead.\nOops!\n");
 		}
 		//refresh GUI
-
 	}
 
 }
