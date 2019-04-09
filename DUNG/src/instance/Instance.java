@@ -24,27 +24,36 @@ public abstract class Instance {
 		return team.get(teamNum).get(i);
 	}
 
-	public void addEntity(Entity add, int teamNum) { // Add people to the combat.
+	public void addEntity(Entity add, int teamNum) { // Add people to the instance.
 		if (!initiativeList.contains(add)) {
 			if (teamNum>(team.size()-1))
 				for (int i=0; i<=(teamNum-(team.size()-1)); i++)
 					team.add(new ArrayList<Entity>());
 			team.get(teamNum).add(add);
-			Display.debug(add.getName() + " was added to instance."); // Change this line if we add more people. Also more of a console thing rather than interface, intentionally.
+
 
 			// Adds sorted to IntiativeList.
-			/*
-		boolean found = false;
-		int index=0;
-		while(index<=InitiativeList.size() && !found) { // Someone check this and remove this note or tell me. I'm not sure about this.
-			if (add.getPerception()>InitiativeList.get(index).getPerception()) {
-				if (!(add.getPerception()<=InitiativeList.get(index+1).getPerception())) {
-					InitiativeList.add(index+1, add);
-					found = true;
-				}
+			// TODO Highly suspect I messed up the math here. Has not been confirmed.
+			boolean found = false;
+			int index=0;
+			while(index <= initiativeList.size() && !found) { // Someone check this and remove this note or tell me. I'm not sure about this.
+				//Display.debug("Checking index " + index + "... ");
+				if (initiativeList.size() != 0) { // Checks to make sure something is already here.
+					if (add.getPerception() > initiativeList.get(index).getPerception()) {
+						//Display.debug("Greater than current index... ");
+						if (initiativeList.size() > index+1) {
+							if (!(add.getPerception() <= initiativeList.get(index+1).getPerception())) {
+								//Display.debug("Less than or equal to next. ");
+								Display.debug(add.getName() + " was added to instance. After.");
+								initiativeList.add(index+1, add);
+								found = true;
+							}
+						} else {initiativeList.add(index+1, add); found = true; Display.debug(add.getName() + " was added to instance. Last.");}
+					} else {initiativeList.add(index, add); found = true; Display.debug(add.getName() + " was added to instance. Before.");}
+				} else {initiativeList.add(add); found = true; Display.debug(add.getName() + " was added to instance. First in.");}
+				index++;
 			}
-		}*/
-			initiativeList.add(add); // Temp
+			//initiativeList.add(add); // Temp
 		} 
 	}
 
