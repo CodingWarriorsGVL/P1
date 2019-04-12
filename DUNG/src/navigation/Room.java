@@ -1,19 +1,21 @@
 /*
  * **************************************************************************************************************
- * Room.java | Author: brandonlewis | Date: 2019.02.15 | Rev: 2019.03.01
- * This file is a class of the navigation package for the "Dungeons of UNG" text-based game. The room class interfaces with the Entity class which is not a part of the navigation package.
+ * Room.java | Author: brandonlewis | Date: 2019.02.15 | Rev: 2019.04.02 | Last Edit: Jared Hawkins
+ * This file is a class of the navigation package for the "Dungeons of UNG" text-based game. The room class interfaces with the Entity and Instance classes which are not a part of the navigation package.
  * **************************************************************************************************************
  */
 package navigation;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import characters.Entity;
+import instance.Instance;
 
 public class Room {
   
-  private LinkedList<Entity> entities;
+  private ArrayList<Entity> entities;
   private RoomFeature[] roomFeatures;
   private final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
+  private ArrayList<Instance> instances;
   
   /*
    * ------------------------------------------------------------------------------------------------------------
@@ -21,7 +23,8 @@ public class Room {
    * ------------------------------------------------------------------------------------------------------------
    */
   public Room() {
-	this.entities = new LinkedList<Entity>();
+	this.entities = new ArrayList<Entity>();
+	this.instances = new ArrayList<Instance>(); 
 	this.roomFeatures = new RoomFeature[4];
   }
   
@@ -31,7 +34,8 @@ public class Room {
    * ------------------------------------------------------------------------------------------------------------
    */
   public Room(RoomFeature north, RoomFeature east, RoomFeature south, RoomFeature west) {
-	this.entities = new LinkedList<Entity>();
+	this.entities = new ArrayList<Entity>();
+	this.instances = new ArrayList<Instance>(); 
 	this.roomFeatures = new RoomFeature[4];
 	this.roomFeatures[NORTH] = north;
 	this.roomFeatures[SOUTH] = south;
@@ -49,6 +53,22 @@ public class Room {
 	  this.entities.add(newEntities[i]);
 	}
   }
+  
+  public ArrayList<Entity> getEnties() {
+	  return this.entities; //Could change to just Instance return later, with the number call for the Instance being input.
+  }
+  // Adds an Instance to the room.
+  public void addInstances(Instance... newInstances) {
+	  for (int i=0; i<newInstances.length; i++)
+		  this.instances.add(newInstances[i]); 
+  }
+  
+  // Retrieves the Instances the room holds. 
+  public ArrayList<Instance> getInstances() {
+	  return instances; //Could change to just Instance return later, with the number call for the Instance being input.
+  }
+  
+  
   
   /*
    * ------------------------------------------------------------------------------------------------------------

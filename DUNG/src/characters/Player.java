@@ -17,148 +17,21 @@ import static display.Display.*;
 public class Player extends Entity {
 
 	// Class Variables
-	int intellect, perception, experience, mana, level;
-
-	int meleeDamage = melee;
-	int blocking = defense;
-	
 	int xPosition;
 	int yPosition;
 
-
-
-	public ArrayList inventory = new ArrayList();
-	public ArrayList spells = new ArrayList();
-
-
-	Item[] equippedItems = new Item[5];
-
-	MagicSpell[] equippedSpells;
-
-	//Locations in the equippedItems array that specific equipment is assigned to.
-	public static final int
-	HELMET = 0,
-	ARMOR = 1,
-	LEGGINGS = 2,
-	SHIELD = 3,
-	WEAPON = 4;
-
-
-
-	public Player(String name, int health, int mana, int melee, int defense, int intellect, int perception,int experience, int level) {
-		super(name, health, melee, defense);
-		this.intellect = intellect;
-		this.perception = perception;
-		this.experience = experience;
-		this.mana = mana;
-		this.level = level;
-		equippedSpells = new MagicSpell[level+1];
+	public Player(String name, int health, int mana, int melee, int defense, int intellect, int perception, int level) {
+		super(name, health, mana, melee, defense, intellect, perception, level, false);
 	}
 
 	// Getters and Setters
 
-	public MagicSpell[] getEquippedSpells() {
-		return equippedSpells;
-	}
 
-	public void setEquippedSpells(int location, MagicSpell spell) {
-		equippedSpells[location] = spell;
-	}
-
-	public Item[] getEquippedItems() {
-		return equippedItems;
-	}
-
-	public void setEquippedItems(int location, Item item) {
-		equippedItems[location] = item;
-	}
-
-	public void setSpells(MagicSpell spell) {
-		spells.add(spell);
-	}
-
-	public ArrayList getSpells() {
-		return spells;
-	}
-
-	public void setInventory(Item item) {
-		inventory.add(item);
-	}
-
-	public ArrayList getInventory() {
-		return inventory;
-	}
-
-	public void removeEquippedItems(int location) {
-		equippedItems[location] = null;
-	}
-
-	public int getIntellect() {
-		return intellect;
-	}
-
-	public void setIntellect(int intellect) {
-		this.intellect = intellect;
-	}
-
-	public int getPerception() {
-		return perception;
-	}
-
-	public void setPerception(int perception) {
-		this.perception = perception;
-	}
-
-	public int getExperience() {
-		return experience;
-	}
-
-	public void setExperience(int experience) {
-		this.experience = experience;
-	}
-
-	public void setMana(int mana) {
-		this.mana = mana;
-	}
-
-	public int getMana() {
-		return mana;
-	}
-
-	public void setMeleeDamage(Item[] equippedItems) {
-		meleeDamage = 0;
-		meleeDamage = ((Weapon) equippedItems[WEAPON]).getAttack() + melee;
-	}
-
-	public int getMeleeDamage() {
-		return meleeDamage;
-	}
-
-	public void setBlocking(Item[] equippedItems) {
-		int equipmentDefense = 0;
-		blocking = 0;
-		for (int i = 0; i < 3; i++) {
-			equipmentDefense += ((Armor) equippedItems[i]).getDefense();
-		}
-		blocking = equipmentDefense + defense;
-	}
-
-	public int getBlocking() {
-		return blocking;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
 
 
 	// Other Methods
 
-	public void displayEquippedItems() { 
+	public void displayEquippedItems() {
 		println("--------------------------------------------------------------------");
 		println("* Equipped Items *");
 		for (int i = 0; i < equippedItems.length; i++) {
@@ -167,7 +40,7 @@ public class Player extends Entity {
 		println("--------------------------------------------------------------------");
 	}
 
-	public void displayInventory() { 
+	public void displayInventory() {
 
 		println("--------------------------------------------------------------------");
 		println("* Inventory *");
@@ -245,9 +118,8 @@ public class Player extends Entity {
 		} // End while(equippingItems
 
 	}// End changeEquippedItems
-	
-	public void changeEquippedSpells() { //change an equipped spell
-		
+	public void changeEquippedSpells() {
+
 		boolean equippingSpells = true;
 		int input;
 
@@ -284,7 +156,7 @@ public class Player extends Entity {
 			}
 
 			//else
-				//System.out.println("* Invalid Selection! *");
+			//System.out.println("* Invalid Selection! *");
 		} // End while(equippingSpells)
 
 	}//End changeEquippedSPells
@@ -292,7 +164,7 @@ public class Player extends Entity {
 	public void removeEquippedSpell(int location) {
 		equippedSpells[location] = null;
 	}
-	
+
 	public int getXPosition() {
 		return this.xPosition;
 	}
@@ -312,29 +184,30 @@ public class Player extends Entity {
 				+ intellect + "\nPerception: " + perception;
 	}
 
-	public static Player buildCharacter(){	
+	public static Player buildCharacter(){
+		Player player;
 
 
-		Player player = new Player(" ", 0, 0, 0, 0, 0, 0, 0, 1);
+		String nameTemp = input("# Hello traveler, what is your name? #");
+		if (!nameTemp.equals("Speedy")) { // Fast character creation
+			player = new Player(" ", 0, 0, 0, 0, 0, 0, 1);
+			player.setName(nameTemp);
+			String answer = " ";
+			boolean checkingName = true;
 
-		player.setName(input("# Hello traveler, what is your name? #"));
-		String answer = " ";
-		boolean checkingName = true;
+			while(checkingName){
+				answer = input("\n# Ah so your name is " + player.getName() + ". #" + "\n\n# Is that correct? #\n1.Yes\n2.No");
 
-		while(checkingName){
-			answer = input("\n# Ah so your name is " + player.getName() + ". #" + "\n\n# Is that correct? #\n1.Yes\n2.No");
+				if(answer.equals("2")){
+					player.setName(input("\n# My apologies good friend, please tell me your name again. #"));
+				}
 
-			if(answer.equals("2")){
-				player.setName(input("\n# My apologies good friend, please tell me your name again. #"));
-			}
+				else
+					checkingName = false;
+			}//End while(checkingName)
 
-			else
-				checkingName = false;
-		}//End while(checkingName)
+			boolean spendingPoints = true;
 
-		boolean spendingPoints = true;
-
-		SPEND_POINTS:
 			while(spendingPoints){
 
 				int spendablePoints = 240;
@@ -347,6 +220,7 @@ public class Player extends Entity {
 
 				input = inputInt("\n# How many points would you like to spend in health? #");
 				player.setHealth(input);
+				player.setMaxHealth(input);
 				spendablePoints -= input;
 				println("# You now have " + spendablePoints + " points left. #");
 
@@ -392,52 +266,49 @@ public class Player extends Entity {
 				answer = input("\n# Are you happy with your character build? #\n1.Yes\n2.No");
 
 				if(answer.equals("2")){
-					continue SPEND_POINTS;
-				}
-
-				else
+					spendingPoints = true;
+				} else
 					spendingPoints = false;
-
 			}//End while(spendingPoints)
 
-		System.out.println("\n# Now let's get you some starter gear! #");
+			System.out.println("\n# Now let's get you some starter gear! #");
 
-		player.setEquippedItems(ruggedHelmet.getEquippedItemSlot(), ruggedHelmet);
-		player.setEquippedItems(ruggedArmor.getEquippedItemSlot(), ruggedArmor);
-		player.setEquippedItems(ruggedLeggings.getEquippedItemSlot(), ruggedLeggings);
-		player.setEquippedItems(ruggedShield.getEquippedItemSlot(), ruggedShield);
-		player.setEquippedItems(ruggedSword.getEquippedItemSlot(), ruggedSword);
-		player.setBlocking(player.getEquippedItems());
-		player.setMeleeDamage(player.getEquippedItems());
-
-
-		player.setInventory(healthPotion);
-		player.setInventory(goldCoin);
-
-		healthPotion.setQuantity(3);
-		goldCoin.setQuantity(10);
+			player.setEquippedItems(ruggedHelmet.getEquippedItemSlot(), ruggedHelmet);
+			player.setEquippedItems(ruggedArmor.getEquippedItemSlot(), ruggedArmor);
+			player.setEquippedItems(ruggedLeggings.getEquippedItemSlot(), ruggedLeggings);
+			player.setEquippedItems(ruggedShield.getEquippedItemSlot(), ruggedShield);
+			player.setEquippedItems(testSword.getEquippedItemSlot(), testSword);
+			player.setBlocking(player.getEquippedItems());
+			player.setMeleeDamage(player.getEquippedItems());
 
 
+			player.setInventory(healthPotion);
+			player.setInventory(goldCoin);
 
-		System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
-		 " Gold coins to get you started check your inventory to see them. #");
-
-		player.displayEquippedItems();
-		player.displayInventory();
-
-		println("# Wait! Before you leave out on your adventure, I wanted to tell you that you have 2 starter spells. #");
-		println("# These are your starter spells. #");
-		player.setEquippedSpells(0, fireBall);
-		player.setEquippedSpells(1, lightHealing);
-		player.setSpells(fireBall);
-		player.setSpells(lightHealing);
-		player.setSpells(testAttack);
-		player.setSpells(testHealing);
-		//player.changeEquippedSpells();
-		player.displayEquippedSpells();
+			healthPotion.setQuantity(3);
+			goldCoin.setQuantity(10);
 
 
 
+			System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
+					" Gold coins to get you started check your inventory to see them. #");
+
+			player.displayEquippedItems();
+			player.displayInventory();
+
+			println("# Wait! Before you leave out on your adventure, I wanted to tell you that you have 2 starter spells. #");
+			println("# These are your starter spells. #");
+			player.setEquippedSpells(0, fireBall);
+			player.setEquippedSpells(1, lightHealing);
+			player.setSpells(fireBall);
+			player.setSpells(lightHealing);
+			player.setSpells(testAttack);
+			player.setSpells(testHealing);
+			//player.changeEquippedSpells();
+			player.displayEquippedSpells();
+
+
+		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
 		return player;
 	}//End buildCharacter
 
