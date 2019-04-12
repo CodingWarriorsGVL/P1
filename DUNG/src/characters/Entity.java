@@ -106,6 +106,11 @@ public class Entity {
 
 	public Item[] getEquippedItems() {
 		return equippedItems;
+		if (equippedItems[location] == null) {
+			if (location == 4)
+				;
+		}
+		else equippedItems[location] = item;
 	}
 
 	public void setEquippedItems(int location, Item item) {

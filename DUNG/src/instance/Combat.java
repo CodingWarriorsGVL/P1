@@ -13,6 +13,8 @@ public class Combat extends Instance {
 	protected ArrayList<Item> droppedLoot = new ArrayList<Item>(); //for clean up looting inventories.
 	private boolean allDead = false; //changes to true if everyone dies at the same time and is an extra check at the end to prevent an infinite loop.
 	private Entity currentEntity; //the Entity currently taking a turn.
+	
+	private final int DEFENSE_MUTLI = 500;
 
 
 	public void launch() {
@@ -138,19 +140,24 @@ public class Combat extends Instance {
 		String output = "";
 		int damage, damageFinal;
 		Weapon weapon;
+		//boolean hit = false;
 
 		if (defender.isAlive()) {
 			//damage = (int)(Math.random()*(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)+(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)) + attacker.getEquippedItems()[4].getAttack();
 			weapon = (Weapon)attacker.getEquippedItems()[4];
 			damage = (int)(Math.random()*((weapon.getAttack()+attacker.getMelee())/2) + (weapon.getAttack()+attacker.getMelee())/2 +1); // Damage will be from half weapon attack + melee to full weapon attack + melee. TODO Adjust damage?
 			if (damage < 0) damage = 0;
-			double damageReduction = (defender.getBlocking()+300)/300; // Move blocking up to entity?
+			double damageReduction = (defender.getBlocking()+DEFENSE_MUTLI)/DEFENSE_MUTLI; // Move blocking up to entity?
 			damageFinal = (int) (damage/damageReduction);
-			defender.setHealth(defender.getHealth() - damageFinal);
 
-			output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n"; 
-			output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
-
+			if (Math.random()*(attacker.getMelee())+(attacker.getMelee()/2) > defender.getPerception()) { // DP vs AM/2 + 1-AM
+				defender.setHealth(defender.getHealth() - damageFinal);
+				output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n"; 
+				output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
+			}
+			else {
+				output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " and misses.";
+			}
 		}
 		else output += defender.getName() + " is already dead.\n"; // like an error catch
 
