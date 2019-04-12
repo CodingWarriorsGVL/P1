@@ -11,6 +11,7 @@ public class Weapon extends Item {
 	//Weapon Objects
 	public static final Weapon ruggedSword = new Weapon("Rugged Sword", 1, 1, 0, 3, WEAPON);
 	public static final Weapon steelSword = new Weapon("Steel Sword", 3, 15, 30, 10, WEAPON);
+	public static final Weapon axe = new Weapon("Axe", 3, 20, 35, 25, WEAPON);
 	
 	public static final Weapon testSword = new Weapon("Test Sword", 1, 1, 0, 500, WEAPON);
 

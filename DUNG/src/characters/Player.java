@@ -44,6 +44,7 @@ public class Player extends Entity {
 	WEAPON = 4;
 
 
+
 	public Player(String name, int health, int mana, int melee, int defense, int intellect, int perception,int experience, int level) {
 		super(name, health, melee, defense);
 		this.intellect = intellect;
@@ -157,7 +158,7 @@ public class Player extends Entity {
 
 	// Other Methods
 
-	public void displayEquippedItems() {
+	public void displayEquippedItems() { 
 		println("--------------------------------------------------------------------");
 		println("* Equipped Items *");
 		for (int i = 0; i < equippedItems.length; i++) {
@@ -166,7 +167,7 @@ public class Player extends Entity {
 		println("--------------------------------------------------------------------");
 	}
 
-	public void displayInventory() {
+	public void displayInventory() { 
 
 		println("--------------------------------------------------------------------");
 		println("* Inventory *");
@@ -177,9 +178,9 @@ public class Player extends Entity {
 
 		println("--------------------------------------------------------------------");
 
-	}// End displayInventory
+	}
 
-	public void displayEquippedSpells() {
+	public void displayEquippedSpells() { //print equipped spells
 		println("--------------------------------------------------------------------");
 		println("* Equipped Spells *");
 		for (int i = 0; i < equippedSpells.length; i++) {
@@ -190,7 +191,7 @@ public class Player extends Entity {
 		println("--------------------------------------------------------------------");
 	}
 
-	public void displaySpells() {
+	public void displaySpells() { // print list of spells
 
 		println("--------------------------------------------------------------------");
 		println("* Spell  Book *");
@@ -200,10 +201,10 @@ public class Player extends Entity {
 		}
 		println("--------------------------------------------------------------------");
 
-	}// End displayEquippedSpells
+	}
 
 
-	public void changeEquippedItems() {
+	public void changeEquippedItems() { //change an equipped item
 
 		boolean equippingItems = true;
 		int input;
@@ -241,10 +242,11 @@ public class Player extends Entity {
 
 			else
 				println("* Invalid Selection! *");
-		} // End while(equippingItems)
+		} // End while(equippingItems
 
 	}// End changeEquippedItems
-	public void changeEquippedSpells() {
+	
+	public void changeEquippedSpells() { //change an equipped spell
 		
 		boolean equippingSpells = true;
 		int input;
@@ -410,7 +412,7 @@ public class Player extends Entity {
 
 
 		player.setInventory(healthPotion);
-    player.setInventory(goldCoin);
+		player.setInventory(goldCoin);
 
 		healthPotion.setQuantity(3);
 		goldCoin.setQuantity(10);
