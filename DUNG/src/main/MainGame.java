@@ -90,7 +90,7 @@ public class MainGame {
 
 
 		Entity giantRoach = new Entity("Giant Roach", 40, 0, 3, 6, 1, 2, 1, true); // Make Enemy
-		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 4); // Make Weapon for Enemy
+		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 4, 0, false); // Make Weapon for Enemy
 		giantRoach.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
 
 		Entity giantMouse = new Entity("Giant Mouse", 40, 0, 3, 6, 1, 2, 1, true); // Make Enemy
@@ -137,13 +137,13 @@ public class MainGame {
 		player1.setPlayerBlocking(player1.getEquippedItems());
 		player1.setPlayerDamage(player1.getEquippedItems());		
 		player1.setPlayerInventory(healthPotion);
-		healthPotion.setQuantity(3);
-		player1.setPlayerInventory(testHelmet);
-		player1.setPlayerInventory(testArmor);
-		player1.setPlayerInventory(testLeggings);
-		player1.setPlayerInventory(testShield);
-		player1.setPlayerInventory(testSword);
-		player1.changeEquippedItems();*/
+		healthPotion.setQuantity(3);*/
+		player1.setInventory(testHelmet);
+		player1.setInventory(testArmor);
+		player1.setInventory(testLeggings);
+		player1.setInventory(testShield);
+		player1.setInventory(testSword);
+		//player1.changeEquippedItems();
 
 		boolean play = true;
 
@@ -209,6 +209,7 @@ public class MainGame {
 				println("You can go west");
 			}
 			println("You can quit");
+			println("Change equipped items.");
 
 
 			String input = input("Where would you like to go?");
@@ -227,6 +228,10 @@ public class MainGame {
 			}
 			if (input.toLowerCase().charAt(0)=='q') {
 				play = false;
+			}
+			
+			if (input.toLowerCase().charAt(0)=='c') {
+				player1.changeEquippedItems();
 			}
 			//enemy = getEnemy();
 
