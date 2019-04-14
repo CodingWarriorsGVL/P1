@@ -9,13 +9,14 @@ public class Weapon extends Item {
 	
 	
 	//Weapon Objects
-	public static final Weapon ruggedSword = new Weapon("Rugged Sword", 1, 1, 0, 3, WEAPON);
-	public static final Weapon steelSword = new Weapon("Steel Sword", 3, 15, 30, 10, WEAPON);
+	public static final Weapon ruggedSword = new Weapon("Rugged Sword", 1, 1, 0, 3, WEAPON, 0, false);
+	public static final Weapon steelSword = new Weapon("Steel Sword", 3, 15, 30, 10, WEAPON, 0, false);
 	
-	public static final Weapon testSword = new Weapon("Test Sword", 1, 1, 0, 500, WEAPON);
+	public static final Weapon testSword = new Weapon("Test Sword", 1, 1, 0, 500, WEAPON, 0, false);
 
-	public Weapon(String name, int dropChance, int sellValue, int buyValue, int attack, int equippedItemSlot) {
-		super(name, dropChance, sellValue, buyValue, equippedItemSlot);
+	public Weapon(String name, int dropChance, int sellValue, int buyValue, int attack, int equippedItemSlot, 
+			int quantity, boolean isConsumable) {
+		super(name, dropChance, sellValue, buyValue, equippedItemSlot, quantity, isConsumable);
 		this.attack = attack;
 		
 	}

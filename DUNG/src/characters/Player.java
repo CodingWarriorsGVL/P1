@@ -19,6 +19,8 @@ public class Player extends Entity {
 	// Class Variables
 	int xPosition;
 	int yPosition;
+	
+	static Player player;
 
 	public Player(String name, int health, int mana, int melee, int defense, int intellect, int perception, int level) {
 		super(name, health, mana, melee, defense, intellect, perception, level, false);
@@ -46,7 +48,7 @@ public class Player extends Entity {
 		println("* Inventory *");
 
 		for (int i = 0; i < inventory.size(); i++) {
-			println(i + 1 + ". " + ((Item) inventory.get(i)).getName());
+			println(i + 1 + ". " + inventory.get(i));
 		}
 
 		println("--------------------------------------------------------------------");
@@ -183,9 +185,10 @@ public class Player extends Entity {
 				+ "\nMana: " + mana + "\nMelee: " + melee + "\nDefense: " + defense + "\nIntellect: "
 				+ intellect + "\nPerception: " + perception;
 	}
+	
 
 	public static Player buildCharacter(){	
-		Player player;
+		
 
 
 		String nameTemp = input("# Hello traveler, what is your name? #");
@@ -270,7 +273,7 @@ public class Player extends Entity {
 				} else 
 					spendingPoints = false;
 			}//End while(spendingPoints)
-
+		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
 			System.out.println("\n# Now let's get you some starter gear! #");
 
 			player.setEquippedItems(ruggedHelmet.getEquippedItemSlot(), ruggedHelmet);
@@ -308,7 +311,7 @@ public class Player extends Entity {
 			player.displayEquippedSpells();
 
 
-		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
+		
 		return player;
 	}//End buildCharacter
 
