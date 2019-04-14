@@ -19,8 +19,6 @@ public class Player extends Entity {
 	// Class Variables
 	int xPosition;
 	int yPosition;
-	
-	static Player player;
 
 	public Player(String name, int health, int mana, int melee, int defense, int intellect, int perception, int level) {
 		super(name, health, mana, melee, defense, intellect, perception, level, false);
@@ -53,9 +51,9 @@ public class Player extends Entity {
 
 		println("--------------------------------------------------------------------");
 
-	}// End displayInventory
+	}
 
-	public void displayEquippedSpells() {
+	public void displayEquippedSpells() { //print equipped spells
 		println("--------------------------------------------------------------------");
 		println("* Equipped Spells *");
 		for (int i = 0; i < equippedSpells.length; i++) {
@@ -66,7 +64,7 @@ public class Player extends Entity {
 		println("--------------------------------------------------------------------");
 	}
 
-	public void displaySpells() {
+	public void displaySpells() { // print list of spells
 
 		println("--------------------------------------------------------------------");
 		println("* Spell  Book *");
@@ -76,10 +74,10 @@ public class Player extends Entity {
 		}
 		println("--------------------------------------------------------------------");
 
-	}// End displayEquippedSpells
+	}
 
 
-	public void changeEquippedItems() {
+	public void changeEquippedItems() { //change an equipped item
 
 		boolean equippingItems = true;
 		int input;
@@ -117,7 +115,7 @@ public class Player extends Entity {
 
 			else
 				println("* Invalid Selection! *");
-		} // End while(equippingItems)
+		} // End while(equippingItems
 
 	}// End changeEquippedItems
 	public void changeEquippedSpells() {
@@ -187,8 +185,9 @@ public class Player extends Entity {
 	}
 	
 
-	public static Player buildCharacter(){	
-		
+
+	public static Player buildCharacter(){
+		Player player;
 
 
 		String nameTemp = input("# Hello traveler, what is your name? #");
@@ -270,7 +269,7 @@ public class Player extends Entity {
 
 				if(answer.equals("2")){
 					spendingPoints = true;
-				} else 
+				} else
 					spendingPoints = false;
 			}//End while(spendingPoints)
 		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
