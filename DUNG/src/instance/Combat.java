@@ -18,8 +18,6 @@ public class Combat extends Instance {
 	protected ArrayList<Item> droppedLoot = new ArrayList<Item>(); //for clean up looting inventories.
 	private boolean allDead = false; //changes to true if everyone dies at the same time and is an extra check at the end to prevent an infinite loop.
 	private Entity currentEntity; //the Entity currently taking a turn.
-	Scanner scan = new Scanner(System.in);
-	
 	private final int DAMGE_REDUCTION_MULTIPLIER = 500;
 
 
@@ -77,46 +75,46 @@ public class Combat extends Instance {
 				Display.println("Choose an action for " + currentEntity.getName() + ": ");
 				//refreshGUI();
 				do {
-					String tempActionType = Display.input("Input action (attack, special(WIP), run, "
-							+ "inventory(WIP), use item): ");
+					ArrayList<Entity> targets = new ArrayList<Entity>();
+					String tempActionType = Display.input("Input action (attack, special(WIP), run, inventory): ");
 					//Display.println(tempActionType);
 					if (tempActionType.equals("attack")||tempActionType.equals("special")) {
-						ArrayList<Entity> targets = new ArrayList<Entity>();
-
-						Display.println("Targets:");
-						for (Entity i: potentialTargets) {
-							Display.print(i);
-						}
-
 						int choice;
-
-						if (potentialTargets.size() > 1) {
-							do {
-								choice = Display.inputInt("Choose what to attack: (1 - " + potentialTargets.size() + ")");
-							} while (!(choice > 0 && choice <= potentialTargets.size()));
-						} else {
-							choice = 1;
-						}
+						choice = pickTarget(potentialTargets);
 
 						targets.add(potentialTargets.get(choice-1));
 
 						currentAction = new RPGAction(tempActionType, targets);
 					}
-					else if (tempActionType.equals("run")||tempActionType.equals("inventory")) {
+					
+					else if (tempActionType.equals("run")) {
 						currentAction = new RPGAction(tempActionType, null);
 					}
 					
-					else if(tempActionType.equals("use item")) {
-						String newAction;
-						//System.out.println("This one is working!");
-						currentAction = new RPGAction(tempActionType, null);
-						System.out.println("Which item would you like to use?");
-						currentEntity.displayInventory(currentEntity.getInventory());
-						newAction = scan.nextLine();
-						if(newAction.toLowerCase().equals("health potion")) {
-							currentEntity.consumeItem(healthPotion, currentEntity);
-						}
+					else if(tempActionType.equals("inventory")) {
+						String actionOnItem;
+						Item choosenItem;
+						int itemNum;
 						
+						currentAction = new RPGAction(tempActionType, null);
+						currentEntity.displayInventory(currentEntity.getInventory());
+						itemNum = Display.inputInt("Choose an item number: ");
+						choosenItem = currentEntity.getInventory().get(itemNum-1);
+						
+						Display.print("What would you like to do? Options: ");
+						if (choosenItem.isConsumable() || choosenItem.isEquipable())
+							Display.print("Use, ");
+						Display.println("Drop, Give");
+						do {
+						actionOnItem = Display.input("").toLowerCase();
+						} while (!(actionOnItem.equals("use") || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // TODO Error: Could put use, when that's not a valid option!
+						
+						if (false /*choosenItem.isTargetable()*/ || actionOnItem.equals("give")) {
+							targets.add(initiativeList.get(pickTarget(initiativeList)-1));
+						}
+						else targets.add(currentEntity);
+						
+						currentAction = new RPGAction(tempActionType, targets, actionOnItem, itemNum-1);
 					}
 					
 					else Display.println("Invalid input, please enter again...");
@@ -133,7 +131,7 @@ public class Combat extends Instance {
 					currentInitiative--;
 			}
 			else if (currentAction.getActionType().equals("inventory"))
-				accessInventory(currentEntity);
+				accessInventory(currentEntity, currentAction);
 
 			checkDead();
 
@@ -157,27 +155,28 @@ public class Combat extends Instance {
 	}
 
 	public String fight(Entity attacker, Entity defender) {
-
 		String output = "";
 		int damage, damageFinal;
 		Weapon weapon;
 
 		if (defender.isAlive()) {
 			//damage = (int)(Math.random()*(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)+(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)) + attacker.getEquippedItems()[4].getAttack();
-			weapon = (Weapon)attacker.getEquippedItems()[4];
-			damage = (int)(Math.random()*((weapon.getAttack()+attacker.getMelee())/2) + (weapon.getAttack()+attacker.getMelee())/2 +1); // Damage will be from half weapon attack + melee to full weapon attack + melee. TODO Adjust damage?
+			if (attacker.getEquippedItems()[4] != null)
+				weapon = (Weapon)attacker.getEquippedItems()[4];
+			else weapon = new Weapon("unarmed", 0, 0, 0, 0, 4, 0, false); // May seem excessive to make a new one each time, and we could just have one per a combat.
+			damage = (int)(Math.random()*((weapon.getAttack()+attacker.getMelee())/2) + (weapon.getAttack()+attacker.getMelee())/2 +1); // Damage will be from half weapon attack + melee to full weapon attack + melee.
 			if (damage < 0) damage = 0;
 			double damageReduction = (defender.getBlocking()+DAMGE_REDUCTION_MULTIPLIER)/DAMGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
 			damageFinal = (int) (damage/damageReduction);
-			defender.setHealth(defender.getHealth() - damageFinal);
 			
-			if (attacker.getMelee()*) {
-				
+			if (Math.random()*(attacker.getMelee())+(attacker.getMelee()/2) > defender.getPerception()) { // DP vs AM/2 + 1-AM
+				defender.setHealth(defender.getHealth() - damageFinal);
+				output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n"; 
+				output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
 			}
-
-			output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n"; 
-			output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
-
+			else {
+				output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " and misses.";
+			}
 		}
 		else output += defender.getName() + " is already dead.\n"; // like an error catch
 
@@ -207,9 +206,48 @@ public class Combat extends Instance {
 		}
 	}
 
-	public void accessInventory(Entity current) {
-		current.getInventory();
-		//activate the typical (need it somewhere else) inventory menu, including the ability to use a consumable, and give it targeting access data for whatever the current even it happening, so it can allow choosing of targets.
+	public void accessInventory(Entity currentEntity, RPGAction currentAction) {
+		Item item = currentEntity.getInventory().get(currentAction.getInventorySlot());
+		
+		if (currentAction.getInventoryAction().equals("drop")) {
+			droppedLoot.add(item); // Drops it on the ground for someone to pick up at the end of combat (not recommended).
+			currentEntity.getInventory().remove(item);
+			Display.println(currentEntity.getName() + " drops " + item.getName() + " on the ground.");
+		}
+		else if (currentAction.getInventoryAction().equals("use")) {
+			if (item.isEquipable()) {
+				//currentEntity.setEquippedItems(location, item); 
+				// TODO rearrange equipping so it's not just a menu, but can be used here too? An auto check on entity that equips an item to it's proper place based on what it is.
+			}
+			else if (item.isConsumable()) {
+				if (currentEntity.consumeItem(item, currentEntity)) 
+					Display.println(currentEntity.getName() + " consumes " + item.getName() + ".");
+				else Display.debug("Item was not consumable!!!");
+			}
+			// else if (item.isTargetable()) { 
+		}
+		else if (currentAction.getInventoryAction().equals("give")) {
+			currentAction.getTargets().get(0).getInventory().add(item);
+			currentEntity.getInventory().remove(item);
+			Display.println(currentEntity.getName() + " gives " + item.getName() + " to " + currentAction.getTargets().get(0).getName() + ".");
+		}
+	}
+	
+	public int pickTarget(ArrayList<Entity> targetList) {
+		Display.println("Targets:");
+		for (Entity i: targetList) {
+			Display.print(i);
+		}
+
+		int choice;
+		if (targetList.size() > 1) {
+			do {
+				choice = Display.inputInt("Choose what to attack: (1 - " + targetList.size() + ")");
+			} while (!(choice > 0 && choice <= targetList.size()));
+		} else {
+			choice = 1;
+		}
+		return choice;
 	}
 
 	public boolean checkActive() { // TODO redo something here, I think there might be issue.

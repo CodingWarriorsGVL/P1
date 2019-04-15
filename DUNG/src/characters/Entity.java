@@ -244,9 +244,8 @@ public class Entity {
 		return health > 0;
 	}
 	
-	public void consumeItem(Item i, Entity e) {
-		i.consume(i,e);
-		
+	public boolean consumeItem(Item i, Entity e) {
+		return i.consume(i,e);	
 	}
 	
 	

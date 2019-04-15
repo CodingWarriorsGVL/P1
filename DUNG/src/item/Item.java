@@ -75,16 +75,26 @@ public class Item{
 		this.buyValue = buyValue;
 	}
 	
+	public boolean isConsumable() {
+		return isConsumable;
+	}
+	
+	public boolean isEquipable() {
+		if (this instanceof Weapon || this instanceof Armor) {
+			return true;
+		}
+		else return false;
+	}
+	
 	//Other Methods
 	
-	public void consume(Item i,Entity e) {
-		if(i.isConsumable == true && i.getQuantity() > 0) {
+	public boolean consume(Item i,Entity e) {
+		if(i.isConsumable() && i.getQuantity() > 0) {
 			i.setQuantity(i.getQuantity() - 1);
-			
+			return true;
 		}
-		
 		else
-			System.out.println("You can not use this item.");
+			return false;
 	}
 	
 	

@@ -10,10 +10,22 @@ public class RPGAction { //Wrapper to hold player and AI actions from their figu
 	String inventoryAction; //drop, use, give
 	int specialNum; //which special was selected to use.
 	
-	public RPGAction(String action, ArrayList<Entity> targets ) {
+	public RPGAction(String action, ArrayList<Entity> targets) {
 		this.action = action;
 		this.targets = targets;
 	}
+	public RPGAction(String action, ArrayList<Entity> targets, String inventoryAction, int inventorySlot) {
+		this.action = action;
+		this.targets = targets;
+		this.inventoryAction = inventoryAction;
+		this.inventorySlot = inventorySlot;
+	}
+	public RPGAction(String action, ArrayList<Entity> targets, int specialNum) {
+		this.action = action;
+		this.targets = targets;
+		this.specialNum = specialNum;
+	}
+	
 	// Retrieval Methods
 	public String getActionType() {
 		return action;
@@ -36,7 +48,7 @@ public class RPGAction { //Wrapper to hold player and AI actions from their figu
 			return true;
 		else if ( (action.equals("special")) && (targets.size() != 0) && (specialNum >= 0) )
 			return true;
-		else if ( (action.equals("inventory")) && (targets.size() != 0) && ((inventoryAction.equals("use")) || (inventoryAction.equals("drop")) || (inventoryAction.equals("give"))) && (inventorySlot != 0))
+		else if ( (action.equals("inventory")) && (targets.size() != 0) && (inventoryAction.equals("use") || inventoryAction.equals("drop") || inventoryAction.equals("give")) && (inventorySlot != 0))
 			return true;
 		else if ((action.equals("run")))
 			return true;
