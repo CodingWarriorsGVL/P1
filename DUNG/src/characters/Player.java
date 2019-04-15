@@ -221,45 +221,92 @@ public class Player extends Entity {
 						+ "Melee, Defense, Intellect, and Perception. #"
 						+ "\n# Use them wisley! #");
 
-				input = inputInt("\n# How many points would you like to spend in health? #");
-				player.setHealth(input);
-				player.setMaxHealth(input);
-				spendablePoints -= input;
-				println("# You now have " + spendablePoints + " points left. #");
-
-				if(spendablePoints > 0){
-					input = inputInt("\n# How many points would you like to spend in mana? #");
-					player.setMana(input);
+				
+				if(spendablePoints > 0) {									
+					do {
+						input = inputInt("\n# How many points would you like to spend in health? #");	
+						if(spendablePoints >= input) {
+							player.setHealth(input);
+							player.setMaxHealth(input);							
+						}
+						else 
+							System.out.println("You do not have enough spendable points for the quantity that you entered.");
+							
+					}while(input > spendablePoints);	
 					spendablePoints -= input;
+					input = 0;
 					println("# You now have " + spendablePoints + " points left. #");
 				}
 
 				if(spendablePoints > 0){
-					input = inputInt("\n# How many points would you like to spend in melee? #");
-					player.setMelee(input);
+					do {
+						input = inputInt("\n# How many points would you like to spend in mana? #");
+						if(spendablePoints >= input) {
+							player.setMana(input);
+							player.setMaxMana(input);
+						}
+						else
+							System.out.println("You do not have enough spendable points for the quantity you entered.");
+					}while(input > spendablePoints);
 					spendablePoints -= input;
 					println("# You now have " + spendablePoints + " points left. #");
+					input = 0;
 				}
 
 				if(spendablePoints > 0){
-					input = inputInt("\n# How many points would you like to spend in defense? #");
-					player.setDefense(input);
+					do {
+						input = inputInt("\n# How many points would you like to spend in melee? #");
+						if(spendablePoints >= input) {
+							player.setMelee(input);
+						}	
+						else 
+							System.out.println("You do not have enough spendable points for the quantity that you entered.");
+					}while(input > spendablePoints);	
 					spendablePoints -= input;
 					println("# You now have " + spendablePoints + " points left. #");
+					input = 0;
+				}
+
+				if(spendablePoints > 0){			
+					do {
+						input = inputInt("\n# How many points would you like to spend in defense? #");
+						if(spendablePoints >= input) {
+							player.setDefense(input);
+						}
+						else 
+							System.out.println("You do not have enough spendable points for the quantity that you entered.");
+					}while(input > spendablePoints);
+					spendablePoints -= input;
+					println("# You now have " + spendablePoints + " points left. #");
+					input = 0;
 				}
 
 				if(spendablePoints > 0){
-					input = inputInt("\n# How many points would you like to spend in intellect? #");
-					player.setIntellect(input);
+					do {				
+						input = inputInt("\n# How many points would you like to spend in intellect? #");
+						if(spendablePoints >= input) {
+							player.setIntellect(input);
+						}
+						else 
+							System.out.println("You do not have enough spendable points for the quantity that you entered.");
+					}while(input > spendablePoints);
 					spendablePoints -= input;
-					System.out.println("# You now have " + spendablePoints + " points left. #");
+					println("# You now have " + spendablePoints + " points left. #");
+					input = 0;
 				}
 
 				if(spendablePoints > 0){
-					input = inputInt("\n# How many points would you like to spend in perception? #");
-					player.setPerception(input);
+					do {
+						input = inputInt("\n# How many points would you like to spend in perception? #");
+						if(spendablePoints >= input) {
+							player.setPerception(input);				
+						}
+						else 
+							System.out.println("You do not have enough spendable points for the quantity that you entered.");
+					}while(input > spendablePoints);
 					spendablePoints -= input;
 					println("# You now have " + spendablePoints + " points left. #");
+					input = 0;
 				}
 
 				println("\n# Ok " + player.getName() + " here is your character build. #");
