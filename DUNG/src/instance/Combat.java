@@ -19,6 +19,8 @@ public class Combat extends Instance {
 	private boolean allDead = false; //changes to true if everyone dies at the same time and is an extra check at the end to prevent an infinite loop.
 	private Entity currentEntity; //the Entity currently taking a turn.
 	Scanner scan = new Scanner(System.in);
+	
+	private final int DAMGE_REDUCTION_MULTIPLIER = 500;
 
 
 	public void launch() {
@@ -165,9 +167,13 @@ public class Combat extends Instance {
 			weapon = (Weapon)attacker.getEquippedItems()[4];
 			damage = (int)(Math.random()*((weapon.getAttack()+attacker.getMelee())/2) + (weapon.getAttack()+attacker.getMelee())/2 +1); // Damage will be from half weapon attack + melee to full weapon attack + melee. TODO Adjust damage?
 			if (damage < 0) damage = 0;
-			double damageReduction = (defender.getBlocking()+300)/300; // Move blocking up to entity?
+			double damageReduction = (defender.getBlocking()+DAMGE_REDUCTION_MULTIPLIER)/DAMGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
 			damageFinal = (int) (damage/damageReduction);
 			defender.setHealth(defender.getHealth() - damageFinal);
+			
+			if (attacker.getMelee()*) {
+				
+			}
 
 			output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n"; 
 			output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
