@@ -3,9 +3,14 @@
 package instance;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+
 import display.Display;
 import characters.Entity;
 import item.*;
+import static item.Item.*;
+import static item.Potion.*;
+
 
 public class Combat extends Instance {
 	protected int victor; // Number of the team that has won this Combat
@@ -15,6 +20,8 @@ public class Combat extends Instance {
 	private Entity currentEntity; //the Entity currently taking a turn.
 	
 	private final int DEFENSE_MUTLI = 500;
+  
+	Scanner scan = new Scanner(System.in);
 
 
 	public void launch() {
@@ -71,7 +78,8 @@ public class Combat extends Instance {
 				Display.println("Choose an action for " + currentEntity.getName() + ": ");
 				//refreshGUI();
 				do {
-					String tempActionType = Display.input("Input action (attack, special(WIP), run, inventory(WIP)): ");
+					String tempActionType = Display.input("Input action (attack, special(WIP), run, "
+							+ "inventory(WIP), use item): ");
 					//Display.println(tempActionType);
 					if (tempActionType.equals("attack")||tempActionType.equals("special")) {
 						ArrayList<Entity> targets = new ArrayList<Entity>();
@@ -98,6 +106,20 @@ public class Combat extends Instance {
 					else if (tempActionType.equals("run")||tempActionType.equals("inventory")) {
 						currentAction = new RPGAction(tempActionType, null);
 					}
+					
+					else if(tempActionType.equals("use item")) {
+						String newAction;
+						//System.out.println("This one is working!");
+						currentAction = new RPGAction(tempActionType, null);
+						System.out.println("Which item would you like to use?");
+						currentEntity.displayInventory(currentEntity.getInventory());
+						newAction = scan.nextLine();
+						if(newAction.toLowerCase().equals("health potion")) {
+							currentEntity.consumeItem(healthPotion, currentEntity);
+						}
+						
+					}
+					
 					else Display.println("Invalid input, please enter again...");
 				} while(!currentAction.isValid());
 			}

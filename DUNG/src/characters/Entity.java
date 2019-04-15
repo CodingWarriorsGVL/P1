@@ -1,8 +1,11 @@
 package characters;
 
+import static display.Display.println;
+
 import java.util.ArrayList;
 import item.Armor;
 import item.Item;
+import item.Potion;
 import item.Weapon;
 
 public class Entity {
@@ -10,7 +13,7 @@ public class Entity {
 	//Class Variables
 	String name;
 	int health, melee, defense, intellect, perception, experience, mana, level;
-	int maxHealth, money;
+	int maxHealth, money, maxMana;
 
 	boolean isAI;
 	
@@ -42,6 +45,7 @@ public class Entity {
 		this.intellect = intellect;
 		this.perception = perception;
 		this.mana = mana;
+		maxMana = mana;
 		this.level = level;
 		equippedSpells = new MagicSpell[level+1];
 		this.isAI = isAI;
@@ -66,6 +70,14 @@ public class Entity {
 	}
 	public void setMaxHealth(int max) {
 		this.maxHealth = max;
+	}
+	
+	public int getMaxMana() {
+		return maxMana;
+	}
+	
+	public void setMaxMana(int max) {
+		this.maxMana = max;
 	}
 
 	public int getHealth() {
@@ -127,10 +139,24 @@ public class Entity {
 
 	public void setInventory(Item item) {
 		inventory.add(item);
+		item.setQuantity(item.getQuantity() + 1);
 	}
 
 	public ArrayList<Item> getInventory() {
 		return inventory;
+	}
+	
+	public void displayInventory(ArrayList<Item> inventory) {
+		println("--------------------------------------------------------------------");
+		println("* Inventory *");
+
+		for (int i = 0; i < inventory.size(); i++) {
+			if(inventory.get(i).getQuantity() == 0)
+				inventory.remove(inventory.get(i));
+			System.out.println(inventory.get(i));
+		}
+
+		println("--------------------------------------------------------------------");
 	}
 
 	public void removeEquippedItems(int location) {
@@ -222,4 +248,13 @@ public class Entity {
 	public boolean isAlive() {
 		return health > 0;
 	}
+	
+	public void consumeItem(Item i, Entity e) {
+		i.consume(i,e);
+		
+	}
+	
+	
+	
+	
 }// End Class Entity
