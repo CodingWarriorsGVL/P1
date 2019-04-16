@@ -3,8 +3,6 @@
 package instance;
 
 import java.util.ArrayList;
-import java.util.Scanner;
-
 import display.Display;
 import characters.Entity;
 import item.*;
@@ -104,7 +102,7 @@ public class Combat extends Instance {
 						Display.print("What would you like to do? Options: ");
 						if (choosenItem.isConsumable() || choosenItem.isEquipable())
 							Display.print("Use, ");
-						Display.println("Drop, Give");
+						Display.print("Drop, Give");
 						do {
 						actionOnItem = Display.input("").toLowerCase();
 						} while (!(actionOnItem.equals("use") || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // TODO Error: Could put use, when that's not a valid option!
