@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import display.Display;
 import characters.Entity;
 import item.*;
-import static item.Item.*;
-import static item.Potion.*;
-
 
 public class Combat extends Instance {
 	protected int victor; // Number of the team that has won this Combat
@@ -77,11 +74,7 @@ public class Combat extends Instance {
 					String tempActionType = Display.input("Input action (attack, special(WIP), run, inventory): ");
 					//Display.println(tempActionType);
 					if (tempActionType.equals("attack")||tempActionType.equals("special")) {
-						int choice;
-						choice = pickTarget(potentialTargets);
-
-						targets.add(potentialTargets.get(choice-1));
-
+						targets.add(potentialTargets.get(pickTarget(potentialTargets)-1));
 						currentAction = new RPGAction(tempActionType, targets);
 					}
 					
@@ -94,7 +87,6 @@ public class Combat extends Instance {
 						Item choosenItem;
 						int itemNum;
 						
-						currentAction = new RPGAction(tempActionType, null);
 						currentEntity.displayInventory(currentEntity.getInventory());
 						itemNum = Display.inputInt("Choose an item number: ");
 						choosenItem = currentEntity.getInventory().get(itemNum-1);
@@ -105,7 +97,7 @@ public class Combat extends Instance {
 						Display.print("Drop, Give");
 						do {
 						actionOnItem = Display.input("").toLowerCase();
-						} while (!(actionOnItem.equals("use") || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // TODO Error: Could put use, when that's not a valid option!
+						} while (!((actionOnItem.equals("use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // Watch the parentheses 
 						
 						if (false /*choosenItem.isTargetable()*/ || actionOnItem.equals("give")) {
 							targets.add(initiativeList.get(pickTarget(initiativeList)-1));
@@ -115,7 +107,10 @@ public class Combat extends Instance {
 						currentAction = new RPGAction(tempActionType, targets, actionOnItem, itemNum-1);
 					}
 					
-					else Display.println("Invalid input, please enter again...");
+					else {
+						Display.println("Invalid input, please enter again...");
+						currentAction = new RPGAction("", null);
+					}
 				} while(!currentAction.isValid());
 			}
 
@@ -124,10 +119,9 @@ public class Combat extends Instance {
 				Display.print(fight(currentEntity, currentAction.getTargets().get(0)));
 			else if (currentAction.getActionType().equals("special"))
 				; //TODO special
-			else if (currentAction.getActionType().equals("run")) {
+			else if (currentAction.getActionType().equals("run"))
 				if (run(currentEntity))
 					currentInitiative--;
-			}
 			else if (currentAction.getActionType().equals("inventory"))
 				accessInventory(currentEntity, currentAction);
 
@@ -173,7 +167,7 @@ public class Combat extends Instance {
 				output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
 			}
 			else {
-				output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " and misses.";
+				output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " and misses.\n";
 			}
 		}
 		else output += defender.getName() + " is already dead.\n"; // like an error catch

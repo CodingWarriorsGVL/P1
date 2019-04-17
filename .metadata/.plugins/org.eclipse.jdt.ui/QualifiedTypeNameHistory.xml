@@ -7,6 +7,6 @@
 <fullyQualifiedTypeName name="navigation.Door"/>
 <fullyQualifiedTypeName name="navigation.Room"/>
 <fullyQualifiedTypeName name="combat.Instance"/>
-<fullyQualifiedTypeName name="display.Display"/>
 <fullyQualifiedTypeName name="java.lang.Math"/>
+<fullyQualifiedTypeName name="display.Display"/>
 </qualifiedTypeNameHistroy>
