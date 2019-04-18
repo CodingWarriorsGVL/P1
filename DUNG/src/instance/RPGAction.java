@@ -8,7 +8,7 @@ public class RPGAction { //Wrapper to hold player and AI actions from their figu
 	Integer inventorySlot; //inventory slot #, base 0. If inventory action.
 	ArrayList<Entity> targets; //array of all the targets in group or initiative (depending on when accessed) currently being targeted.
 	String inventoryAction; //drop, use, give
-	int specialNum; //which special was selected to use.
+	Integer specialNum; //which special was selected to use.
 	
 	public RPGAction(String action, ArrayList<Entity> targets) {
 		this.action = action;
@@ -46,12 +46,30 @@ public class RPGAction { //Wrapper to hold player and AI actions from their figu
 	public boolean isValid() {
 		if ((action.equals("attack")) && (targets.size() != 0))
 			return true;
-		else if ( (action.equals("special")) && (targets.size() != 0) && (specialNum >= 0) )
+		else if ( (action.equals("special")) && (targets.size() != 0) && (specialNum != null) )
 			return true;
 		else if ( (action.equals("inventory")) && (targets.size() != 0) && (inventoryAction.equals("use") || inventoryAction.equals("drop") || inventoryAction.equals("give")) && (inventorySlot != null))
 			return true;
 		else if ((action.equals("run")))
 			return true;
 		else return false;
+	}
+	
+	public String toString() {
+		String output = "";
+		if (action != null)
+			output += "Action type: " + action + ", ";
+		if (inventorySlot != null)
+			output += "Inventory slot: " + inventorySlot + ", ";
+		if (targets != null) {
+			output += "Targets: ";
+			for (Entity i: targets)
+				output += i.getName() + ", ";
+		}
+		if (inventoryAction != null)
+			output += "Inventory action: " + inventoryAction + ", ";
+		if (specialNum != null)
+			output += "Special number: " + specialNum + ", ";
+		return output;
 	}
 }

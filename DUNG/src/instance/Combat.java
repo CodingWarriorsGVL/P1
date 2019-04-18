@@ -114,14 +114,16 @@ public class Combat extends Instance {
 				} while(!currentAction.isValid());
 			}
 
+			Display.debug(currentAction.toString()); // More debug to see what is happening in the background.
 			// Redirect to perform currentAction
 			if (currentAction.getActionType().equals("attack"))
 				Display.print(fight(currentEntity, currentAction.getTargets().get(0)));
 			else if (currentAction.getActionType().equals("special"))
 				; //TODO special
-			else if (currentAction.getActionType().equals("run"))
+			else if (currentAction.getActionType().equals("run")) {
 				if (run(currentEntity))
 					currentInitiative--;
+			}
 			else if (currentAction.getActionType().equals("inventory"))
 				accessInventory(currentEntity, currentAction);
 
@@ -161,7 +163,7 @@ public class Combat extends Instance {
 			double damageReduction = (defender.getBlocking()+DAMGE_REDUCTION_MULTIPLIER)/DAMGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
 			damageFinal = (int) (damage/damageReduction);
 			
-			if (Math.random()*(attacker.getMelee())+(attacker.getMelee()/2) > defender.getPerception()) { // DP vs AM/2 + 1-AM
+			if (Math.random()*attacker.getMelee()+(attacker.getMelee()/2) > Math.random()*defender.getPerception()+(defender.getPerception()/2)) { // DP vs AM/2 + 1-AM
 				defender.setHealth(defender.getHealth() - damageFinal);
 				output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n"; 
 				output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
@@ -208,7 +210,7 @@ public class Combat extends Instance {
 		}
 		else if (currentAction.getInventoryAction().equals("use")) {
 			if (item.isEquipable()) {
-				//currentEntity.setEquippedItems(location, item); 
+				currentEntity.setEquippedItems(item.getEquippedItemSlot(), item); 
 				// TODO rearrange equipping so it's not just a menu, but can be used here too? An auto check on entity that equips an item to it's proper place based on what it is.
 			}
 			else if (item.isConsumable()) {
@@ -223,6 +225,7 @@ public class Combat extends Instance {
 			currentEntity.getInventory().remove(item);
 			Display.println(currentEntity.getName() + " gives " + item.getName() + " to " + currentAction.getTargets().get(0).getName() + ".");
 		}
+		else Display.debug("ERROR: improper inventory action given!"); // We need to establish something bigger for error catching probably.
 	}
 	
 	public int pickTarget(ArrayList<Entity> targetList) {
@@ -234,7 +237,7 @@ public class Combat extends Instance {
 		int choice;
 		if (targetList.size() > 1) {
 			do {
-				choice = Display.inputInt("Choose what to attack: (1 - " + targetList.size() + ")");
+				choice = Display.inputInt("Choose a target: (1 - " + targetList.size() + ")");
 			} while (!(choice > 0 && choice <= targetList.size()));
 		} else {
 			choice = 1;
