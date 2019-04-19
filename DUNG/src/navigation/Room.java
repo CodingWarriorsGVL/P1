@@ -16,6 +16,7 @@ public class Room {
   private RoomFeature[] roomFeatures;
   private final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
   private ArrayList<Instance> instances;
+  private int xcoord, ycoord;
   
   /*
    * ------------------------------------------------------------------------------------------------------------
@@ -33,7 +34,7 @@ public class Room {
    * Overloaded Constructor - Instantiates a room object with an empty list of entities and an specified array of roomFeatures.
    * ------------------------------------------------------------------------------------------------------------
    */
-  public Room(RoomFeature north, RoomFeature east, RoomFeature south, RoomFeature west) {
+  public Room(RoomFeature north, RoomFeature east, RoomFeature south, RoomFeature west, int x, int y) {
 	this.entities = new ArrayList<Entity>();
 	this.instances = new ArrayList<Instance>(); 
 	this.roomFeatures = new RoomFeature[4];
@@ -41,6 +42,8 @@ public class Room {
 	this.roomFeatures[SOUTH] = south;
 	this.roomFeatures[EAST] = east;
 	this.roomFeatures[WEST] = west;
+	this.xcoord = x;
+	this.ycoord = y;
   }
   
   /*
@@ -122,6 +125,11 @@ public class Room {
    */
   public RoomFeature getWest() {
 	return this.roomFeatures[WEST];
+  }
+  
+  public int[] getCoords(){
+	  int[] returnme = {xcoord, ycoord};
+	  return returnme;
   }
   
   /*
