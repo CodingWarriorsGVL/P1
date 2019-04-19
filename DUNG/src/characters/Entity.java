@@ -118,11 +118,6 @@ public class Entity {
 
 	public Item[] getEquippedItems() {
 		return equippedItems;
-		if (equippedItems[location] == null) {
-			if (location == 4)
-				;
-		}
-		else equippedItems[location] = item;
 	}
 
 	public void setEquippedItems(int location, Item item) {
@@ -249,9 +244,8 @@ public class Entity {
 		return health > 0;
 	}
 	
-	public void consumeItem(Item i, Entity e) {
-		i.consume(i,e);
-		
+	public boolean consumeItem(Item i, Entity e) {
+		return i.consume(i,e);	
 	}
 	
 	

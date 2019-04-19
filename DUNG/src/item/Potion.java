@@ -3,6 +3,7 @@ package item;
 import java.util.Random;
 
 import characters.Entity;
+import display.Display;
 
 public class Potion extends Item {
 
@@ -47,7 +48,7 @@ public class Potion extends Item {
 	}
 	
 	@Override
-	public void consume(Item i, Entity e){
+	public boolean consume(Item i, Entity e){
 		
 		if(i.isConsumable == true && i.getQuantity() > 0 && i.equals(healthPotion) && e.getHealth() < e.getMaxHealth()) {
 			int healAmount = ((Potion)i).heal();
@@ -62,6 +63,7 @@ public class Potion extends Item {
 				System.out.println("You used a health potion healing yourself for " + healAmount + " health points.");
 			}
 			System.out.println("You now have " + e.getHealth() + " health points.");
+			return true;
 		}
 		
 		else if(i.isConsumable == true && i.getQuantity() > 0 && i.equals(manaPotion) && e.getMana() < e.getMaxMana()) {
@@ -77,10 +79,13 @@ public class Potion extends Item {
 				System.out.println("You used a mana potion healing yourself for " + healAmount + " mana points.");
 			}
 			System.out.println("You now have " + e.getHealth() + " mana points.");
+			return true;
 		}
 		
-		else
-			System.out.println("You can not use this item.");
+		else {
+			Display.debug("You can not use this item.");
+			return false;
+		}
 	}
 	
 	public String toString() {
