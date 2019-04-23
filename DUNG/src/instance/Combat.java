@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import display.Display;
 import characters.Entity;
 import item.*;
+import characters.*;
 
 public class Combat extends Instance {
 	protected int victor; // Number of the team that has won this Combat
@@ -73,40 +74,78 @@ public class Combat extends Instance {
 					ArrayList<Entity> targets = new ArrayList<Entity>();
 					String tempActionType = Display.input("Input action (attack, special(WIP), run, inventory): ");
 					//Display.println(tempActionType);
-					if (tempActionType.equals("attack")||tempActionType.equals("special")) {
+					if (tempActionType.equals("attack")) {
 						targets.add(potentialTargets.get(pickTarget(potentialTargets)-1));
 						currentAction = new RPGAction(tempActionType, targets);
 					}
-					
+
+					else if (tempActionType.equals("special")) {
+						// List spells
+						for (MagicSpell i: currentEntity.getEquippedSpells())
+							Display.println(i.getName() + ": " + i.getManaCost() + " mana.");
+						// Choose spell
+						int tempSpellNum = Display.inputInt("Choose a spell 1 - " + currentEntity.getEquippedSpells().length + ": ");
+
+						if (currentEntity.getMana() >= currentEntity.getEquippedSpells()[tempSpellNum].getManaCost()) {
+							// get targets from spell
+							String tempTargetType = currentEntity.getEquippedSpells()[tempSpellNum].getTargetType();
+							// pick x targets
+							ArrayList<Entity> spellPotentialTargets = new ArrayList<Entity>(initiativeList);
+							if (!currentEntity.getEquippedSpells()[tempSpellNum].getTargetDead()) // Changes target list depending on allowed to target dead.
+								for (Entity i: dead)
+									spellPotentialTargets.remove(i);
+
+							if (tempTargetType.equals("self")) {
+								targets.add(currentEntity);
+							}
+							else if (tempTargetType.equals("friendly")) {
+								spellPotentialTargets = team.get(currentTeam); // Resets to only your team, as it's easier than removing all enemies from the combat (typically).
+								if (!currentEntity.getEquippedSpells()[tempSpellNum].getTargetDead()) // Remove the dead again, because list was reset.
+									for (Entity i: dead)
+										spellPotentialTargets.remove(i);
+								targets.add(spellPotentialTargets.get(pickTarget(spellPotentialTargets))); // Target selection and set Target.
+							}
+							else if (tempTargetType.equals("enemy")) {
+								for (Entity i: team.get(currentTeam))
+									spellPotentialTargets.remove(i);
+								targets.add(spellPotentialTargets.get(pickTarget(spellPotentialTargets))); // Target selection and set Target.
+							}
+							else if (tempTargetType.equals("all")) {
+								targets.addAll(spellPotentialTargets); // Just hits everyone.
+							}
+						} else Display.println("Not enough mana to cast that spell.");
+						currentAction = new RPGAction(tempActionType, targets, tempSpellNum); 
+					}
+
 					else if (tempActionType.equals("run")) {
 						currentAction = new RPGAction(tempActionType, null);
 					}
-					
+
 					else if(tempActionType.equals("inventory")) {
 						String actionOnItem;
 						Item choosenItem;
 						int itemNum;
-						
+
 						currentEntity.displayInventory(currentEntity.getInventory());
 						itemNum = Display.inputInt("Choose an item number: ");
 						choosenItem = currentEntity.getInventory().get(itemNum-1);
-						
+
 						Display.print("What would you like to do? Options: ");
 						if (choosenItem.isConsumable() || choosenItem.isEquipable())
 							Display.print("Use, ");
 						Display.print("Drop, Give");
 						do {
-						actionOnItem = Display.input("").toLowerCase();
+							actionOnItem = Display.input("").toLowerCase();
 						} while (!((actionOnItem.equals("use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // Watch the parentheses 
-						
+
 						if (false /*choosenItem.isTargetable()*/ || actionOnItem.equals("give")) {
 							targets.add(initiativeList.get(pickTarget(initiativeList)-1));
 						}
 						else targets.add(currentEntity);
-						
+
 						currentAction = new RPGAction(tempActionType, targets, actionOnItem, itemNum-1);
 					}
-					
+
 					else {
 						Display.println("Invalid input, please enter again...");
 						currentAction = new RPGAction("", null);
@@ -119,7 +158,7 @@ public class Combat extends Instance {
 			if (currentAction.getActionType().equals("attack"))
 				Display.print(fight(currentEntity, currentAction.getTargets().get(0)));
 			else if (currentAction.getActionType().equals("special"))
-				; //TODO special
+				Display.print(useSpecial(currentEntity, currentAction));
 			else if (currentAction.getActionType().equals("run")) {
 				if (run(currentEntity))
 					currentInitiative--;
@@ -162,7 +201,7 @@ public class Combat extends Instance {
 			if (damage < 0) damage = 0;
 			double damageReduction = (defender.getBlocking()+DAMGE_REDUCTION_MULTIPLIER)/DAMGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
 			damageFinal = (int) (damage/damageReduction);
-			
+
 			if (Math.random()*attacker.getMelee()+(attacker.getMelee()/2) > Math.random()*defender.getPerception()+(defender.getPerception()/2)) { // DP vs AM/2 + 1-AM
 				defender.setHealth(defender.getHealth() - damageFinal);
 				output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n"; 
@@ -174,6 +213,17 @@ public class Combat extends Instance {
 		}
 		else output += defender.getName() + " is already dead.\n"; // like an error catch
 
+		return output;
+	}
+	
+	public String useSpecial (Entity caster, RPGAction action) {
+		String output = "";
+		MagicSpell spell = caster.getEquippedSpells()[action.getSpecial()];
+		if (spell instanceof DamageSpell) {
+			for (Entity i: action.getTargets());
+				//i.setHealth(i.getHealth()-spell.getDamage());;
+		}
+		
 		return output;
 	}
 
@@ -202,7 +252,7 @@ public class Combat extends Instance {
 
 	public void accessInventory(Entity currentEntity, RPGAction currentAction) {
 		Item item = currentEntity.getInventory().get(currentAction.getInventorySlot());
-		
+
 		if (currentAction.getInventoryAction().equals("drop")) {
 			droppedLoot.add(item); // Drops it on the ground for someone to pick up at the end of combat (not recommended).
 			currentEntity.getInventory().remove(item);
@@ -227,7 +277,7 @@ public class Combat extends Instance {
 		}
 		else Display.debug("ERROR: improper inventory action given!"); // We need to establish something bigger for error catching probably.
 	}
-	
+
 	public int pickTarget(ArrayList<Entity> targetList) {
 		Display.println("Targets:");
 		for (Entity i: targetList) {
