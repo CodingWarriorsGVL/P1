@@ -14,8 +14,7 @@ public class Combat extends Instance {
 	protected ArrayList<Item> droppedLoot = new ArrayList<Item>(); //for clean up looting inventories.
 	private boolean allDead = false; //changes to true if everyone dies at the same time and is an extra check at the end to prevent an infinite loop.
 	private Entity currentEntity; //the Entity currently taking a turn.
-	private final int DAMGE_REDUCTION_MULTIPLIER = 500;
-
+	private final int DAMAGE_REDUCTION_MULTIPLIER = 500;
 
 	public void launch() {
 		currentTeam = 0;
@@ -72,7 +71,7 @@ public class Combat extends Instance {
 				//refreshGUI();
 				do {
 					ArrayList<Entity> targets = new ArrayList<Entity>();
-					String tempActionType = Display.input("Input action (attack, special(WIP), run, inventory): ");
+					String tempActionType = Display.input("Input action (attack, special, run, inventory): ");
 					//Display.println(tempActionType);
 					if (tempActionType.equals("attack")) {
 						targets.add(potentialTargets.get(pickTarget(potentialTargets)-1));
@@ -84,7 +83,10 @@ public class Combat extends Instance {
 						for (MagicSpell i: currentEntity.getEquippedSpells())
 							Display.println(i.getName() + ": " + i.getManaCost() + " mana.");
 						// Choose spell
-						int tempSpellNum = Display.inputInt("Choose a spell 1 - " + currentEntity.getEquippedSpells().length + ": ");
+						int tempSpellNum;
+						do {
+							tempSpellNum = Display.inputInt("You have " + currentEntity.getMana()+"/"+currentEntity.getMaxMana() + " mana. Choose a spell 1 - " + currentEntity.getEquippedSpells().length + ": ")-1;
+						} while (currentEntity.getEquippedSpells()[tempSpellNum] == null);
 
 						if (currentEntity.getMana() >= currentEntity.getEquippedSpells()[tempSpellNum].getManaCost()) {
 							// get targets from spell
@@ -103,12 +105,12 @@ public class Combat extends Instance {
 								if (!currentEntity.getEquippedSpells()[tempSpellNum].getTargetDead()) // Remove the dead again, because list was reset.
 									for (Entity i: dead)
 										spellPotentialTargets.remove(i);
-								targets.add(spellPotentialTargets.get(pickTarget(spellPotentialTargets))); // Target selection and set Target.
+								targets.add(spellPotentialTargets.get(pickTarget(spellPotentialTargets)-1)); // Target selection and set Target.
 							}
 							else if (tempTargetType.equals("enemy")) {
 								for (Entity i: team.get(currentTeam))
 									spellPotentialTargets.remove(i);
-								targets.add(spellPotentialTargets.get(pickTarget(spellPotentialTargets))); // Target selection and set Target.
+								targets.add(spellPotentialTargets.get(pickTarget(spellPotentialTargets)-1)); // Target selection and set Target.
 							}
 							else if (tempTargetType.equals("all")) {
 								targets.addAll(spellPotentialTargets); // Just hits everyone.
@@ -199,7 +201,7 @@ public class Combat extends Instance {
 			else weapon = new Weapon("unarmed", 0, 0, 0, 0, 4, 0, false); // May seem excessive to make a new one each time, and we could just have one per a combat.
 			damage = (int)(Math.random()*((weapon.getAttack()+attacker.getMelee())/2) + (weapon.getAttack()+attacker.getMelee())/2 +1); // Damage will be from half weapon attack + melee to full weapon attack + melee.
 			if (damage < 0) damage = 0;
-			double damageReduction = (defender.getBlocking()+DAMGE_REDUCTION_MULTIPLIER)/DAMGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
+			double damageReduction = (defender.getBlocking()+DAMAGE_REDUCTION_MULTIPLIER)/DAMAGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
 			damageFinal = (int) (damage/damageReduction);
 
 			if (Math.random()*attacker.getMelee()+(attacker.getMelee()/2) > Math.random()*defender.getPerception()+(defender.getPerception()/2)) { // DP vs AM/2 + 1-AM
@@ -216,19 +218,47 @@ public class Combat extends Instance {
 		return output;
 	}
 	
-	public String useSpecial (Entity caster, RPGAction action) {
+	public String useSpecial(Entity caster, RPGAction action) {
 		String output = "";
 		MagicSpell spell = caster.getEquippedSpells()[action.getSpecial()];
-		if (spell instanceof DamageSpell) {
-			for (Entity i: action.getTargets());
-				//i.setHealth(i.getHealth()-spell.getDamage());;
+		caster.setMana(caster.getMana() - spell.getManaCost()); // Remove mana.
+		output += caster.getName() + " casts " + spell.getName() + " for " + spell.getManaCost() + " mana.\n";
+		
+		if (spell instanceof DamageSpell) { // Damage and Healing spells.
+			int damage, damageFinal;
+			for (Entity i: action.getTargets()) {
+				output += i.getName() + " was ";
+				if (((DamageSpell)spell).getDamage() < 0) {// Checks for healing, and if healing would put over max HP then...
+					damage = (int)(Math.random()*((Math.abs(((DamageSpell)spell).getDamage())+caster.getIntellect())/2) + (Math.abs(((DamageSpell)spell).getDamage())+caster.getIntellect())/2 +1); // Damage will be from half spell + intellect to full spell damage + intellect.
+					if (damage + i.getHealth() > i.getMaxHealth()) 
+						i.setHealth(i.getMaxHealth()); // ... set health to max.
+					else i.setHealth(i.getHealth() + damage); // Heals.
+					damageFinal = damage;
+					output += "healed";
+				}
+				else if (((DamageSpell)spell).getDamage() > 0) {
+					damage = (int)(Math.random()*((((DamageSpell)spell).getDamage()+caster.getIntellect())/2) + (((DamageSpell)spell).getDamage()+caster.getIntellect())/2 +1); // Damage will be from half spell + intellect to full spell damage + intellect.
+					double damageReduction = (i.getBlocking()+DAMAGE_REDUCTION_MULTIPLIER)/DAMAGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
+					damageFinal = (int) (damage/damageReduction);
+					i.setHealth(i.getHealth() - damageFinal); // Deals damage.
+					output += "damaged";
+				}
+				else { // Catch if the damage is 0 for some reason.
+					damageFinal = ((DamageSpell)spell).getDamage();
+					output += "hit";
+				}
+				output += " for " + damageFinal + " and now has " + i.getHealth() +"/"+ i.getMaxHealth() + " health points.\n";
+			}
 		}
+		
+		// Summon spells.
+		
 		
 		return output;
 	}
 
 	public boolean run(Entity runner) {
-		//runner compare dex stats against those of people of other team, roll number, if beats them:
+		//runner compare perception stats against those of people of other team, roll number, if beats them:
 		int highestEnemyDex = 0;
 		Display.print(runner.getName() + " attempts to run from combat... ");
 		for (int i=0; i<team.size(); i++)

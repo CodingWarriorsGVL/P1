@@ -6,8 +6,7 @@ import item.Armor;
 import item.Item;
 import item.Weapon;
 import static item.Armor.*;
-import static characters.HealingSpell.*;
-import static characters.AttackSpell.*;
+import static characters.DamageSpell.*;
 import static item.Weapon.*;
 import static item.Potion.*;
 import static item.Currency.*;
@@ -348,9 +347,9 @@ public class Player extends Entity {
 
 			println("# Wait! Before you leave out on your adventure, I wanted to tell you that you have 2 starter spells. #");
 			println("# These are your starter spells. #");
-			player.setEquippedSpells(0, fireBall);
+			player.setEquippedSpells(0, fireBolt);
 			player.setEquippedSpells(1, lightHealing);
-			player.setSpells(fireBall);
+			player.setSpells(fireBolt);
 			player.setSpells(lightHealing);
 			player.setSpells(testAttack);
 			player.setSpells(testHealing);
