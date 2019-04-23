@@ -3,16 +3,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import characters.AttackSpell;
-import characters.HealingSpell;
 import characters.MagicSpell;
 import characters.Player;
 import display.Display;
 
-import static characters.AttackSpell.fireBall;
-import static characters.AttackSpell.testAttack;
-import static characters.HealingSpell.lightHealing;
-import static characters.HealingSpell.testHealing;
 import static characters.Player.*;
 import static item.Armor.ruggedArmor;
 import static item.Armor.ruggedHelmet;
