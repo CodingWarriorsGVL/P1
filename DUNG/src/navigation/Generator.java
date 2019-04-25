@@ -1,38 +1,66 @@
 //INCOMPLETE
-import java.util.ArrayList;
+package navigation;
+import java.util.*;
 import characters.Entity;
 import instance.Instance;
 
 
-package navigation;
+
 
 public class Generator {
 	private String dungeon_name;
 	private int dungeon_height, dungeon_width, floor_amt, xfloorfeed, yfloorfeed;
 	
 	
+	
 	public static void dungeonGenerator(){
-		dungeon_name=("abcdeg");
-		floor_amt=(1);
+		//dungeon_name=("abcdeg");
+		//floor_amt=(1);
 		Dungeon Thisdungeon = new Dungeon(dungeon_name, floor_amt);
 	}
 	public static void floorGenerator(int floorxsize, int floorysize){
-		xfloorfeed = (floorxsize);
-		yfloorfeed = (floorysize);
-		Floor Firstfloor = new Floor(xfloorfeed, yfloorfeed);
+		Floor generatedFloor = new Floor(floorxsize, floorysize);
+		RoomFeature North, South, East, West;
+		Random gen = new Random();
+		int rando;
+		for(int ycnt=0;ycnt<floorysize;ycnt++) {
+			for(int xcnt=0;xcnt<floorxsize;xcnt++) {
+				rando  = gen.nextInt(4)+1;
+				switch (rando)
+				{
+					case 1:
+						north = new Door;
+						south = new Wall;
+						east = new Wall;
+						west = new Wall;
+						break;
+					case 2:
+						north = new wall;
+						south = new Door;
+						east = new Wall;
+						west = new Wall;
+						break;
+					case 3:
+						north = new Wall;
+						south = new Wall;
+						east = new Door;
+						west = new Wall;
+						break;
+					case 4:
+						north = new Wall;
+						south = new Wall;
+						east = new Wall;
+						west = new Door;
+						break;
+				}
+				switch (xcnt)
+				generatedFloor[xcnt][ycnt] = new Room(north, south, east, west, xcnt, ycnt)
+			}
+		}	
+		
 	}
-	/* 0 - No Door
-	 * 1 - Door North
-	 * 2 - Door East
-	 * 3 - Door South
-	 * 4 - Door West*/
 	public static void roomGenerator(RoomFeature north, RoomFeature east, RoomFeature south, RoomFeature west, ArrayList<Entity> ent){
-		Room thisroom = new Room(north, east, south, west);
-		for (Entity i:ent){
-		thisroom.addEntities(i);}
-
-		for (int x = 0; x<xfloorfeed; x++)
-			for (int y = 0; y<yfloorfeed; y++)
+		
 	}
 	  /*
 	   * ------------------------------------------------------------------------------------------------------------
