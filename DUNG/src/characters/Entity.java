@@ -1,6 +1,6 @@
 package characters;
 
-import static display.Display.println;
+import display.Display;
 
 import java.util.ArrayList;
 import item.Armor;
@@ -13,7 +13,7 @@ public class Entity {
 	//Class Variables
 	String name;
 	int health, melee, defense, intellect, perception, experience, mana, level;
-	int maxHealth, money, maxMana;
+	int maxHealth, money, maxMana, abilityPoints;
 
 	boolean isAI;
 	
@@ -22,6 +22,8 @@ public class Entity {
 	
 	public ArrayList<Item> inventory = new ArrayList<Item>();
 	public ArrayList<MagicSpell> spells = new ArrayList<MagicSpell>();
+	
+	final int LEVEL_TIER_INCREASE = 5, ABILITY_POINTS_PER = 10; // Sets the level up conditions.
 
 
 	Item[] equippedItems = new Item[5];
@@ -142,8 +144,8 @@ public class Entity {
 	}
 	
 	public void displayInventory(ArrayList<Item> inventory) {
-		println("--------------------------------------------------------------------");
-		println("* Inventory *");
+		Display.println("--------------------------------------------------------------------");
+		Display.println("* Inventory *");
 
 		for (int i = 0; i < inventory.size(); i++) {
 			if(inventory.get(i).getQuantity() == 0)
@@ -151,7 +153,7 @@ public class Entity {
 			System.out.println(inventory.get(i));
 		}
 
-		println("--------------------------------------------------------------------");
+		Display.println("--------------------------------------------------------------------");
 	}
 
 	public void removeEquippedItems(int location) {
@@ -225,10 +227,36 @@ public class Entity {
 	public int getLevel() {
 		return level;
 	}
+	public void setAbilityPoints(int abilityPoints) {
+		this.abilityPoints = abilityPoints;
+	}
+	public int getAbilityPoints() {
+		return abilityPoints;
+	}
 	
 	public void addXP(int xp) {
 		experience += xp;
-		//TODO add level up here?
+		while (experience >= xpToLevel()) { // Loops if you have enough xp to keep leveling.
+			levelUp(1); // Only levels you once.
+		}
+	}
+	
+	public int xpToLevel() { // The return value and equation for leveling.
+		int newXP = (int)(100*2.0*level*(level/100.0)); // Fun xp needed to level equation. Don't ask - Jared.
+		return newXP;
+	}
+	
+	public void levelUp(int numLvls) {
+		for (int i=0; i<numLvls; i++) { // Allows for multiple levels to be given at once.
+			//abilityPoints = (int)(abilityPoints + Math.ceil(level/5.0)*10);
+			abilityPoints = (int)(abilityPoints + Math.ceil(level/LEVEL_TIER_INCREASE)*ABILITY_POINTS_PER);
+			experience -= xpToLevel(); // Subtracts the level up from your xp pool.
+			if (experience < 0) // This is mostly as catch that should happen if forced to level to keep you from having negative xp.
+				experience = 0;
+			level += 1;
+			if (isAI == false) // Only tells you when non AI controlled entities leveled. Since there is no way to check if they are on your team yet.
+				Display.print(name + " has leveled up to level "+level+"!\n");
+		}
 	}
 
 	public boolean isAI() {
@@ -236,10 +264,6 @@ public class Entity {
 	}
 		
 	//Other Methods	
-	public void attack(int attack) {
-		
-	}
-	
 	public boolean isAlive() {
 		return health > 0;
 	}

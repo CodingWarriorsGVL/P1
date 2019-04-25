@@ -193,6 +193,7 @@ public class Player extends Entity {
 		String nameTemp = input("# Hello traveler, what is your name? #");
 		if (!nameTemp.equals("Speedy")) { // Fast character creation
 			player = new Player(" ", 0, 0, 0, 0, 0, 0, 1);
+			player.setAbilityPoints(240);
 			player.setName(nameTemp);
 			String answer = " ";
 			boolean checkingName = true;
@@ -212,7 +213,7 @@ public class Player extends Entity {
 
 			while(spendingPoints){
 
-				int spendablePoints = 240;
+				int spendablePoints = player.getAbilityPoints();
 				int input = 0;
 				answer = " ";
 
