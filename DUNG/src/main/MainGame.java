@@ -8,18 +8,10 @@ import characters.Player;
 import display.Display;
 
 import static characters.Player.*;
-import static item.Armor.ruggedArmor;
-import static item.Armor.ruggedHelmet;
-import static item.Armor.ruggedLeggings;
-import static item.Armor.ruggedShield;
-import static item.Armor.testArmor;
-import static item.Armor.testHelmet;
-import static item.Armor.testLeggings;
-import static item.Armor.testShield;
-import static item.Potion.healthPotion;
-import static item.Weapon.ruggedSword;
-import static item.Weapon.testSword;
-import static item.Weapon.axe;
+import static item.Armor.*;
+import static item.Potion.*;
+import static item.Weapon.*;
+import static characters.Enemy.*;
 
 import item.Armor;
 import item.Potion;
@@ -37,6 +29,8 @@ import java.util.ArrayList;
 
 import static display.Display.*;
 
+import static navigation.Generator.*;
+
 public class MainGame {
 
 	//Dungeon dungeon;
@@ -51,7 +45,7 @@ public class MainGame {
 	public Dungeon dungeon;
 
 	public static void main(String[] args) {
-		System.setOut(System.out);
+		Display.initialize();
 		// Print Logo
 		try {
 			Scanner input;
@@ -59,6 +53,7 @@ public class MainGame {
 			while (input.hasNextLine()) {
 				println(input.nextLine());
 			}
+			input.close();
 
 		} catch (FileNotFoundException e) {
 			println("Error Loading Logo");
@@ -67,10 +62,14 @@ public class MainGame {
 	}
 
 	public MainGame() {
+		
+		
+		
 		player1 = buildCharacter();
 
 
-		dungeon = new Dungeon("Scary Dungeon", 1);   //Quick and dirty dungeon build, all wall and door objects are the same which would mess up locking/unlocking, in the doors case
+		dungeon = generateDungeon();//new Dungeon("Scary Dungeon", 1);   //Quick and dirty dungeon build, all wall and door objects are the same which would mess up locking/unlocking, in the doors case
+		/*
 		dungeon.setFloor(0, new Floor(2,2));
 		Door door = new Door(false, "wood");
 		Wall wall = new Wall();
@@ -79,22 +78,20 @@ public class MainGame {
 		dungeon.getFloor(0).setRoom(new Room(wall, wall, door, door),  1, 0);
 		dungeon.getFloor(0).setRoom(new Room(door, door, wall, wall),  0, 1);
 		dungeon.getFloor(0).setRoom(new Room(door, wall, wall, door),  1, 1);
+		*/
+		player1.setXPosition(5);
+		player1.setYPosition(9);
 
-		player1.setXPosition(0);
-		player1.setYPosition(0);
-
-		// Made the enemies more buff for a bit for testing reasons. This can be removed. - Jared
-		Entity giantRoach = new Entity("Giant Roach", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
-		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 0, false); // Make Weapon for Enemy
+		Entity giantRoach = new Entity("Giant Roach", 40, 0, 3, 6, 1, 2, 1, true); // Make Enemy
 		giantRoach.setEquippedItems(bite); // Give Weapon to Enemy
 
 		Entity giantMouse = new Entity("Giant Mouse", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
 		giantMouse.setEquippedItems(bite); // Give Weapon to Enemy
-		
+
 
 
 		//dungeon.getFloor(0).getRoom(1, 1).addInstances(testInstance); // Place Instance Somewhere.
-		dungeon.getFloor(0).getRoom(1, 1).addEntities(giantRoach, giantMouse);
+		dungeon.getFloor(0).getRoom(1, 1).addEntities(getGiantRoach(), getGiantMouse());
 
 
 		//For Testing
@@ -174,7 +171,9 @@ public class MainGame {
 			combat.addEntity(player1, 0);
 			
 			for (Entity i: currentRoom.getEnties()) {
-				combat.addEntity(i, 1);	
+				if (i instanceof Enemy) {
+					combat.addEntity(i, 1);	
+				}
 			}
 			
 			if (combat.checkActive()) {

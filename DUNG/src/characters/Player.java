@@ -154,7 +154,7 @@ public class Player extends Entity {
 			}
 
 			//else
-			//System.out.println("* Invalid Selection! *");
+			//println("* Invalid Selection! *");
 		} // End while(equippingSpells)
 
 	}//End changeEquippedSPells
@@ -204,6 +204,7 @@ public class Player extends Entity {
 			}//End while(checkingName)
 			player.spendPoints();
 
+
 		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
 		System.out.println("\n# Now let's get you some starter gear! #");
 
@@ -252,10 +253,13 @@ public class Player extends Entity {
 		Player player = this; // Yes this is bad, but it was FAST, TODO correct variables.
 
 		while(spendingPoints){
-
 			int spendablePoints = player.getAbilityPoints();
 			int input = 0;
 			answer = " ";
+
+			println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
+					" Gold coins to get you started check your inventory to see them. #");
+
 
 			println("# Ok " + player.getName() + " you have " + spendablePoints + " points to spend in: Health, Mana, "
 					+ "Melee, Defense, Intellect, and Perception. #"
