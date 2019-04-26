@@ -29,6 +29,8 @@ import java.util.ArrayList;
 
 import static display.Display.*;
 
+import static navigation.Generator.*;
+
 public class MainGame {
 
 	//Dungeon dungeon;
@@ -66,7 +68,8 @@ public class MainGame {
 		player1 = buildCharacter();
 
 
-		dungeon = new Dungeon("Scary Dungeon", 1);   //Quick and dirty dungeon build, all wall and door objects are the same which would mess up locking/unlocking, in the doors case
+		dungeon = generateDungeon();//new Dungeon("Scary Dungeon", 1);   //Quick and dirty dungeon build, all wall and door objects are the same which would mess up locking/unlocking, in the doors case
+		/*
 		dungeon.setFloor(0, new Floor(2,2));
 		Door door = new Door(false, "wood");
 		Wall wall = new Wall();
@@ -75,14 +78,12 @@ public class MainGame {
 		dungeon.getFloor(0).setRoom(new Room(wall, wall, door, door),  1, 0);
 		dungeon.getFloor(0).setRoom(new Room(door, door, wall, wall),  0, 1);
 		dungeon.getFloor(0).setRoom(new Room(door, wall, wall, door),  1, 1);
+		*/
+		player1.setXPosition(5);
+		player1.setYPosition(9);
 
-		player1.setXPosition(0);
-		player1.setYPosition(0);
+		Entity giantRoach = new Entity("Giant Roach", 40, 0, 3, 6, 1, 2, 1, true); // Make Enemy
 
-		// Made the enemies more buff for a bit for testing reasons. This can be removed. - Jared
-		/*
-		Entity giantRoach = new Entity("Giant Roach", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
-		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 4, 0, false); // Make Weapon for Enemy
 		giantRoach.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
 
 		Entity giantMouse = new Entity("Giant Mouse", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
