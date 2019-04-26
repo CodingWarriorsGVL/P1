@@ -3,28 +3,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import characters.AttackSpell;
-import characters.HealingSpell;
 import characters.MagicSpell;
 import characters.Player;
 import display.Display;
 
-import static characters.AttackSpell.fireBall;
-import static characters.AttackSpell.testAttack;
-import static characters.HealingSpell.lightHealing;
-import static characters.HealingSpell.testHealing;
 import static characters.Player.*;
-import static item.Armor.ruggedArmor;
-import static item.Armor.ruggedHelmet;
-import static item.Armor.ruggedLeggings;
-import static item.Armor.ruggedShield;
-import static item.Armor.testArmor;
-import static item.Armor.testHelmet;
-import static item.Armor.testLeggings;
-import static item.Armor.testShield;
-import static item.Potion.healthPotion;
-import static item.Weapon.ruggedSword;
-import static item.Weapon.testSword;
+import static item.Armor.*;
+import static item.Potion.*;
+import static item.Weapon.*;
+import static characters.Enemy.*;
 
 import item.Armor;
 import item.Potion;
@@ -58,7 +45,7 @@ public class MainGame {
 	public Dungeon dungeon;
 
 	public static void main(String[] args) {
-		System.setOut(System.out);
+		Display.initialize();
 		// Print Logo
 		try {
 			Scanner input;
@@ -66,6 +53,7 @@ public class MainGame {
 			while (input.hasNextLine()) {
 				println(input.nextLine());
 			}
+			input.close();
 
 		} catch (FileNotFoundException e) {
 			println("Error Loading Logo");
@@ -74,6 +62,9 @@ public class MainGame {
 	}
 
 	public MainGame() {
+		
+		
+		
 		player1 = buildCharacter();
 
 
@@ -92,16 +83,16 @@ public class MainGame {
 		player1.setYPosition(9);
 
 		Entity giantRoach = new Entity("Giant Roach", 40, 0, 3, 6, 1, 2, 1, true); // Make Enemy
-		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 4); // Make Weapon for Enemy
+
 		giantRoach.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
 
-		Entity giantMouse = new Entity("Giant Mouse", 40, 0, 3, 6, 1, 2, 1, true); // Make Enemy
+		Entity giantMouse = new Entity("Giant Mouse", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
 		giantMouse.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
-		
+		*/
 
 
 		//dungeon.getFloor(0).getRoom(1, 1).addInstances(testInstance); // Place Instance Somewhere.
-		dungeon.getFloor(0).getRoom(1, 1).addEntities(giantRoach, giantMouse);
+		dungeon.getFloor(0).getRoom(1, 1).addEntities(getGiantRoach(), getGiantMouse());
 
 
 		//For Testing
@@ -139,13 +130,13 @@ public class MainGame {
 		player1.setPlayerBlocking(player1.getEquippedItems());
 		player1.setPlayerDamage(player1.getEquippedItems());		
 		player1.setPlayerInventory(healthPotion);
-		healthPotion.setQuantity(3);
-		player1.setPlayerInventory(testHelmet);
-		player1.setPlayerInventory(testArmor);
-		player1.setPlayerInventory(testLeggings);
-		player1.setPlayerInventory(testShield);
-		player1.setPlayerInventory(testSword);
-		player1.changeEquippedItems();*/
+		healthPotion.setQuantity(3);*/
+		player1.setInventory(testHelmet);
+		player1.setInventory(testArmor);
+		player1.setInventory(testLeggings);
+		player1.setInventory(testShield);
+		player1.setInventory(testSword);
+		//player1.changeEquippedItems();
 
 		boolean play = true;
 
@@ -179,7 +170,9 @@ public class MainGame {
 			combat.addEntity(player1, 0);
 			
 			for (Entity i: currentRoom.getEnties()) {
-				combat.addEntity(i, 1);	
+				if (i instanceof Enemy) {
+					combat.addEntity(i, 1);	
+				}
 			}
 			
 			if (combat.checkActive()) {
@@ -211,6 +204,7 @@ public class MainGame {
 				println("You can go west");
 			}
 			println("You can quit");
+			println("Change equipped items.");
 
 
 			String input = input("Where would you like to go?");
@@ -229,6 +223,10 @@ public class MainGame {
 			}
 			if (input.toLowerCase().charAt(0)=='q') {
 				play = false;
+			}
+			
+			if (input.toLowerCase().charAt(0)=='c') {
+				player1.changeEquippedItems();
 			}
 			//enemy = getEnemy();
 
