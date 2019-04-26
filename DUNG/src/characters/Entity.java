@@ -122,8 +122,8 @@ public class Entity {
 		return equippedItems;
 	}
 
-	public void setEquippedItems(int location, Item item) {
-		equippedItems[location] = item;
+	public void setEquippedItems(Item item) {
+		equippedItems[item.getEquippedItemSlot()] = item;
 	}
 
 	public void setSpells(MagicSpell spell) {
@@ -277,7 +277,32 @@ public class Entity {
 		return i.consume(i,e);	
 	}
 	
-	
+	public void useItem(Item item, String action, ArrayList<Entity> targets) {
+		Display.debug(action);
+		if (action.equals("drop")) {
+			//droppedLoot.add(item); // Drops it on the ground for someone to pick up at the end of combat (not recommended). TODO fix
+			this.getInventory().remove(item);
+			Display.println(this.getName() + " drops " + item.getName() + " on the ground.");
+		}
+		else if (action.equals("use")) {
+			if (item.isEquipable()) {
+				this.setEquippedItems(item); 
+				Display.println(getName() + " equips " + item.getName() + ".");
+			}
+			else if (item.isConsumable()) {
+				if (this.consumeItem(item, this)) 
+					Display.println(this.getName() + " consumes " + item.getName() + ".");
+				else Display.debug("Item was not consumable!!!");
+			}
+			// else if (item.isTargetable()) { 
+		}
+		else if (action.equals("give")) {
+			targets.get(0).getInventory().add(item);
+			this.getInventory().remove(item);
+			Display.println(this.getName() + " gives " + item.getName() + " to " + targets.get(0).getName() + ".");
+		}
+		else Display.debug("action input wrong");
+	}
 	
 	
 }// End Class Entity

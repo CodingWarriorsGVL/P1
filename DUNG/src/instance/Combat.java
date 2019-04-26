@@ -281,31 +281,7 @@ public class Combat extends Instance {
 	}
 
 	public void accessInventory(Entity currentEntity, RPGAction currentAction) {
-		Item item = currentEntity.getInventory().get(currentAction.getInventorySlot());
-
-		if (currentAction.getInventoryAction().equals("drop")) {
-			droppedLoot.add(item); // Drops it on the ground for someone to pick up at the end of combat (not recommended).
-			currentEntity.getInventory().remove(item);
-			Display.println(currentEntity.getName() + " drops " + item.getName() + " on the ground.");
-		}
-		else if (currentAction.getInventoryAction().equals("use")) {
-			if (item.isEquipable()) {
-				currentEntity.setEquippedItems(item.getEquippedItemSlot(), item); 
-				// TODO rearrange equipping so it's not just a menu, but can be used here too? An auto check on entity that equips an item to it's proper place based on what it is.
-			}
-			else if (item.isConsumable()) {
-				if (currentEntity.consumeItem(item, currentEntity)) 
-					Display.println(currentEntity.getName() + " consumes " + item.getName() + ".");
-				else Display.debug("Item was not consumable!!!");
-			}
-			// else if (item.isTargetable()) { 
-		}
-		else if (currentAction.getInventoryAction().equals("give")) {
-			currentAction.getTargets().get(0).getInventory().add(item);
-			currentEntity.getInventory().remove(item);
-			Display.println(currentEntity.getName() + " gives " + item.getName() + " to " + currentAction.getTargets().get(0).getName() + ".");
-		}
-		else Display.debug("ERROR: improper inventory action given!"); // We need to establish something bigger for error catching probably.
+		currentEntity.useItem(currentEntity.getInventory().get(currentAction.getInventorySlot()), currentAction.getInventoryAction(), currentAction.getTargets());
 	}
 
 	public int pickTarget(ArrayList<Entity> targetList) {

@@ -19,6 +19,7 @@ import static item.Armor.testShield;
 import static item.Potion.healthPotion;
 import static item.Weapon.ruggedSword;
 import static item.Weapon.testSword;
+import static item.Weapon.axe;
 
 import item.Armor;
 import item.Potion;
@@ -85,10 +86,10 @@ public class MainGame {
 		// Made the enemies more buff for a bit for testing reasons. This can be removed. - Jared
 		Entity giantRoach = new Entity("Giant Roach", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
 		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 0, false); // Make Weapon for Enemy
-		giantRoach.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
+		giantRoach.setEquippedItems(bite); // Give Weapon to Enemy
 
 		Entity giantMouse = new Entity("Giant Mouse", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
-		giantMouse.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
+		giantMouse.setEquippedItems(bite); // Give Weapon to Enemy
 		
 
 
@@ -137,6 +138,7 @@ public class MainGame {
 		player1.setInventory(testLeggings);
 		player1.setInventory(testShield);
 		player1.setInventory(testSword);
+		player1.setInventory(axe);
 		//player1.changeEquippedItems();
 
 		boolean play = true;
@@ -151,6 +153,7 @@ public class MainGame {
 			//print(player.getPosition());
 
 			currentRoom = dungeon.getFloor(0).getRoom(player1.getXPosition(), player1.getYPosition());
+			player1.setCurrentRoom(currentRoom);
 
 			// Activate Instances.
 			//This seems like best location for now, just after you have entered the room.

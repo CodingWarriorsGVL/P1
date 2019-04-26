@@ -29,7 +29,13 @@ public class Player extends Entity {
 	}
 
 	// Getters and Setters
-
+	
+	public void setCurrentRoom(Room room) {
+		currentRoom = room;
+	}
+	public Room getCurrentRoom() {
+		return currentRoom;
+	}
 
 
 
@@ -98,8 +104,7 @@ public class Player extends Entity {
 			if (input > 0 && input <= inventory.size() && ((Item) inventory.get(input - 1)).getEquippedItemSlot() < 5) {
 				inventory.add(equippedItems[((Item) inventory.get(input - 1)).getEquippedItemSlot()]);
 				this.removeEquippedItems(((Item) inventory.get(input - 1)).getEquippedItemSlot());
-				this.setEquippedItems(((Item) inventory.get(input - 1)).getEquippedItemSlot(),
-						((Item) inventory.get(input - 1)));
+				this.setEquippedItems(((Item) inventory.get(input - 1)));
 				inventory.remove(((Item) inventory.get(input - 1)));
 
 				this.setMeleeDamage(equippedItems);
@@ -189,10 +194,7 @@ public class Player extends Entity {
 	}
 
 
-	public static Player buildCharacter(){	
-
-
-
+	public static Player buildCharacter() {	
 		String nameTemp = input("# Hello traveler, what is your name? #");
 		if (!nameTemp.equals("Speedy")) { // Fast character creation
 			player = new Player(" ", 0, 0, 0, 0, 0, 0, 1);
@@ -216,11 +218,11 @@ public class Player extends Entity {
 		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
 		System.out.println("\n# Now let's get you some starter gear! #");
 
-		player.setEquippedItems(ruggedHelmet.getEquippedItemSlot(), ruggedHelmet);
-		player.setEquippedItems(ruggedArmor.getEquippedItemSlot(), ruggedArmor);
-		player.setEquippedItems(ruggedLeggings.getEquippedItemSlot(), ruggedLeggings);
-		player.setEquippedItems(ruggedShield.getEquippedItemSlot(), ruggedShield);
-		player.setEquippedItems(testSword.getEquippedItemSlot(), testSword);
+		player.setEquippedItems(ruggedHelmet);
+		player.setEquippedItems(ruggedArmor);
+		player.setEquippedItems(ruggedLeggings);
+		player.setEquippedItems(ruggedShield);
+		player.setEquippedItems(testSword);
 		player.setBlocking(player.getEquippedItems());
 		player.setMeleeDamage(player.getEquippedItems());
 
@@ -383,13 +385,21 @@ public class Player extends Entity {
 	public void characterMenu() {
 		String input;
 		Display.println("--------------------------------------------------------------------");
-		input = Display.input("Character Menu, Choose an option (Inventory, Spells)");
-
-		if (input.toLowerCase().charAt(0)=='i') {
-			changeEquippedItems();
-		}
-
-		changeEquippedSpells();
+		input = Display.input("Character Menu, Choose an option (Inventory, Spells, Back)");
+		Boolean go = false;
+		do {
+			if (input.toLowerCase().charAt(0)=='i') {
+				characterInventory();
+				go = true;
+			}
+			else if (input.toLowerCase().charAt(0)=='s') {
+				changeEquippedSpells();
+				go = true;
+			}
+			else if (input.toLowerCase().charAt(0)=='b') {
+				go = true;
+			}
+		} while (go);
 	}
 
 	public void characterInventory() {
@@ -397,7 +407,10 @@ public class Player extends Entity {
 		Item choosenItem;
 		int itemNum;
 		ArrayList<Entity> targets = new ArrayList<Entity>();
-		ArrayList<Entity> potentialTargets = new ArrayList<Entity>(currentRoom.getEnties()); // Everyone in the room.
+		ArrayList<Entity> potentialTargets; // Everyone in the room.
+		if (currentRoom.getEnties() != null)
+			potentialTargets = new ArrayList<Entity>(currentRoom.getEnties());
+		else potentialTargets = new ArrayList<Entity>();
 
 		this.displayInventory(this.getInventory());
 		itemNum = Display.inputInt("Choose an item number: ");
@@ -415,8 +428,10 @@ public class Player extends Entity {
 			targets.add(potentialTargets.get(pickTarget(potentialTargets)-1));
 		}
 		else targets.add(this);
+
+		useItem(getInventory().get(itemNum), actionOnItem, targets);
 	}
-	
+
 	public int pickTarget(ArrayList<Entity> targetList) {
 		Display.println("Targets:");
 		for (Entity i: targetList) {
@@ -433,4 +448,6 @@ public class Player extends Entity {
 		}
 		return choice;
 	}
+
+
 }// End Class Player
