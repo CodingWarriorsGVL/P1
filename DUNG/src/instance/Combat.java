@@ -128,7 +128,7 @@ public class Combat extends Instance {
 						Item choosenItem;
 						int itemNum;
 
-						currentEntity.displayInventory(currentEntity.getInventory());
+						currentEntity.displayInventory();
 						itemNum = Display.inputInt("Choose an item number: ");
 						choosenItem = currentEntity.getInventory().get(itemNum-1);
 

@@ -2,6 +2,8 @@ package characters;
 
 import display.Display;
 
+import static display.Display.println;
+
 import java.util.ArrayList;
 import item.Armor;
 import item.Item;
@@ -147,20 +149,19 @@ public class Entity {
 		inventory = new ArrayList<Item>();
 		money = 0;
 	}
-	
-	public void displayInventory(ArrayList<Item> inventory) {
-		Display.println("--------------------------------------------------------------------");
-		Display.println("* Inventory *");
 
+	public void displayInventory() {
+		println("--------------------------------------------------------------------");
+		println("* Inventory *");
 		for (int i = 0; i < inventory.size(); i++) {
 			if(inventory.get(i).getQuantity() == 0)
 				inventory.remove(inventory.get(i));
-			System.out.println(inventory.get(i));
+			println(i + 1 + ". " + inventory.get(i));
 		}
+		println("--------------------------------------------------------------------");
 
-		Display.println("--------------------------------------------------------------------");
-	}
-
+	}// End displayInventory
+	
 	public void removeEquippedItems(int location) {
 		equippedItems[location] = null;
 	}

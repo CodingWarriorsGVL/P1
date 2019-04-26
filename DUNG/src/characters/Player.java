@@ -50,18 +50,7 @@ public class Player extends Entity {
 		println("--------------------------------------------------------------------");
 	}
 
-	public void displayInventory() {
 
-		println("--------------------------------------------------------------------");
-		println("* Inventory *");
-
-		for (int i = 0; i < inventory.size(); i++) {
-			println(i + 1 + ". " + inventory.get(i));
-		}
-
-		println("--------------------------------------------------------------------");
-
-	}// End displayInventory
 
 	public void displayEquippedSpells() {
 		println("--------------------------------------------------------------------");
@@ -365,41 +354,45 @@ public class Player extends Entity {
 			print(player);
 			println("--------------------------------------------------------------------");
 
-			boolean go = false; // Needs better name, feel free to fix.
+			boolean isValid = false; // Needs better name, feel free to fix.
 			do {
 				answer = input("\n# Are you happy with your character build? #\n1.Yes\n2.No\n3.Back").toLowerCase();;
 				if(answer.equals("2") || answer.equals("n") || answer.equals("no")) {
 					spendingPoints = true;
-					go = true;
+					isValid = true;
 				} else if (answer.equals("1") || answer.equals("y") || answer.equals("yes")) {
 					spendingPoints = false;
-					go = true;
+					isValid = true;
 				} else if (answer.equals("3") || answer.equals("b") || answer.equals("back")) {
 					spendingPoints = false;
-					go = true;
+					isValid = true;
 				} else Display.println("Not a valid answer.");
-			} while (go);
+			} while (!isValid);
 		}//End while(spendingPoints)
 	}
 
 	public void characterMenu() {
 		String input;
 		Display.println("--------------------------------------------------------------------");
-		input = Display.input("Character Menu, Choose an option (Inventory, Spells, Back)");
-		Boolean go = false;
+		input = Display.input("Character Menu, Choose an option (Inventory, Spells, Attributes, Back)");
+		Boolean isValid = false;
 		do {
 			if (input.toLowerCase().charAt(0)=='i') {
 				characterInventory();
-				go = true;
+				isValid = true;
 			}
 			else if (input.toLowerCase().charAt(0)=='s') {
 				changeEquippedSpells();
-				go = true;
+				isValid = true;
+			}
+			else if (input.toLowerCase().charAt(0)=='a') {
+				spendPoints();
+				isValid = true;
 			}
 			else if (input.toLowerCase().charAt(0)=='b') {
-				go = true;
+				isValid = true;
 			}
-		} while (go);
+		} while (!isValid);
 	}
 
 	public void characterInventory() {
@@ -412,7 +405,7 @@ public class Player extends Entity {
 			potentialTargets = new ArrayList<Entity>(currentRoom.getEnties());
 		else potentialTargets = new ArrayList<Entity>();
 
-		this.displayInventory(this.getInventory());
+		this.displayInventory();
 		itemNum = Display.inputInt("Choose an item number: ");
 		choosenItem = this.getInventory().get(itemNum-1);
 
