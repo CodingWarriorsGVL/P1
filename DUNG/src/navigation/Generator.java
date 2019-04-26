@@ -5,6 +5,7 @@ import characters.Entity;
 import instance.Instance;
 import navigation.Room;
 import static navigation.Room.*;
+import static characters.Enemy.*;
 
 
 
@@ -23,6 +24,8 @@ public class Generator {
 		Dungeon dungeon = new Dungeon("Dungeon of Death", 1);
 		Floor floor = new Floor(10,10);
 		dungeon.setFloor(0, floor);
+		Random enmy = new Random();
+		int chance;
 		
 		for (int x=0; x<10; x++) {
 			for (int y=0; y<10; y++) {
@@ -39,19 +42,87 @@ public class Generator {
 		for (int y=8; y>1; y--) {
 			floor.getRoom(5, y).setRoomFeature(NORTH, new Door(false));
 			floor.getRoom(5, y).setRoomFeature(SOUTH, new Door(false));
+			chance = (int) Math.pow((enmy.nextInt(10)+1),2);
+			if(chance<70)
+			{
+			floor.getRoom(5, y).addEntities(getGiantRoach());
+			}
+			else if(chance<50)
+			{
+			floor.getRoom(5, y).addEntities(getGiantMouse());
+			}
+			else if(chance<30)
+			{
+			floor.getRoom(5, y).addEntities(getSkeleton());
+			}
+			else if(chance<10)
+			{
+			floor.getRoom(5, y).addEntities(getGiantSpider());
+			}
 		}
 		
 		for (int x=1; x<9; x++) {
 			floor.getRoom(x, 5).setRoomFeature(EAST, new Door(false));
 			floor.getRoom(x, 5).setRoomFeature(WEST, new Door(false));
+			chance = (int) Math.pow((enmy.nextInt(10)+1),2);
+			if(chance<70)
+			{
+			floor.getRoom(x, 5).addEntities(getGiantRoach());
+			}
+			else if(chance<50)
+			{
+			floor.getRoom(x, 5).addEntities(getGiantMouse());
+			}
+			else if(chance<30)
+			{
+			floor.getRoom(x, 5).addEntities(getSkeleton());
+			}
+			else if(chance<10)
+			{
+			floor.getRoom(x, 5).addEntities(getGiantSpider());
+			}
 		}
 		for (int x=1; x<9; x++) {
 			floor.getRoom(x, 0).setRoomFeature(WEST, new Door(false));
 			floor.getRoom(x, 0).setRoomFeature(EAST, new Door(false));
+			chance = (int) Math.pow((enmy.nextInt(10)+1),2);
+			if(chance<70)
+			{
+			floor.getRoom(x, 0).addEntities(getGiantRoach());
+			}
+			else if(chance<50)
+			{
+			floor.getRoom(x, 0).addEntities(getGiantMouse());
+			}
+			else if(chance<30)
+			{
+			floor.getRoom(x, 0).addEntities(getSkeleton());
+			}
+			else if(chance<10)
+			{
+			floor.getRoom(x, 0).addEntities(getGiantSpider());
+			}
 		}
 		for (int x=1; x<9; x++) {
 			floor.getRoom(x, 9).setRoomFeature(WEST, new Door(false));
 			floor.getRoom(x, 9).setRoomFeature(EAST, new Door(false));
+			chance = (int) Math.pow((enmy.nextInt(10)+1),2);
+			if(chance<70)
+			{
+			floor.getRoom(x, 9).addEntities(getGiantRoach());
+			}
+			else if(chance<50)
+			{
+			floor.getRoom(x, 9).addEntities(getGiantMouse());
+			}
+			else if(chance<30)
+			{
+			floor.getRoom(x, 9).addEntities(getSkeleton());
+			}
+			else if(chance<10)
+			{
+			floor.getRoom(x, 9).addEntities(getGiantSpider());
+			}
 		}
 		
 		floor.getRoom(5, 9).setRoomFeature(NORTH, new Door(false));

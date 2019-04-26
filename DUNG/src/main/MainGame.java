@@ -82,13 +82,7 @@ public class MainGame {
 		player1.setXPosition(5);
 		player1.setYPosition(9);
 
-		Entity giantRoach = new Entity("Giant Roach", 40, 0, 3, 6, 1, 2, 1, true); // Make Enemy
-
-		giantRoach.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
-
-		Entity giantMouse = new Entity("Giant Mouse", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
-		giantMouse.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
-		*/
+		
 
 
 		//dungeon.getFloor(0).getRoom(1, 1).addInstances(testInstance); // Place Instance Somewhere.
