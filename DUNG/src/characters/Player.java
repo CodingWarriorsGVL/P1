@@ -157,7 +157,7 @@ public class Player extends Entity {
 			}
 
 			//else
-			//System.out.println("* Invalid Selection! *");
+			//println("* Invalid Selection! *");
 		} // End while(equippingSpells)
 
 	}//End changeEquippedSPells
@@ -219,7 +219,7 @@ public class Player extends Entity {
 
 				println("# Ok " + player.getName() + " you have " + spendablePoints + " points to spend in: Health, Mana, "
 						+ "Melee, Defense, Intellect, and Perception. #"
-						+ "\n# Use them wisley! #");
+						+ "\n# Use them wisely! #");
 
 				
 				if(spendablePoints > 0) {									
@@ -230,7 +230,7 @@ public class Player extends Entity {
 							player.setMaxHealth(input);							
 						}
 						else 
-							System.out.println("You do not have enough spendable points for the quantity that you entered.");
+							println("You do not have enough spendable points for the quantity that you entered.");
 							
 					}while(input > spendablePoints);	
 					spendablePoints -= input;
@@ -246,7 +246,7 @@ public class Player extends Entity {
 							player.setMaxMana(input);
 						}
 						else
-							System.out.println("You do not have enough spendable points for the quantity you entered.");
+							println("You do not have enough spendable points for the quantity you entered.");
 					}while(input > spendablePoints);
 					spendablePoints -= input;
 					println("# You now have " + spendablePoints + " points left. #");
@@ -260,7 +260,7 @@ public class Player extends Entity {
 							player.setMelee(input);
 						}	
 						else 
-							System.out.println("You do not have enough spendable points for the quantity that you entered.");
+							println("You do not have enough spendable points for the quantity that you entered.");
 					}while(input > spendablePoints);	
 					spendablePoints -= input;
 					println("# You now have " + spendablePoints + " points left. #");
@@ -274,7 +274,7 @@ public class Player extends Entity {
 							player.setDefense(input);
 						}
 						else 
-							System.out.println("You do not have enough spendable points for the quantity that you entered.");
+							println("You do not have enough spendable points for the quantity that you entered.");
 					}while(input > spendablePoints);
 					spendablePoints -= input;
 					println("# You now have " + spendablePoints + " points left. #");
@@ -288,7 +288,7 @@ public class Player extends Entity {
 							player.setIntellect(input);
 						}
 						else 
-							System.out.println("You do not have enough spendable points for the quantity that you entered.");
+							println("You do not have enough spendable points for the quantity that you entered.");
 					}while(input > spendablePoints);
 					spendablePoints -= input;
 					println("# You now have " + spendablePoints + " points left. #");
@@ -302,7 +302,7 @@ public class Player extends Entity {
 							player.setPerception(input);				
 						}
 						else 
-							System.out.println("You do not have enough spendable points for the quantity that you entered.");
+							println("You do not have enough spendable points for the quantity that you entered.");
 					}while(input > spendablePoints);
 					spendablePoints -= input;
 					println("# You now have " + spendablePoints + " points left. #");
@@ -321,7 +321,7 @@ public class Player extends Entity {
 					spendingPoints = false;
 			}//End while(spendingPoints)
 		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
-			System.out.println("\n# Now let's get you some starter gear! #");
+			println("\n# Now let's get you some starter gear! #");
 
 			player.setEquippedItems(ruggedHelmet.getEquippedItemSlot(), ruggedHelmet);
 			player.setEquippedItems(ruggedArmor.getEquippedItemSlot(), ruggedArmor);
@@ -340,7 +340,7 @@ public class Player extends Entity {
 
 
 
-			System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
+			println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
 					" Gold coins to get you started check your inventory to see them. #");
 
 			player.displayEquippedItems();
