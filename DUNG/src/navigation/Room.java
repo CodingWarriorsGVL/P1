@@ -14,7 +14,7 @@ public class Room {
   
   private ArrayList<Entity> entities;
   private RoomFeature[] roomFeatures;
-  private final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
+  public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
   private ArrayList<Instance> instances;
   private int xcoord, ycoord;
   

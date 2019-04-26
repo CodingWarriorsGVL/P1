@@ -3,21 +3,67 @@ package navigation;
 import java.util.*;
 import characters.Entity;
 import instance.Instance;
+import navigation.Room;
+import static navigation.Room.*;
+
 
 
 
 
 public class Generator {
-	private String dungeon_name;
-	private int dungeon_height, dungeon_width, floor_amt, xfloorfeed, yfloorfeed;
+	private static String dungeon_name;
+	private int dungeon_height, dungeon_width;
+	private static int floor_amt;
+	private int xfloorfeed;
+	private int yfloorfeed;
 	
 	
 	
+	public static Dungeon generateDungeon() {
+		Dungeon dungeon = new Dungeon("Dungeon of Death", 1);
+		Floor floor = new Floor(10,10);
+		dungeon.setFloor(0, floor);
+		
+		for (int x=0; x<10; x++) {
+			for (int y=0; y<10; y++) {
+				Room room = new Room();
+				room.setRoomFeature(NORTH, new Wall());
+				room.setRoomFeature(SOUTH, new Wall());
+				room.setRoomFeature(EAST, new Wall());
+				room.setRoomFeature(WEST, new Wall());
+
+				floor.setRoom(room, x, y);
+			}
+		}
+		
+		for (int y=0; y<9; y++) {
+			floor.getRoom(5, y).setRoomFeature(NORTH, new Door(false));
+		}
+		
+		for (int x=5; x<9; x++) {
+			floor.getRoom(x, 5).setRoomFeature(WEST, new Door(false));
+		}
+		for (int x=5; x>0; x--) {
+			floor.getRoom(x, 5).setRoomFeature(EAST, new Door(false));
+		}
+		for (int x=5; x<9; x++) {
+			floor.getRoom(x, 9).setRoomFeature(WEST, new Door(false));
+		}
+		for (int x=5; x>0; x--) {
+			floor.getRoom(x, 9).setRoomFeature(EAST, new Door(false));
+		}
+		
+		return dungeon;
+	}
+	
+	/*
 	public static void dungeonGenerator(){
 		//dungeon_name=("abcdeg");
 		//floor_amt=(1);
 		Dungeon Thisdungeon = new Dungeon(dungeon_name, floor_amt);
 	}
+	*/
+	/*
 	public static void floorGenerator(int floorxsize, int floorysize){
 		Floor generatedFloor = new Floor(floorxsize, floorysize);
 		RoomFeature North, South, East, West;
@@ -59,6 +105,8 @@ public class Generator {
 		}	
 		
 	}
+	*/
+	/*
 	public static void roomGenerator(RoomFeature north, RoomFeature east, RoomFeature south, RoomFeature west, ArrayList<Entity> ent){
 		
 	}
@@ -67,6 +115,7 @@ public class Generator {
 	   * method that checks 2 rooms for adjacent doors.
 	   * ------------------------------------------------------------------------------------------------------------
 	   */
+	/*
 	public static boolean doorChecker(Room roomA, Room roomB){
 		boolean isadjacent,validity;
 		int adjcheckA[] = roomA.getCoords();
@@ -105,4 +154,5 @@ public class Generator {
 			validity = false;
 		return validity;
 	}
+	*/
 }
