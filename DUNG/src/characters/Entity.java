@@ -2,6 +2,8 @@ package characters;
 
 import display.Display;
 
+import static display.Display.println;
+
 import java.util.ArrayList;
 import item.Armor;
 import item.Item;
@@ -122,8 +124,8 @@ public class Entity {
 		return equippedItems;
 	}
 
-	public void setEquippedItems(int location, Item item) {
-		equippedItems[location] = item;
+	public void setEquippedItems(Item item) {
+		equippedItems[item.getEquippedItemSlot()] = item;
 	}
 
 	public void setSpells(MagicSpell spell) {
@@ -136,26 +138,30 @@ public class Entity {
 
 	public void setInventory(Item item) {
 		inventory.add(item);
-		item.setQuantity(item.getQuantity() + 1);
+		item.setQuantity(item.getQuantity() + 1); // What is this mess?
 	}
 
 	public ArrayList<Item> getInventory() {
 		return inventory;
 	}
 	
-	public void displayInventory(ArrayList<Item> inventory) {
-		Display.println("--------------------------------------------------------------------");
-		Display.println("* Inventory *");
+	public void clearInventory() {
+		inventory = new ArrayList<Item>();
+		money = 0;
+	}
 
+	public void displayInventory() {
+		println("--------------------------------------------------------------------");
+		println("* Inventory *");
 		for (int i = 0; i < inventory.size(); i++) {
 			if(inventory.get(i).getQuantity() == 0)
 				inventory.remove(inventory.get(i));
-			System.out.println(inventory.get(i));
+			println(i + 1 + ". " + inventory.get(i));
 		}
+		println("--------------------------------------------------------------------");
 
-		Display.println("--------------------------------------------------------------------");
-	}
-
+	}// End displayInventory
+	
 	public void removeEquippedItems(int location) {
 		equippedItems[location] = null;
 	}
@@ -272,7 +278,32 @@ public class Entity {
 		return i.consume(i,e);	
 	}
 	
-	
+	public void useItem(Item item, String action, ArrayList<Entity> targets) {
+		Display.debug(action);
+		if (action.equals("drop")) {
+			//droppedLoot.add(item); // Drops it on the ground for someone to pick up at the end of combat (not recommended). TODO fix
+			this.getInventory().remove(item);
+			Display.println(this.getName() + " drops " + item.getName() + " on the ground.");
+		}
+		else if (action.equals("use")) {
+			if (item.isEquipable()) {
+				this.setEquippedItems(item); 
+				Display.println(getName() + " equips " + item.getName() + ".");
+			}
+			else if (item.isConsumable()) {
+				if (this.consumeItem(item, this)) 
+					Display.println(this.getName() + " consumes " + item.getName() + ".");
+				else Display.debug("Item was not consumable!!!");
+			}
+			// else if (item.isTargetable()) { 
+		}
+		else if (action.equals("give")) {
+			targets.get(0).getInventory().add(item);
+			this.getInventory().remove(item);
+			Display.println(this.getName() + " gives " + item.getName() + " to " + targets.get(0).getName() + ".");
+		}
+		else Display.debug("action input wrong");
+	}
 	
 	
 }// End Class Entity

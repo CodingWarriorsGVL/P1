@@ -83,12 +83,11 @@ public class MainGame {
 		player1.setYPosition(9);
 
 		Entity giantRoach = new Entity("Giant Roach", 40, 0, 3, 6, 1, 2, 1, true); // Make Enemy
-
-		giantRoach.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
+		giantRoach.setEquippedItems(bite); // Give Weapon to Enemy
 
 		Entity giantMouse = new Entity("Giant Mouse", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
-		giantMouse.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
-		*/
+		giantMouse.setEquippedItems(bite); // Give Weapon to Enemy
+
 
 
 		//dungeon.getFloor(0).getRoom(1, 1).addInstances(testInstance); // Place Instance Somewhere.
@@ -136,6 +135,7 @@ public class MainGame {
 		player1.setInventory(testLeggings);
 		player1.setInventory(testShield);
 		player1.setInventory(testSword);
+		player1.setInventory(axe);
 		//player1.changeEquippedItems();
 
 		boolean play = true;
@@ -150,6 +150,7 @@ public class MainGame {
 			//print(player.getPosition());
 
 			currentRoom = dungeon.getFloor(0).getRoom(player1.getXPosition(), player1.getYPosition());
+			player1.setCurrentRoom(currentRoom);
 
 			// Activate Instances.
 			//This seems like best location for now, just after you have entered the room.
@@ -212,21 +213,21 @@ public class MainGame {
 			if (input.toLowerCase().charAt(0)=='n') {
 				player1.setYPosition(player1.getYPosition() - 1);
 			}
-			if (input.toLowerCase().charAt(0)=='e') {
+			else if (input.toLowerCase().charAt(0)=='e') {
 				player1.setXPosition(player1.getXPosition() + 1);
 			}
-			if (input.toLowerCase().charAt(0)=='s') {
+			else if (input.toLowerCase().charAt(0)=='s') {
 				player1.setYPosition(player1.getYPosition() + 1);
 			}
-			if (input.toLowerCase().charAt(0)=='w') {
+			else if (input.toLowerCase().charAt(0)=='w') {
 				player1.setXPosition(player1.getXPosition() - 1);
 			}
-			if (input.toLowerCase().charAt(0)=='q') {
+			else if (input.toLowerCase().charAt(0)=='q') {
 				play = false;
 			}
 			
-			if (input.toLowerCase().charAt(0)=='c') {
-				player1.changeEquippedItems();
+			else if (input.toLowerCase().charAt(0)=='c') {
+				player1.characterMenu();
 			}
 			//enemy = getEnemy();
 

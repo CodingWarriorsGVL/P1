@@ -2,6 +2,7 @@ package characters;
 
 import java.util.*;
 
+import display.Display;
 import item.Armor;
 import item.Item;
 import item.Weapon;
@@ -10,6 +11,7 @@ import static characters.DamageSpell.*;
 import static item.Weapon.*;
 import static item.Potion.*;
 import static item.Currency.*;
+import navigation.Room;
 
 import static display.Display.*;
 
@@ -18,7 +20,8 @@ public class Player extends Entity {
 	// Class Variables
 	int xPosition;
 	int yPosition;
-	
+	Room currentRoom;
+
 	static Player player;
 
 	public Player(String name, int health, int mana, int melee, int defense, int intellect, int perception, int level) {
@@ -26,7 +29,13 @@ public class Player extends Entity {
 	}
 
 	// Getters and Setters
-
+	
+	public void setCurrentRoom(Room room) {
+		currentRoom = room;
+	}
+	public Room getCurrentRoom() {
+		return currentRoom;
+	}
 
 
 
@@ -41,18 +50,7 @@ public class Player extends Entity {
 		println("--------------------------------------------------------------------");
 	}
 
-	public void displayInventory() {
 
-		println("--------------------------------------------------------------------");
-		println("* Inventory *");
-
-		for (int i = 0; i < inventory.size(); i++) {
-			println(i + 1 + ". " + inventory.get(i));
-		}
-
-		println("--------------------------------------------------------------------");
-
-	}// End displayInventory
 
 	public void displayEquippedSpells() {
 		println("--------------------------------------------------------------------");
@@ -95,8 +93,7 @@ public class Player extends Entity {
 			if (input > 0 && input <= inventory.size() && ((Item) inventory.get(input - 1)).getEquippedItemSlot() < 5) {
 				inventory.add(equippedItems[((Item) inventory.get(input - 1)).getEquippedItemSlot()]);
 				this.removeEquippedItems(((Item) inventory.get(input - 1)).getEquippedItemSlot());
-				this.setEquippedItems(((Item) inventory.get(input - 1)).getEquippedItemSlot(),
-						((Item) inventory.get(input - 1)));
+				this.setEquippedItems(((Item) inventory.get(input - 1)));
 				inventory.remove(((Item) inventory.get(input - 1)));
 
 				this.setMeleeDamage(equippedItems);
@@ -184,12 +181,9 @@ public class Player extends Entity {
 				+ "\nMana: " + mana + "\nMelee: " + melee + "\nDefense: " + defense + "\nIntellect: "
 				+ intellect + "\nPerception: " + perception;
 	}
-	
-
-	public static Player buildCharacter(){	
-		
 
 
+	public static Player buildCharacter() {	
 		String nameTemp = input("# Hello traveler, what is your name? #");
 		if (!nameTemp.equals("Speedy")) { // Fast character creation
 			player = new Player(" ", 0, 0, 0, 0, 0, 0, 1);
@@ -208,161 +202,249 @@ public class Player extends Entity {
 				else
 					checkingName = false;
 			}//End while(checkingName)
-
-			boolean spendingPoints = true;
-
-			while(spendingPoints){
-
-				int spendablePoints = player.getAbilityPoints();
-				int input = 0;
-				answer = " ";
-
-				println("# Ok " + player.getName() + " you have " + spendablePoints + " points to spend in: Health, Mana, "
-						+ "Melee, Defense, Intellect, and Perception. #"
-						+ "\n# Use them wisely! #");
-
-				
-				if(spendablePoints > 0) {									
-					do {
-						input = inputInt("\n# How many points would you like to spend in health? #");	
-						if(spendablePoints >= input) {
-							player.setHealth(input);
-							player.setMaxHealth(input);							
-						}
-						else 
-							println("You do not have enough spendable points for the quantity that you entered.");
-							
-					}while(input > spendablePoints);	
-					spendablePoints -= input;
-					input = 0;
-					println("# You now have " + spendablePoints + " points left. #");
-				}
-
-				if(spendablePoints > 0){
-					do {
-						input = inputInt("\n# How many points would you like to spend in mana? #");
-						if(spendablePoints >= input) {
-							player.setMana(input);
-							player.setMaxMana(input);
-						}
-						else
-							println("You do not have enough spendable points for the quantity you entered.");
-					}while(input > spendablePoints);
-					spendablePoints -= input;
-					println("# You now have " + spendablePoints + " points left. #");
-					input = 0;
-				}
-
-				if(spendablePoints > 0){
-					do {
-						input = inputInt("\n# How many points would you like to spend in melee? #");
-						if(spendablePoints >= input) {
-							player.setMelee(input);
-						}	
-						else 
-							println("You do not have enough spendable points for the quantity that you entered.");
-					}while(input > spendablePoints);	
-					spendablePoints -= input;
-					println("# You now have " + spendablePoints + " points left. #");
-					input = 0;
-				}
-
-				if(spendablePoints > 0){			
-					do {
-						input = inputInt("\n# How many points would you like to spend in defense? #");
-						if(spendablePoints >= input) {
-							player.setDefense(input);
-						}
-						else 
-							println("You do not have enough spendable points for the quantity that you entered.");
-					}while(input > spendablePoints);
-					spendablePoints -= input;
-					println("# You now have " + spendablePoints + " points left. #");
-					input = 0;
-				}
-
-				if(spendablePoints > 0){
-					do {				
-						input = inputInt("\n# How many points would you like to spend in intellect? #");
-						if(spendablePoints >= input) {
-							player.setIntellect(input);
-						}
-						else 
-							println("You do not have enough spendable points for the quantity that you entered.");
-					}while(input > spendablePoints);
-					spendablePoints -= input;
-					println("# You now have " + spendablePoints + " points left. #");
-					input = 0;
-				}
-
-				if(spendablePoints > 0){
-					do {
-						input = inputInt("\n# How many points would you like to spend in perception? #");
-						if(spendablePoints >= input) {
-							player.setPerception(input);				
-						}
-						else 
-							println("You do not have enough spendable points for the quantity that you entered.");
-					}while(input > spendablePoints);
-					spendablePoints -= input;
-					println("# You now have " + spendablePoints + " points left. #");
-					input = 0;
-				}
-
-				println("\n# Ok " + player.getName() + " here is your character build. #");
-				println("--------------------------------------------------------------------");
-				print(player);
-				println("--------------------------------------------------------------------");
-				answer = input("\n# Are you happy with your character build? #\n1.Yes\n2.No");
-
-				if(answer.equals("2")){
-					spendingPoints = true;
-				} else 
-					spendingPoints = false;
-			}//End while(spendingPoints)
-		} else  {
-			player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
-		}
-		
-			println("\n# Now let's get you some starter gear! #");
-
-			player.setEquippedItems(ruggedHelmet.getEquippedItemSlot(), ruggedHelmet);
-			player.setEquippedItems(ruggedArmor.getEquippedItemSlot(), ruggedArmor);
-			player.setEquippedItems(ruggedLeggings.getEquippedItemSlot(), ruggedLeggings);
-			player.setEquippedItems(ruggedShield.getEquippedItemSlot(), ruggedShield);
-			player.setEquippedItems(ruggedSword.getEquippedItemSlot(), ruggedSword);
-			player.setBlocking(player.getEquippedItems());
-			player.setMeleeDamage(player.getEquippedItems());
+			player.spendPoints();
 
 
-			player.setInventory(healthPotion);
-			player.setInventory(goldCoin);
+		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
+		System.out.println("\n# Now let's get you some starter gear! #");
 
-			healthPotion.setQuantity(3);
-			goldCoin.setQuantity(10);
+		player.setEquippedItems(ruggedHelmet);
+		player.setEquippedItems(ruggedArmor);
+		player.setEquippedItems(ruggedLeggings);
+		player.setEquippedItems(ruggedShield);
+		player.setEquippedItems(testSword);
+		player.setBlocking(player.getEquippedItems());
+		player.setMeleeDamage(player.getEquippedItems());
 
 
+		player.setInventory(healthPotion);
+		//player.setInventory(goldCoin);
+
+		healthPotion.setQuantity(3);
+		//goldCoin.setQuantity(10);
+
+		player.setMoney(10); // Gives 10 gold coins to work with.
+
+		System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
+				" Gold coins to get you started check your inventory to see them. #");
+
+		player.displayEquippedItems();
+		player.displayInventory();
+
+		println("# Wait! Before you leave out on your adventure, I wanted to tell you that you have 2 starter spells. #");
+		println("# These are your starter spells. #");
+		player.setEquippedSpells(0, fireBolt);
+		player.setEquippedSpells(1, lightHealing);
+		player.setSpells(fireBolt);
+		player.setSpells(lightHealing);
+		player.setSpells(testAttack);
+		player.setSpells(testHealing);
+		//player.changeEquippedSpells();
+		player.displayEquippedSpells();
+
+
+
+		return player;
+	}//End buildCharacter
+
+	public void spendPoints() {
+		boolean spendingPoints = true;
+		String answer;
+		Player player = this; // Yes this is bad, but it was FAST, TODO correct variables.
+
+		while(spendingPoints){
+			int spendablePoints = player.getAbilityPoints();
+			int input = 0;
+			answer = " ";
 
 			println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
 					" Gold coins to get you started check your inventory to see them. #");
 
-			player.displayEquippedItems();
-			player.displayInventory();
 
-			println("# Wait! Before you leave out on your adventure, I wanted to tell you that you have 2 starter spells. #");
-			println("# These are your starter spells. #");
-			player.setEquippedSpells(0, fireBolt);
-			player.setEquippedSpells(1, lightHealing);
-			player.setSpells(fireBolt);
-			player.setSpells(lightHealing);
-			player.setSpells(testAttack);
-			player.setSpells(testHealing);
-			//player.changeEquippedSpells();
-			player.displayEquippedSpells();
+			println("# Ok " + player.getName() + " you have " + spendablePoints + " points to spend in: Health, Mana, "
+					+ "Melee, Defense, Intellect, and Perception. #"
+					+ "\n# Use them wisley! #");
 
 
-		
-		return player;
-	}//End buildCharacter
+			if(spendablePoints > 0) {									
+				do {
+					input = inputInt("\n# How many points would you like to spend in health? #");	
+					if(spendablePoints >= input) {
+						player.setHealth(input);
+						player.setMaxHealth(input);							
+					}
+					else 
+						System.out.println("You do not have enough spendable points for the quantity that you entered.");
+
+				}while(input > spendablePoints);	
+				spendablePoints -= input;
+				input = 0;
+				println("# You now have " + spendablePoints + " points left. #");
+			}
+
+			if(spendablePoints > 0){
+				do {
+					input = inputInt("\n# How many points would you like to spend in mana? #");
+					if(spendablePoints >= input) {
+						player.setMana(input); // This can be cheesed!
+						player.setMaxMana(input);
+					}
+					else
+						System.out.println("You do not have enough spendable points for the quantity you entered.");
+				}while(input > spendablePoints);
+				spendablePoints -= input;
+				println("# You now have " + spendablePoints + " points left. #");
+				input = 0;
+			}
+
+			if(spendablePoints > 0){
+				do {
+					input = inputInt("\n# How many points would you like to spend in melee? #");
+					if(spendablePoints >= input) {
+						player.setMelee(input);
+					}	
+					else 
+						System.out.println("You do not have enough spendable points for the quantity that you entered.");
+				}while(input > spendablePoints);	
+				spendablePoints -= input;
+				println("# You now have " + spendablePoints + " points left. #");
+				input = 0;
+			}
+
+			if(spendablePoints > 0){			
+				do {
+					input = inputInt("\n# How many points would you like to spend in defense? #");
+					if(spendablePoints >= input) {
+						player.setDefense(input);
+					}
+					else 
+						System.out.println("You do not have enough spendable points for the quantity that you entered.");
+				}while(input > spendablePoints);
+				spendablePoints -= input;
+				println("# You now have " + spendablePoints + " points left. #");
+				input = 0;
+			}
+
+			if(spendablePoints > 0){
+				do {				
+					input = inputInt("\n# How many points would you like to spend in intellect? #");
+					if(spendablePoints >= input) {
+						player.setIntellect(input);
+					}
+					else 
+						System.out.println("You do not have enough spendable points for the quantity that you entered.");
+				}while(input > spendablePoints);
+				spendablePoints -= input;
+				println("# You now have " + spendablePoints + " points left. #");
+				input = 0;
+			}
+
+			if(spendablePoints > 0){
+				do {
+					input = inputInt("\n# How many points would you like to spend in perception? #");
+					if(spendablePoints >= input) {
+						player.setPerception(input);				
+					}
+					else 
+						System.out.println("You do not have enough spendable points for the quantity that you entered.");
+				}while(input > spendablePoints);
+				spendablePoints -= input;
+				println("# You now have " + spendablePoints + " points left. #");
+				input = 0;
+			}
+
+			println("\n# Ok " + player.getName() + " here is your character build. #");
+			println("--------------------------------------------------------------------");
+			print(player);
+			println("--------------------------------------------------------------------");
+
+			boolean isValid = false; // Needs better name, feel free to fix.
+			do {
+				answer = input("\n# Are you happy with your character build? #\n1.Yes\n2.No\n3.Back").toLowerCase();;
+				if(answer.equals("2") || answer.equals("n") || answer.equals("no")) {
+					spendingPoints = true;
+					isValid = true;
+				} else if (answer.equals("1") || answer.equals("y") || answer.equals("yes")) {
+					spendingPoints = false;
+					isValid = true;
+				} else if (answer.equals("3") || answer.equals("b") || answer.equals("back")) {
+					spendingPoints = false;
+					isValid = true;
+				} else Display.println("Not a valid answer.");
+			} while (!isValid);
+		}//End while(spendingPoints)
+	}
+
+	public void characterMenu() {
+		String input;
+		Display.println("--------------------------------------------------------------------");
+		input = Display.input("Character Menu, Choose an option (Inventory, Spells, Attributes, Back)");
+		Boolean isValid = false;
+		do {
+			if (input.toLowerCase().charAt(0)=='i') {
+				characterInventory();
+				isValid = true;
+			}
+			else if (input.toLowerCase().charAt(0)=='s') {
+				changeEquippedSpells();
+				isValid = true;
+			}
+			else if (input.toLowerCase().charAt(0)=='a') {
+				spendPoints();
+				isValid = true;
+			}
+			else if (input.toLowerCase().charAt(0)=='b') {
+				isValid = true;
+			}
+		} while (!isValid);
+	}
+
+	public void characterInventory() {
+		String actionOnItem;
+		Item choosenItem;
+		int itemNum;
+		ArrayList<Entity> targets = new ArrayList<Entity>();
+		ArrayList<Entity> potentialTargets; // Everyone in the room.
+		if (currentRoom.getEnties() != null)
+			potentialTargets = new ArrayList<Entity>(currentRoom.getEnties());
+		else potentialTargets = new ArrayList<Entity>();
+
+		this.displayInventory();
+		itemNum = Display.inputInt("Choose an item number: ");
+		choosenItem = this.getInventory().get(itemNum-1);
+
+		Display.print("What would you like to do? Options: ");
+		if (choosenItem.isConsumable() || choosenItem.isEquipable())
+			Display.print("Use, ");
+		Display.print("Drop, Give");
+		do {
+			actionOnItem = Display.input("").toLowerCase();
+		} while (!((actionOnItem.equals("use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // Watch the parentheses 
+
+		if (false /*choosenItem.isTargetable()*/ || actionOnItem.equals("give")) {
+			targets.add(potentialTargets.get(pickTarget(potentialTargets)-1));
+		}
+		else targets.add(this);
+
+		useItem(getInventory().get(itemNum), actionOnItem, targets);
+	}
+
+	public int pickTarget(ArrayList<Entity> targetList) {
+		Display.println("Targets:");
+		for (Entity i: targetList) {
+			Display.print(i);
+		}
+
+		int choice;
+		if (targetList.size() > 1) {
+			do {
+				choice = Display.inputInt("Choose a target: (1 - " + targetList.size() + ")");
+			} while (!(choice > 0 && choice <= targetList.size()));
+		} else {
+			choice = 1;
+		}
+		return choice;
+	}
+
 
 }// End Class Player

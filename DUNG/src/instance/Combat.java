@@ -128,7 +128,7 @@ public class Combat extends Instance {
 						Item choosenItem;
 						int itemNum;
 
-						currentEntity.displayInventory(currentEntity.getInventory());
+						currentEntity.displayInventory();
 						itemNum = Display.inputInt("Choose an item number: ");
 						choosenItem = currentEntity.getInventory().get(itemNum-1);
 
@@ -198,7 +198,7 @@ public class Combat extends Instance {
 			//damage = (int)(Math.random()*(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)+(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)) + attacker.getEquippedItems()[4].getAttack();
 			if (attacker.getEquippedItems()[4] != null)
 				weapon = (Weapon)attacker.getEquippedItems()[4];
-			else weapon = new Weapon("unarmed", 0, 0, 0, 0, 4, 0, false); // May seem excessive to make a new one each time, and we could just have one per a combat.
+			else weapon = new Weapon("unarmed", 0, 0, 0, 0, 0, false); // May seem excessive to make a new one each time, and we could just have one per a combat.
 			damage = (int)(Math.random()*((weapon.getAttack()+attacker.getMelee())/2) + (weapon.getAttack()+attacker.getMelee())/2 +1); // Damage will be from half weapon attack + melee to full weapon attack + melee.
 			if (damage < 0) damage = 0;
 			double damageReduction = (defender.getBlocking()+DAMAGE_REDUCTION_MULTIPLIER)/DAMAGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
@@ -281,31 +281,7 @@ public class Combat extends Instance {
 	}
 
 	public void accessInventory(Entity currentEntity, RPGAction currentAction) {
-		Item item = currentEntity.getInventory().get(currentAction.getInventorySlot());
-
-		if (currentAction.getInventoryAction().equals("drop")) {
-			droppedLoot.add(item); // Drops it on the ground for someone to pick up at the end of combat (not recommended).
-			currentEntity.getInventory().remove(item);
-			Display.println(currentEntity.getName() + " drops " + item.getName() + " on the ground.");
-		}
-		else if (currentAction.getInventoryAction().equals("use")) {
-			if (item.isEquipable()) {
-				currentEntity.setEquippedItems(item.getEquippedItemSlot(), item); 
-				// TODO rearrange equipping so it's not just a menu, but can be used here too? An auto check on entity that equips an item to it's proper place based on what it is.
-			}
-			else if (item.isConsumable()) {
-				if (currentEntity.consumeItem(item, currentEntity)) 
-					Display.println(currentEntity.getName() + " consumes " + item.getName() + ".");
-				else Display.debug("Item was not consumable!!!");
-			}
-			// else if (item.isTargetable()) { 
-		}
-		else if (currentAction.getInventoryAction().equals("give")) {
-			currentAction.getTargets().get(0).getInventory().add(item);
-			currentEntity.getInventory().remove(item);
-			Display.println(currentEntity.getName() + " gives " + item.getName() + " to " + currentAction.getTargets().get(0).getName() + ".");
-		}
-		else Display.debug("ERROR: improper inventory action given!"); // We need to establish something bigger for error catching probably.
+		currentEntity.useItem(currentEntity.getInventory().get(currentAction.getInventorySlot()), currentAction.getInventoryAction(), currentAction.getTargets());
 	}
 
 	public int pickTarget(ArrayList<Entity> targetList) {
@@ -404,6 +380,9 @@ public class Combat extends Instance {
 					break;
 				}
 			}
+			
+			for (Entity i: dead)
+				i.clearInventory();
 		}
 		else {
 			Display.print("All teams are dead.\nOops!\n");

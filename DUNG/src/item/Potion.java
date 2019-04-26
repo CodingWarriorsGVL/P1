@@ -88,6 +88,14 @@ public class Potion extends Item {
 		}
 	}
 	
+	public Potion clone() {
+		return new Potion(name, dropChance, sellValue, buyValue, healAmount, equippedItemSlot, quantity, isConsumable);
+	}
+	
+	public Potion clone(Potion potion) {
+		return potion.clone();
+	}
+	
 	public String toString() {
 		return name + ": " + quantity;
 	}
