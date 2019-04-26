@@ -84,7 +84,7 @@ public class MainGame {
 
 		// Made the enemies more buff for a bit for testing reasons. This can be removed. - Jared
 		Entity giantRoach = new Entity("Giant Roach", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
-		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 4, 0, false); // Make Weapon for Enemy
+		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 0, false); // Make Weapon for Enemy
 		giantRoach.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
 
 		Entity giantMouse = new Entity("Giant Mouse", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy

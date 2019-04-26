@@ -136,11 +136,16 @@ public class Entity {
 
 	public void setInventory(Item item) {
 		inventory.add(item);
-		item.setQuantity(item.getQuantity() + 1);
+		item.setQuantity(item.getQuantity() + 1); // What is this mess?
 	}
 
 	public ArrayList<Item> getInventory() {
 		return inventory;
+	}
+	
+	public void clearInventory() {
+		inventory = new ArrayList<Item>();
+		money = 0;
 	}
 	
 	public void displayInventory(ArrayList<Item> inventory) {

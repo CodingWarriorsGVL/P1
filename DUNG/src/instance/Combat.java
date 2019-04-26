@@ -198,7 +198,7 @@ public class Combat extends Instance {
 			//damage = (int)(Math.random()*(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)+(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)) + attacker.getEquippedItems()[4].getAttack();
 			if (attacker.getEquippedItems()[4] != null)
 				weapon = (Weapon)attacker.getEquippedItems()[4];
-			else weapon = new Weapon("unarmed", 0, 0, 0, 0, 4, 0, false); // May seem excessive to make a new one each time, and we could just have one per a combat.
+			else weapon = new Weapon("unarmed", 0, 0, 0, 0, 0, false); // May seem excessive to make a new one each time, and we could just have one per a combat.
 			damage = (int)(Math.random()*((weapon.getAttack()+attacker.getMelee())/2) + (weapon.getAttack()+attacker.getMelee())/2 +1); // Damage will be from half weapon attack + melee to full weapon attack + melee.
 			if (damage < 0) damage = 0;
 			double damageReduction = (defender.getBlocking()+DAMAGE_REDUCTION_MULTIPLIER)/DAMAGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
@@ -404,6 +404,9 @@ public class Combat extends Instance {
 					break;
 				}
 			}
+			
+			for (Entity i: dead)
+				i.clearInventory();
 		}
 		else {
 			Display.print("All teams are dead.\nOops!\n");

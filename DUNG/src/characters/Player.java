@@ -333,12 +333,12 @@ public class Player extends Entity {
 
 
 			player.setInventory(healthPotion);
-			player.setInventory(goldCoin);
+			//player.setInventory(goldCoin);
 
 			healthPotion.setQuantity(3);
-			goldCoin.setQuantity(10);
+			//goldCoin.setQuantity(10);
 
-
+			player.setMoney(10); // Gives 10 gold coins to work with.
 
 			System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
 					" Gold coins to get you started check your inventory to see them. #");
