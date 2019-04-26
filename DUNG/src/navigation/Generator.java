@@ -36,31 +36,36 @@ public class Generator {
 			}
 		}
 		
-		for (int y=0; y<9; y++) {
+		for (int y=8; y>1; y--) {
 			floor.getRoom(5, y).setRoomFeature(NORTH, new Door(false));
+			floor.getRoom(5, y).setRoomFeature(SOUTH, new Door(false));
 		}
 		
-		for (int x=5; x<9; x++) {
+		for (int x=1; x<9; x++) {
+			floor.getRoom(x, 5).setRoomFeature(EAST, new Door(false));
 			floor.getRoom(x, 5).setRoomFeature(WEST, new Door(false));
 		}
-		for (int x=5; x>0; x--) {
-			floor.getRoom(x, 5).setRoomFeature(EAST, new Door(false));
+		for (int x=1; x<9; x++) {
+			floor.getRoom(x, 0).setRoomFeature(WEST, new Door(false));
+			floor.getRoom(x, 0).setRoomFeature(EAST, new Door(false));
 		}
-		for (int x=5; x<9; x++) {
+		for (int x=1; x<9; x++) {
 			floor.getRoom(x, 9).setRoomFeature(WEST, new Door(false));
-		}
-		for (int x=5; x>0; x--) {
 			floor.getRoom(x, 9).setRoomFeature(EAST, new Door(false));
 		}
 		
+		floor.getRoom(5, 9).setRoomFeature(NORTH, new Door(false));
+		floor.getRoom(5, 0).setRoomFeature(SOUTH, new Door(false));
+		floor.getRoom(0, 5).setRoomFeature(EAST, new Door(false));
+		floor.getRoom(9, 5).setRoomFeature(WEST, new Door(false));
+		floor.getRoom(0, 0).setRoomFeature(EAST, new Door(false));
+		floor.getRoom(9, 0).setRoomFeature(WEST, new Door(false));
+		floor.getRoom(0, 9).setRoomFeature(EAST, new Door(false));
+		floor.getRoom(9, 9).setRoomFeature(WEST, new Door(false));
+		
+		
 		return dungeon;
-	}
-	
-	/*
-
-	private String dungeon_name;
-	private int dungeon_height, dungeon_width, floor_amt, xfloorfeed, yfloorfeed;
-
+	}/*
 
 
 
@@ -69,47 +74,30 @@ public class Generator {
 		//floor_amt=(1);
 		Dungeon Thisdungeon = new Dungeon(dungeon_name, floor_amt);
 	}
-
-	*/
-	/*
-	public static void floorGenerator(int floorxsize, int floorysize){
-
 	public static Floor floorGenerator(int floorxsize, int floorysize){
-
 		Floor generatedFloor = new Floor(floorxsize, floorysize);
 		Room placedRoom, previousRoom;
 		RoomFeature North, South, East, West;
 		for(int ycnt=0;ycnt<floorysize;ycnt++) {
 			for(int xcnt=0;xcnt<floorxsize;xcnt++) {
-				Switch(ycnt){
+				switch(ycnt){
 					case 0:
-						north = new Wall();
+						North = new Wall();
 						break;
 					case floorysize:
-						south = new Wall();
-						break;
-				}
+						South = new Wall();
+						break;}
 				switch(xcnt){
 					case 0:
-						east = new Wall();
+						East = new Wall();
 						break;
 					case floorxsize:
-						west = new Wall();
-						break;
-					}
+						West = new Wall();
+						break;}
 				}
 				}
 				placedRoom = newRoom(north, east, south, west, xcnt, ycnt);
 			}
-
-		}	
-		
-	}
-	*/
-	/*
-	public static void roomGenerator(RoomFeature north, RoomFeature east, RoomFeature south, RoomFeature west, ArrayList<Entity> ent){
-		
-
 	}
 
 	/*public static Room roomGenerator(RoomFeature n, RoomFeature e, RoomFeature s, RoomFeature w, ArrayList<Entity> ent, int x, int y)
@@ -166,6 +154,5 @@ public class Generator {
 		else
 			validity = false;
 		return validity;
-	}
-	*/
+	}*/
 }

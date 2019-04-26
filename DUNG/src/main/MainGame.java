@@ -89,8 +89,7 @@ public class MainGame {
 		dungeon.getFloor(0).setRoom(new Room(door, wall, wall, door),  1, 1);
 		*/
 		player1.setXPosition(5);
-		player1.setYPosition(0);
-
+		player1.setYPosition(9);
 
 		Entity giantRoach = new Entity("Giant Roach", 40, 0, 3, 6, 1, 2, 1, true); // Make Enemy
 		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 4); // Make Weapon for Enemy
