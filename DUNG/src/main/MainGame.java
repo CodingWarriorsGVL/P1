@@ -50,7 +50,7 @@ public class MainGame {
 	public Dungeon dungeon;
 
 	public static void main(String[] args) {
-		System.setOut(System.out);
+		Display.initialize();
 		// Print Logo
 		try {
 			Scanner input;
@@ -66,6 +66,9 @@ public class MainGame {
 	}
 
 	public MainGame() {
+		
+		
+		
 		player1 = buildCharacter();
 
 
