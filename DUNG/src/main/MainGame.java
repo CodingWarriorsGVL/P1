@@ -83,8 +83,10 @@ public class MainGame {
 		player1.setYPosition(9);
 
 		//dungeon.getFloor(0).getRoom(1, 1).addInstances(testInstance); // Place Instance Somewhere.
-		dungeon.getFloor(0).getRoom(1, 1).addEntities(getGiantRoach(), getGiantMouse());
+		dungeon.getFloor(0).getRoom(5, 8).addEntities(getGiantRoach(), getGiantMouse());
 
+
+		
 
 		//For Testing
 		//player1 = new Player("", 50,50,50,50,50,50,50,2);
@@ -181,7 +183,8 @@ public class MainGame {
 				play = false;
 				break;
 			}
-
+			println(currentRoom);
+			/*
 			println("Your options are:");
 
 			if (currentRoom.getNorth() instanceof Door) {
@@ -198,6 +201,7 @@ public class MainGame {
 			}
 			println("You can quit");
 			println("Change equipped items.");
+			*/
 
 
 			String input = input("Where would you like to go?");

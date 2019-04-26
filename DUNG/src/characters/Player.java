@@ -45,7 +45,7 @@ public class Player extends Entity {
 		println("--------------------------------------------------------------------");
 		println("* Equipped Items *");
 		for (int i = 0; i < equippedItems.length; i++) {
-			print(equippedItems[i]);
+			println(equippedItems[i]);
 		}
 		println("--------------------------------------------------------------------");
 	}
@@ -426,7 +426,7 @@ public class Player extends Entity {
 		}
 		else targets.add(this);
 
-		useItem(getInventory().get(itemNum), actionOnItem, targets);
+		useItem(getInventory().get(itemNum-1), actionOnItem, targets);
 	}
 
 	public int pickTarget(ArrayList<Entity> targetList) {
