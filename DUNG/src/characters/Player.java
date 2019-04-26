@@ -320,14 +320,17 @@ public class Player extends Entity {
 				} else 
 					spendingPoints = false;
 			}//End while(spendingPoints)
-		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
+		} else  {
+			player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
+		}
+		
 			println("\n# Now let's get you some starter gear! #");
 
 			player.setEquippedItems(ruggedHelmet.getEquippedItemSlot(), ruggedHelmet);
 			player.setEquippedItems(ruggedArmor.getEquippedItemSlot(), ruggedArmor);
 			player.setEquippedItems(ruggedLeggings.getEquippedItemSlot(), ruggedLeggings);
 			player.setEquippedItems(ruggedShield.getEquippedItemSlot(), ruggedShield);
-			player.setEquippedItems(testSword.getEquippedItemSlot(), testSword);
+			player.setEquippedItems(ruggedSword.getEquippedItemSlot(), ruggedSword);
 			player.setBlocking(player.getEquippedItems());
 			player.setMeleeDamage(player.getEquippedItems());
 
