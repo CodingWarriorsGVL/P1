@@ -8,17 +8,10 @@ import characters.Player;
 import display.Display;
 
 import static characters.Player.*;
-import static item.Armor.ruggedArmor;
-import static item.Armor.ruggedHelmet;
-import static item.Armor.ruggedLeggings;
-import static item.Armor.ruggedShield;
-import static item.Armor.testArmor;
-import static item.Armor.testHelmet;
-import static item.Armor.testLeggings;
-import static item.Armor.testShield;
-import static item.Potion.healthPotion;
-import static item.Weapon.ruggedSword;
-import static item.Weapon.testSword;
+import static item.Armor.*;
+import static item.Potion.*;
+import static item.Weapon.*;
+import static characters.Enemy.*;
 
 import item.Armor;
 import item.Potion;
@@ -58,6 +51,7 @@ public class MainGame {
 			while (input.hasNextLine()) {
 				println(input.nextLine());
 			}
+			input.close();
 
 		} catch (FileNotFoundException e) {
 			println("Error Loading Logo");
@@ -86,17 +80,18 @@ public class MainGame {
 		player1.setYPosition(0);
 
 		// Made the enemies more buff for a bit for testing reasons. This can be removed. - Jared
+		/*
 		Entity giantRoach = new Entity("Giant Roach", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
 		Weapon bite = new Weapon("bite", 0, 0, 0, 3, 4, 0, false); // Make Weapon for Enemy
 		giantRoach.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
 
 		Entity giantMouse = new Entity("Giant Mouse", 40, 0, 30, 6, 1, 20, 1, true); // Make Enemy
 		giantMouse.setEquippedItems(WEAPON, bite); // Give Weapon to Enemy
-		
+		*/
 
 
 		//dungeon.getFloor(0).getRoom(1, 1).addInstances(testInstance); // Place Instance Somewhere.
-		dungeon.getFloor(0).getRoom(1, 1).addEntities(giantRoach, giantMouse);
+		dungeon.getFloor(0).getRoom(1, 1).addEntities(getGiantRoach(), getGiantMouse());
 
 
 		//For Testing
@@ -174,7 +169,9 @@ public class MainGame {
 			combat.addEntity(player1, 0);
 			
 			for (Entity i: currentRoom.getEnties()) {
-				combat.addEntity(i, 1);	
+				if (i instanceof Enemy) {
+					combat.addEntity(i, 1);	
+				}
 			}
 			
 			if (combat.checkActive()) {
