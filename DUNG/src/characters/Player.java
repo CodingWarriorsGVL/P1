@@ -1,6 +1,6 @@
 package characters;
 
-import java.util.*;
+import java.util.ArrayList;
 
 import display.Display;
 import item.Armor;
@@ -45,7 +45,7 @@ public class Player extends Entity {
 		println("--------------------------------------------------------------------");
 		println("* Equipped Items *");
 		for (int i = 0; i < equippedItems.length; i++) {
-			print(equippedItems[i]);
+			println(equippedItems[i]);
 		}
 		println("--------------------------------------------------------------------");
 	}
@@ -206,7 +206,7 @@ public class Player extends Entity {
 
 
 		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
-		System.out.println("\n# Now let's get you some starter gear! #");
+		Display.println("\n# Now let's get you some starter gear! #");
 
 		player.setEquippedItems(ruggedHelmet);
 		player.setEquippedItems(ruggedArmor);
@@ -225,7 +225,7 @@ public class Player extends Entity {
 
 		player.setMoney(10); // Gives 10 gold coins to work with.
 
-		System.out.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
+		Display.println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
 				" Gold coins to get you started check your inventory to see them. #");
 
 		player.displayEquippedItems();
@@ -274,7 +274,7 @@ public class Player extends Entity {
 						player.setMaxHealth(input);							
 					}
 					else 
-						System.out.println("You do not have enough spendable points for the quantity that you entered.");
+						Display.println("You do not have enough spendable points for the quantity that you entered.");
 
 				}while(input > spendablePoints);	
 				spendablePoints -= input;
@@ -290,7 +290,7 @@ public class Player extends Entity {
 						player.setMaxMana(input);
 					}
 					else
-						System.out.println("You do not have enough spendable points for the quantity you entered.");
+						Display.println("You do not have enough spendable points for the quantity you entered.");
 				}while(input > spendablePoints);
 				spendablePoints -= input;
 				println("# You now have " + spendablePoints + " points left. #");
@@ -304,7 +304,7 @@ public class Player extends Entity {
 						player.setMelee(input);
 					}	
 					else 
-						System.out.println("You do not have enough spendable points for the quantity that you entered.");
+						Display.println("You do not have enough spendable points for the quantity that you entered.");
 				}while(input > spendablePoints);	
 				spendablePoints -= input;
 				println("# You now have " + spendablePoints + " points left. #");
@@ -318,7 +318,7 @@ public class Player extends Entity {
 						player.setDefense(input);
 					}
 					else 
-						System.out.println("You do not have enough spendable points for the quantity that you entered.");
+						Display.println("You do not have enough spendable points for the quantity that you entered.");
 				}while(input > spendablePoints);
 				spendablePoints -= input;
 				println("# You now have " + spendablePoints + " points left. #");
@@ -332,7 +332,7 @@ public class Player extends Entity {
 						player.setIntellect(input);
 					}
 					else 
-						System.out.println("You do not have enough spendable points for the quantity that you entered.");
+						Display.println("You do not have enough spendable points for the quantity that you entered.");
 				}while(input > spendablePoints);
 				spendablePoints -= input;
 				println("# You now have " + spendablePoints + " points left. #");
@@ -346,7 +346,7 @@ public class Player extends Entity {
 						player.setPerception(input);				
 					}
 					else 
-						System.out.println("You do not have enough spendable points for the quantity that you entered.");
+						Display.println("You do not have enough spendable points for the quantity that you entered.");
 				}while(input > spendablePoints);
 				spendablePoints -= input;
 				println("# You now have " + spendablePoints + " points left. #");
@@ -426,7 +426,7 @@ public class Player extends Entity {
 		}
 		else targets.add(this);
 
-		useItem(getInventory().get(itemNum), actionOnItem, targets);
+		useItem(getInventory().get(itemNum-1), actionOnItem, targets);
 	}
 
 	public int pickTarget(ArrayList<Entity> targetList) {
