@@ -211,21 +211,21 @@ public class MainGame {
 			if (input.toLowerCase().charAt(0)=='n') {
 				player1.setYPosition(player1.getYPosition() - 1);
 			}
-			if (input.toLowerCase().charAt(0)=='e') {
+			else if (input.toLowerCase().charAt(0)=='e') {
 				player1.setXPosition(player1.getXPosition() + 1);
 			}
-			if (input.toLowerCase().charAt(0)=='s') {
+			else if (input.toLowerCase().charAt(0)=='s') {
 				player1.setYPosition(player1.getYPosition() + 1);
 			}
-			if (input.toLowerCase().charAt(0)=='w') {
+			else if (input.toLowerCase().charAt(0)=='w') {
 				player1.setXPosition(player1.getXPosition() - 1);
 			}
-			if (input.toLowerCase().charAt(0)=='q') {
+			else if (input.toLowerCase().charAt(0)=='q') {
 				play = false;
 			}
 			
-			if (input.toLowerCase().charAt(0)=='c') {
-				player1.changeEquippedItems();
+			else if (input.toLowerCase().charAt(0)=='c') {
+				player1.characterMenu();
 			}
 			//enemy = getEnemy();
 
