@@ -38,7 +38,6 @@ public class MainGame {
 	Scanner scan;
 
 	int ENEMY_WAIT = 1;
-	int QUIT_MOVE = 0;
 
 	//This is my random comment somewhere
 	public Player player1;
@@ -63,10 +62,7 @@ public class MainGame {
 
 	public MainGame() {
 		
-		
-		
 		player1 = buildCharacter();
-
 
 		dungeon = generateDungeon();//new Dungeon("Scary Dungeon", 1);   //Quick and dirty dungeon build, all wall and door objects are the same which would mess up locking/unlocking, in the doors case
 		/*
@@ -85,20 +81,8 @@ public class MainGame {
 		//dungeon.getFloor(0).getRoom(1, 1).addInstances(testInstance); // Place Instance Somewhere.
 		dungeon.getFloor(0).getRoom(5, 8).addEntities(getGiantRoach(), getGiantMouse());
 
-
-		
-
-		//For Testing
-		//player1 = new Player("", 50,50,50,50,50,50,50,2);
-
-
-		//dungeon = new Dungeon();
-
-
 		//String name = getName();
 		//player = new Entity(name, map);
-
-
 
 		//FOR TESTING PLAYER SPELL INVENTORY
 		/*player1.setEquippedSpells(0, fireBall);
@@ -115,22 +99,12 @@ public class MainGame {
 
 
 		//FOR TESTING PLAYER ITEM INVENTORY
-		/*player1.setEquippedItems(ruggedHelmet.getEquippedItemSlot(), ruggedHelmet);
-		player1.setEquippedItems(ruggedArmor.getEquippedItemSlot(), ruggedArmor);
-		player1.setEquippedItems(ruggedLeggings.getEquippedItemSlot(), ruggedLeggings);
-		player1.setEquippedItems(ruggedShield.getEquippedItemSlot(), ruggedShield);
-		player1.setEquippedItems(ruggedSword.getEquippedItemSlot(), ruggedSword);
-		player1.setPlayerBlocking(player1.getEquippedItems());
-		player1.setPlayerDamage(player1.getEquippedItems());		
-		player1.setPlayerInventory(healthPotion);
-		healthPotion.setQuantity(3);*/
 		player1.setInventory(testHelmet);
 		player1.setInventory(testArmor);
 		player1.setInventory(testLeggings);
 		player1.setInventory(testShield);
 		player1.setInventory(testSword);
 		player1.setInventory(axe);
-		//player1.changeEquippedItems();
 
 		boolean play = true;
 
@@ -204,7 +178,7 @@ public class MainGame {
 			*/
 
 
-			String input = input("Where would you like to go?");
+			String input = input("Where would you like to go?", "North", "East", "South", "West", "Quit", "Character Menu");
 
 			if (input.toLowerCase().charAt(0)=='n') {
 				player1.setYPosition(player1.getYPosition() - 1);
@@ -218,36 +192,16 @@ public class MainGame {
 			else if (input.toLowerCase().charAt(0)=='w') {
 				player1.setXPosition(player1.getXPosition() - 1);
 			}
+			
 			else if (input.toLowerCase().charAt(0)=='q') {
 				play = false;
 			}
-			
 			else if (input.toLowerCase().charAt(0)=='c') {
 				player1.characterMenu();
 			}
-			//enemy = getEnemy();
-
-			//if (enemy == null) { //Move mode
 
 			//getClass().int move = player.getMove();
 			//player.Move(move);
-
-			/*} else { //Fight Mode
-
-				Thread.sleep(ENEMY_WAIT);
-
-				isEnemyAlive = true;
-
-				while(isEnemyAlive) {
-
-					enemy.display();
-					move =  player.getAttack();
-					enemy.attack(move);
-
-					move = enemy.getAttack();
-					player.attack(move);
-				}
-			} */
 
 		}
 		Display.println("Game Over");

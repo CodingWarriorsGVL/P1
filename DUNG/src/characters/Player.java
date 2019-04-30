@@ -29,7 +29,7 @@ public class Player extends Entity {
 	}
 
 	// Getters and Setters
-	
+
 	public void setCurrentRoom(Room room) {
 		currentRoom = room;
 	}
@@ -257,25 +257,19 @@ public class Player extends Entity {
 			int input = 0;
 			answer = " ";
 
-			println("# Here are the items that you now have equipped, I also gave you 3 Health Potions and some" +
-					" Gold coins to get you started check your inventory to see them. #");
-
-
 			println("# Ok " + player.getName() + " you have " + spendablePoints + " points to spend in: Health, Mana, "
 					+ "Melee, Defense, Intellect, and Perception. #"
 					+ "\n# Use them wisley! #");
 
-
 			if(spendablePoints > 0) {									
 				do {
-					input = inputInt("\n# How many points would you like to spend in health? #");	
+					input = inputInt("\n# How many points would you like to add in health? #");	
 					if(spendablePoints >= input) {
-						player.setHealth(input);
-						player.setMaxHealth(input);							
+						player.setHealth(input + player.getHealth());
+						player.setMaxHealth(input + player.getMaxHealth());							
 					}
 					else 
 						Display.println("You do not have enough spendable points for the quantity that you entered.");
-
 				}while(input > spendablePoints);	
 				spendablePoints -= input;
 				input = 0;
@@ -284,10 +278,10 @@ public class Player extends Entity {
 
 			if(spendablePoints > 0){
 				do {
-					input = inputInt("\n# How many points would you like to spend in mana? #");
+					input = inputInt("\n# How many points would you like to add in mana? #");
 					if(spendablePoints >= input) {
-						player.setMana(input); // This can be cheesed!
-						player.setMaxMana(input);
+						player.setMana(input + player.getMana()); // This can be cheesed!
+						player.setMaxMana(input + player.getMaxMana());
 					}
 					else
 						Display.println("You do not have enough spendable points for the quantity you entered.");
@@ -299,9 +293,9 @@ public class Player extends Entity {
 
 			if(spendablePoints > 0){
 				do {
-					input = inputInt("\n# How many points would you like to spend in melee? #");
+					input = inputInt("\n# How many points would you like to add in melee? #");
 					if(spendablePoints >= input) {
-						player.setMelee(input);
+						player.setMelee(input + player.getMelee());
 					}	
 					else 
 						Display.println("You do not have enough spendable points for the quantity that you entered.");
@@ -313,9 +307,9 @@ public class Player extends Entity {
 
 			if(spendablePoints > 0){			
 				do {
-					input = inputInt("\n# How many points would you like to spend in defense? #");
+					input = inputInt("\n# How many points would you like to add in defense? #");
 					if(spendablePoints >= input) {
-						player.setDefense(input);
+						player.setDefense(input + player.getDefense());
 					}
 					else 
 						Display.println("You do not have enough spendable points for the quantity that you entered.");
@@ -327,9 +321,9 @@ public class Player extends Entity {
 
 			if(spendablePoints > 0){
 				do {				
-					input = inputInt("\n# How many points would you like to spend in intellect? #");
+					input = inputInt("\n# How many points would you like to add in intellect? #");
 					if(spendablePoints >= input) {
-						player.setIntellect(input);
+						player.setIntellect(input + player.getIntellect());
 					}
 					else 
 						Display.println("You do not have enough spendable points for the quantity that you entered.");
@@ -341,9 +335,9 @@ public class Player extends Entity {
 
 			if(spendablePoints > 0){
 				do {
-					input = inputInt("\n# How many points would you like to spend in perception? #");
+					input = inputInt("\n# How many points would you like to add in perception? #");
 					if(spendablePoints >= input) {
-						player.setPerception(input);				
+						player.setPerception(input + player.getPerception());				
 					}
 					else 
 						Display.println("You do not have enough spendable points for the quantity that you entered.");
@@ -358,45 +352,34 @@ public class Player extends Entity {
 			print(player);
 			println("--------------------------------------------------------------------");
 
-			boolean isValid = false; // Needs better name, feel free to fix.
-			do {
-				answer = input("\n# Are you happy with your character build? #\n1.Yes\n2.No\n3.Back").toLowerCase();;
-				if(answer.equals("2") || answer.equals("n") || answer.equals("no")) {
-					spendingPoints = true;
-					isValid = true;
-				} else if (answer.equals("1") || answer.equals("y") || answer.equals("yes")) {
-					spendingPoints = false;
-					isValid = true;
-				} else if (answer.equals("3") || answer.equals("b") || answer.equals("back")) {
-					spendingPoints = false;
-					isValid = true;
-				} else Display.println("Not a valid answer.");
-			} while (!isValid);
+
+			answer = input("\n# Are you happy with your character build? #", "Yes", "No", "Back");;
+			if(answer.equals("No")) {
+				spendingPoints = true;
+			} else if (answer.equals("Yes")) {
+				spendingPoints = false;
+			} else if (answer.equals("Back")) {
+				spendingPoints = false;
+			} else Display.println("Not a valid answer.");
+			
+			player.setAbilityPoints(spendablePoints);
 		}//End while(spendingPoints)
 	}
 
 	public void characterMenu() {
 		String input;
 		Display.println("--------------------------------------------------------------------");
-		input = Display.input("Character Menu, Choose an option (Inventory, Spells, Attributes, Back)");
-		Boolean isValid = false;
-		do {
-			if (input.toLowerCase().charAt(0)=='i') {
-				characterInventory();
-				isValid = true;
-			}
-			else if (input.toLowerCase().charAt(0)=='s') {
-				changeEquippedSpells();
-				isValid = true;
-			}
-			else if (input.toLowerCase().charAt(0)=='a') {
-				spendPoints();
-				isValid = true;
-			}
-			else if (input.toLowerCase().charAt(0)=='b') {
-				isValid = true;
-			}
-		} while (!isValid);
+		input = Display.input("Character Menu, Choose an option (Inventory, Spells, Attributes, Back)", "Inventory", "Spells", "Attributes", "Back");
+
+		if (input.toLowerCase().charAt(0)=='i') {
+			characterInventory();
+		}
+		else if (input.toLowerCase().charAt(0)=='s') {
+			changeEquippedSpells();
+		}
+		else if (input.toLowerCase().charAt(0)=='a') {
+			spendPoints();
+		}
 	}
 
 	public void characterInventory() {
@@ -414,14 +397,18 @@ public class Player extends Entity {
 		choosenItem = this.getInventory().get(itemNum-1);
 
 		Display.print("What would you like to do? Options: ");
+		String inputOptions[] = new String[3];
 		if (choosenItem.isConsumable() || choosenItem.isEquipable())
-			Display.print("Use, ");
-		Display.print("Drop, Give");
+			inputOptions[1] = "use";
+			//Display.print("Use, ");
+		//Display.print("Drop, Give");
+		inputOptions[2] = "drop";
+		inputOptions[3] = "give";
 		do {
-			actionOnItem = Display.input("").toLowerCase();
+			actionOnItem = Display.input("", inputOptions);
 		} while (!((actionOnItem.equals("use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // Watch the parentheses 
 
-		if (false /*choosenItem.isTargetable()*/ || actionOnItem.equals("give")) {
+		if (/*choosenItem.isTargetable() ||*/ actionOnItem.equals("give")) {
 			targets.add(potentialTargets.get(pickTarget(potentialTargets)-1));
 		}
 		else targets.add(this);
