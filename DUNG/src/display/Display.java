@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.text.DefaultCaret;
 
 import characters.Entity;
@@ -46,7 +47,7 @@ public class Display {
 
 	public static void initialize() {
 		
-		log = "<html> <pre> <font size = 5>";
+		log = "<html> <pre> <font size = 4 color = 009920>"; // Just made up some color of green. Font sizes larger than 4 are only going to work if we word wrap.
 		frame = new JFrame("DUNG");
 		panel = new JPanel();
 		outputScroll = new JScrollPane();
@@ -78,6 +79,7 @@ public class Display {
 
 		outputScroll.setViewportView(output);
 		outputScroll.setPreferredSize(new Dimension(1280,620));
+		// outputScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // Disables the Horizontal scroll bar. Might be needed for word wrap.
 		DefaultCaret caret = (DefaultCaret)output.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
@@ -106,6 +108,7 @@ public class Display {
 	public static String input(String str, String... options) {
 		println(str);
 		boolean isValid = false;
+		String r = "";
 		do {
 			while (wasRead) {
 				try {
@@ -120,12 +123,28 @@ public class Display {
 			for (String option : options) {
 				if (lastOut.substring(0, Math.min(lastOut.length(), option.length())).equalsIgnoreCase(option.substring(0, Math.min(lastOut.length(), option.length())))) {
 					isValid = true;
+					r = option;
 				}
+			}
+			if (lastOut.equalsIgnoreCase("help")) {
+				println(lastOut);
+				if (options.length==0)
+					println("Any input is valid.");
+				else {
+					print("Options: ");
+					for (String o : options) 
+						print(o + ", ");
+					print("\n");
+				}
+				isValid = false;
+				wasRead = true;
 			}
 		} while (!isValid);
 		wasRead = true;
-		println(lastOut);
-		return lastOut;
+		println(lastOut + ": " + r);
+		if (r != "")
+			return r;
+		else return lastOut;
 	}
 
 	public static int inputInt(String str) {

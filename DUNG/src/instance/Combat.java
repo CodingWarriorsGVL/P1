@@ -71,7 +71,7 @@ public class Combat extends Instance {
 				//refreshGUI();
 				do {
 					ArrayList<Entity> targets = new ArrayList<Entity>();
-					String tempActionType = Display.input("Input action (attack, special, run, inventory): ");
+					String tempActionType = Display.input("Input action: ", "attack", "special", "run", "inventory");
 					//Display.println(tempActionType);
 					if (tempActionType.equals("attack")) {
 						targets.add(potentialTargets.get(pickTarget(potentialTargets)-1));
@@ -131,13 +131,16 @@ public class Combat extends Instance {
 						currentEntity.displayInventory();
 						itemNum = Display.inputInt("Choose an item number: ");
 						choosenItem = currentEntity.getInventory().get(itemNum-1);
-
-						Display.print("What would you like to do? Options: ");
+						String inputOptions[] = new String[3];
+						Display.print("What would you like to do?");
 						if (choosenItem.isConsumable() || choosenItem.isEquipable())
-							Display.print("Use, ");
-						Display.print("Drop, Give");
+							inputOptions[1] = "use";
+							//Display.print("Use, ");
+						//Display.print("Drop, Give");
+						inputOptions[2] = "drop";
+						inputOptions[3] = "give";
 						do {
-							actionOnItem = Display.input("").toLowerCase();
+							actionOnItem = Display.input("", inputOptions);
 						} while (!((actionOnItem.equals("use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // Watch the parentheses 
 
 						if (false /*choosenItem.isTargetable()*/ || actionOnItem.equals("give")) {
@@ -198,7 +201,7 @@ public class Combat extends Instance {
 			//damage = (int)(Math.random()*(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)+(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)) + attacker.getEquippedItems()[4].getAttack();
 			if (attacker.getEquippedItems()[4] != null)
 				weapon = (Weapon)attacker.getEquippedItems()[4];
-			else weapon = new Weapon("unarmed", 0, 0, 0, 0, 0, false); // May seem excessive to make a new one each time, and we could just have one per a combat.
+			else weapon = new Weapon("melee", 0, 0, 0, 0, 0, false); // May seem excessive to make a new one each time, and we could just have one per a combat.
 			damage = (int)(Math.random()*((weapon.getAttack()+attacker.getMelee())/2) + (weapon.getAttack()+attacker.getMelee())/2 +1); // Damage will be from half weapon attack + melee to full weapon attack + melee.
 			if (damage < 0) damage = 0;
 			double damageReduction = (defender.getBlocking()+DAMAGE_REDUCTION_MULTIPLIER)/DAMAGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?

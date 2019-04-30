@@ -153,6 +153,7 @@ public class Entity {
 	public void displayInventory() {
 		println("--------------------------------------------------------------------");
 		println("* Inventory *");
+		println("Gold coins: " + money);
 		for (int i = 0; i < inventory.size(); i++) {
 			if(inventory.get(i).getQuantity() == 0)
 				inventory.remove(inventory.get(i));
