@@ -40,15 +40,23 @@ public class Display {
 
 	private static String lastOut;
 	private static boolean wasRead;
-
 	private static boolean debugOn;
-	
 	private static String log;
 
+	// Appearance Settings:
+	private static final String WINDOWNAME = "DUNG"; // Jar window name.
+	private static final Color BACKCOLOR = Color.black; // Background color
+	private static final String FONTSIZE = "4"; // Font sizes larger than 4 are only going to work if we word wrap.
+	private static final String BASECOLOR = "009920"; // Color: A Green
+	private static final String FONTDEFAULT = "size = "+FONTSIZE+" color = "+BASECOLOR; // Default font settings.
+	private static final String HELPCOLOR = "f442ce"; // Color: Hot Pink
+	private static final String INPUTMESSAGECOLOR = "1662e5"; // Color: a Blue
+	private static final String USERINPUTCOLOR = "00edff"; // Color: Cyan
+	private static final String DEBUGCOLOR = "ffff00"; // Color: Yellow
+
 	public static void initialize() {
-		
-		log = "<html> <pre> <font size = 4 color = 009920>"; // Just made up some color of green. Font sizes larger than 4 are only going to work if we word wrap.
-		frame = new JFrame("DUNG");
+		log = "<html> <pre> <font "+FONTDEFAULT+">"; 
+		frame = new JFrame(WINDOWNAME);
 		panel = new JPanel();
 		outputScroll = new JScrollPane();
 		output = new JTextPane();
@@ -74,7 +82,7 @@ public class Display {
 		//output.setFont(new Font("Monospaced",Font.PLAIN, 12));
 		output.setEditable(false);
 		output.setContentType("text/html");
-		output.setBackground(Color.BLACK);
+		output.setBackground(BACKCOLOR);
 		//output.setText("<html>");
 
 		outputScroll.setViewportView(output);
@@ -106,7 +114,7 @@ public class Display {
 	}
 
 	public static String input(String str, String... options) {
-		println(str);
+		println("<font color = "+INPUTMESSAGECOLOR+">"+str+"</font>"); 
 		boolean isValid = false;
 		String r = "";
 		do {
@@ -129,19 +137,19 @@ public class Display {
 			if (lastOut.equalsIgnoreCase("help")) {
 				println(lastOut);
 				if (options.length==0)
-					println("Any input is valid.");
+					println("<font color = "+HELPCOLOR+">Any input is valid.</font>"); 
 				else {
-					print("Options: ");
+					print("<font color = "+HELPCOLOR+">Options: ");
 					for (String o : options) 
 						print(o + ", ");
-					print("\n");
+					print("\n</font>");
 				}
 				isValid = false;
 				wasRead = true;
 			}
 		} while (!isValid);
 		wasRead = true;
-		println(lastOut + ": " + r);
+		println("<font color = "+USERINPUTCOLOR+">"+ lastOut + ": " + r +"</font>"); 
 		if (r != "")
 			return r;
 		else return lastOut;
@@ -149,7 +157,7 @@ public class Display {
 
 	public static int inputInt(String str) {
 		String in;
-		int out = 0;;
+		int out = 0;
 
 		in = input(str);
 		try {
@@ -160,7 +168,7 @@ public class Display {
 		}
 		return out;
 	}
-	
+
 	public static int inputInt(String str, int max) {
 		String in;
 		int out = 0;;
@@ -188,7 +196,7 @@ public class Display {
 
 	public static void debug(String str) {
 		if (debugOn) {
-			println("Debug: " + str);
+			println("<font color = "+DEBUGCOLOR+">Debug: " + str +"</font>");
 		}
 	}
 

@@ -193,10 +193,11 @@ public class Player extends Entity {
 			boolean checkingName = true;
 
 			while(checkingName){
-				answer = input("\n# Ah so your name is " + player.getName() + ". #" + "\n\n# Is that correct? #\n1.Yes\n2.No");
+				println("# Ah so your name is " + player.getName() + ". #");
+				answer = input("# Is that correct? #", "Yes", "No");
 
-				if(answer.equals("2")){
-					player.setName(input("\n# My apologies good friend, please tell me your name again. #"));
+				if(answer.equals("No")){
+					player.setName(input("# My apologies good friend, please tell me your name again. #"));
 				}
 
 				else
@@ -349,7 +350,7 @@ public class Player extends Entity {
 
 			println("\n# Ok " + player.getName() + " here is your character build. #");
 			println("--------------------------------------------------------------------");
-			print(player);
+			displayStats();
 			println("--------------------------------------------------------------------");
 
 
@@ -357,10 +358,12 @@ public class Player extends Entity {
 			if(answer.equals("No")) {
 				spendingPoints = true;
 			} else if (answer.equals("Yes")) {
-				spendingPoints = false;
+				spendingPoints = false; 
+				// TODO Set spent points in stone. 
 			} else if (answer.equals("Back")) {
 				spendingPoints = false;
-			} else Display.println("Not a valid answer.");
+				// TODO Revert the spent points
+			}
 			
 			player.setAbilityPoints(spendablePoints);
 		}//End while(spendingPoints)
@@ -399,11 +402,11 @@ public class Player extends Entity {
 		Display.print("What would you like to do? Options: ");
 		String inputOptions[] = new String[3];
 		if (choosenItem.isConsumable() || choosenItem.isEquipable())
-			inputOptions[1] = "use";
+			inputOptions[0] = "use";
 			//Display.print("Use, ");
 		//Display.print("Drop, Give");
-		inputOptions[2] = "drop";
-		inputOptions[3] = "give";
+		inputOptions[1] = "drop";
+		inputOptions[2] = "give";
 		do {
 			actionOnItem = Display.input("", inputOptions);
 		} while (!((actionOnItem.equals("use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // Watch the parentheses 
@@ -416,10 +419,10 @@ public class Player extends Entity {
 		useItem(getInventory().get(itemNum-1), actionOnItem, targets);
 	}
 
-	public int pickTarget(ArrayList<Entity> targetList) {
+	public static int pickTarget(ArrayList<Entity> targetList) {
 		Display.println("Targets:");
-		for (Entity i: targetList) {
-			Display.print(i);
+		for (int i=0; i<targetList.size(); i++) {
+			Display.println((i+1)+". " + targetList.get(i).getName());
 		}
 
 		int choice;

@@ -23,7 +23,7 @@ public class Combat extends Instance {
 		int lastInitiative = 0;
 		RPGAction currentAction;
 
-		Display.print("Entering Combat!\n");
+		Display.println("<font color = red>Entering Combat!</font>");
 		//Display.setInstance(this); // Updates the current instance. Marked out from a previous project, but something that might need to stay.
 		//Display.print("Current location: " + /*environment +*/ ".\n");
 
@@ -67,14 +67,13 @@ public class Combat extends Instance {
 
 			// Start Player Action Menu
 			if (!currentEntity.isAI()) { // For players to input.
-				Display.println("Choose an action for " + currentEntity.getName() + ": ");
 				//refreshGUI();
 				do {
 					ArrayList<Entity> targets = new ArrayList<Entity>();
-					String tempActionType = Display.input("Input action: ", "attack", "special", "run", "inventory");
+					String tempActionType = Display.input("Choose an action for " + currentEntity.getName() + ": ", "attack", "special", "run", "inventory");
 					//Display.println(tempActionType);
 					if (tempActionType.equals("attack")) {
-						targets.add(potentialTargets.get(pickTarget(potentialTargets)-1));
+						targets.add(potentialTargets.get(Player.pickTarget(potentialTargets)-1));
 						currentAction = new RPGAction(tempActionType, targets);
 					}
 
@@ -105,12 +104,12 @@ public class Combat extends Instance {
 								if (!currentEntity.getEquippedSpells()[tempSpellNum].getTargetDead()) // Remove the dead again, because list was reset.
 									for (Entity i: dead)
 										spellPotentialTargets.remove(i);
-								targets.add(spellPotentialTargets.get(pickTarget(spellPotentialTargets)-1)); // Target selection and set Target.
+								targets.add(spellPotentialTargets.get(Player.pickTarget(spellPotentialTargets)-1)); // Target selection and set Target.
 							}
 							else if (tempTargetType.equals("enemy")) {
 								for (Entity i: team.get(currentTeam))
 									spellPotentialTargets.remove(i);
-								targets.add(spellPotentialTargets.get(pickTarget(spellPotentialTargets)-1)); // Target selection and set Target.
+								targets.add(spellPotentialTargets.get(Player.pickTarget(spellPotentialTargets)-1)); // Target selection and set Target.
 							}
 							else if (tempTargetType.equals("all")) {
 								targets.addAll(spellPotentialTargets); // Just hits everyone.
@@ -134,17 +133,17 @@ public class Combat extends Instance {
 						String inputOptions[] = new String[3];
 						Display.print("What would you like to do?");
 						if (choosenItem.isConsumable() || choosenItem.isEquipable())
-							inputOptions[1] = "use";
+							inputOptions[0] = "use";
 							//Display.print("Use, ");
 						//Display.print("Drop, Give");
-						inputOptions[2] = "drop";
-						inputOptions[3] = "give";
+						inputOptions[1] = "drop";
+						inputOptions[2] = "give";
 						do {
 							actionOnItem = Display.input("", inputOptions);
 						} while (!((actionOnItem.equals("use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // Watch the parentheses 
 
 						if (false /*choosenItem.isTargetable()*/ || actionOnItem.equals("give")) {
-							targets.add(initiativeList.get(pickTarget(initiativeList)-1));
+							targets.add(initiativeList.get(Player.pickTarget(initiativeList)-1));
 						}
 						else targets.add(currentEntity);
 
@@ -177,13 +176,13 @@ public class Combat extends Instance {
 
 			if (currentInitiative < lastInitiative) { // Tick at the end of the turn of the first person currently in the initiative (but not the first time)
 				//gameTick(1); // Do we have a status effect system in the works? if not we can remove this.
-				Display.print("Game ticks.\n");
+				Display.println("Game ticks.");
 				checkDead();
 			}
 			lastInitiative = currentInitiative;
 
 			if (turnCount == 20) { //error catch so we can see what happened easier
-				Display.print("Too many turns have happened. Exiting loop prematurely.\n");
+				Display.println("Too many turns have happened. Exiting loop prematurely.");
 				break; 
 			}
 			//Display.print(output);
@@ -208,7 +207,7 @@ public class Combat extends Instance {
 			damageFinal = (int) (damage/damageReduction);
 
 			if (Math.random()*attacker.getMelee()+(attacker.getMelee()/2) > Math.random()*defender.getPerception()+(defender.getPerception()/2)) { // DP vs AM/2 + 1-AM
-				defender.setHealth(defender.getHealth() - damageFinal);
+				defender.damage(damageFinal);
 				output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n"; 
 				output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
 			}
@@ -233,9 +232,7 @@ public class Combat extends Instance {
 				output += i.getName() + " was ";
 				if (((DamageSpell)spell).getDamage() < 0) {// Checks for healing, and if healing would put over max HP then...
 					damage = (int)(Math.random()*((Math.abs(((DamageSpell)spell).getDamage())+caster.getIntellect())/2) + (Math.abs(((DamageSpell)spell).getDamage())+caster.getIntellect())/2 +1); // Damage will be from half spell + intellect to full spell damage + intellect.
-					if (damage + i.getHealth() > i.getMaxHealth()) 
-						i.setHealth(i.getMaxHealth()); // ... set health to max.
-					else i.setHealth(i.getHealth() + damage); // Heals.
+					i.damage(-damage);
 					damageFinal = damage;
 					output += "healed";
 				}
@@ -243,12 +240,12 @@ public class Combat extends Instance {
 					damage = (int)(Math.random()*((((DamageSpell)spell).getDamage()+caster.getIntellect())/2) + (((DamageSpell)spell).getDamage()+caster.getIntellect())/2 +1); // Damage will be from half spell + intellect to full spell damage + intellect.
 					double damageReduction = (i.getBlocking()+DAMAGE_REDUCTION_MULTIPLIER)/DAMAGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
 					damageFinal = (int) (damage/damageReduction);
-					i.setHealth(i.getHealth() - damageFinal); // Deals damage.
+					i.damage(damageFinal);
 					output += "damaged";
 				}
 				else { // Catch if the damage is 0 for some reason.
 					damageFinal = ((DamageSpell)spell).getDamage();
-					output += "hit";
+					output += "poked";
 				}
 				output += " for " + damageFinal + " and now has " + i.getHealth() +"/"+ i.getMaxHealth() + " health points.\n";
 			}
@@ -285,23 +282,6 @@ public class Combat extends Instance {
 
 	public void accessInventory(Entity currentEntity, RPGAction currentAction) {
 		currentEntity.useItem(currentEntity.getInventory().get(currentAction.getInventorySlot()), currentAction.getInventoryAction(), currentAction.getTargets());
-	}
-
-	public int pickTarget(ArrayList<Entity> targetList) {
-		Display.println("Targets:");
-		for (Entity i: targetList) {
-			Display.print(i);
-		}
-
-		int choice;
-		if (targetList.size() > 1) {
-			do {
-				choice = Display.inputInt("Choose a target: (1 - " + targetList.size() + ")");
-			} while (!(choice > 0 && choice <= targetList.size()));
-		} else {
-			choice = 1;
-		}
-		return choice;
 	}
 
 	public boolean checkActive() { // TODO redo something here, I think there might be issue.
