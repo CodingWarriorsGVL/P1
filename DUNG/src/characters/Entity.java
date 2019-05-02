@@ -149,19 +149,6 @@ public class Entity {
 		inventory = new ArrayList<Item>();
 		money = 0;
 	}
-
-	public void displayInventory() {
-		println("--------------------------------------------------------------------");
-		println("* Inventory *");
-		println("Gold coins: " + money);
-		for (int i = 0; i < inventory.size(); i++) {
-			if(inventory.get(i).getQuantity() == 0)
-				inventory.remove(inventory.get(i));
-			println(i + 1 + ". " + inventory.get(i));
-		}
-		println("--------------------------------------------------------------------");
-
-	}// End displayInventory
 	
 	public void removeEquippedItems(int location) {
 		equippedItems[location] = null;
@@ -241,6 +228,7 @@ public class Entity {
 		return abilityPoints;
 	}
 	
+	//Other Methods	
 	public void addXP(int xp) {
 		experience += xp;
 		while (experience >= xpToLevel()) { // Loops if you have enough xp to keep leveling.
@@ -262,7 +250,7 @@ public class Entity {
 				experience = 0;
 			level += 1;
 			if (isAI == false) // Only tells you when non AI controlled entities leveled. Since there is no way to check if they are on your team yet.
-				Display.print(name + " has leveled up to level "+level+"!\n");
+				Display.print("<font color = d000ff>" +name+ " has leveled up to level "+level+"!</font>\n");
 		}
 	}
 
@@ -270,7 +258,6 @@ public class Entity {
 		return isAI;
 	}
 		
-	//Other Methods	
 	public boolean isAlive() {
 		return health > 0;
 	}
@@ -280,7 +267,7 @@ public class Entity {
 	}
 	
 	public void useItem(Item item, String action, ArrayList<Entity> targets) {
-		Display.debug(action);
+		//Display.debug(action);
 		if (action.equals("drop")) {
 			//droppedLoot.add(item); // Drops it on the ground for someone to pick up at the end of combat (not recommended). TODO fix
 			this.getInventory().remove(item);
@@ -306,5 +293,40 @@ public class Entity {
 		else Display.debug("action input wrong");
 	}
 	
+	public void damage(int d) {
+		if ((d < 0) && (-d + getHealth() > getMaxHealth()))
+				setHealth(getMaxHealth());
+		else if (d > getHealth())
+			setHealth(0);
+		else setHealth(getHealth()-d);
+	}
+	
+	public void displayInventory() {
+		println("--------------------------------------------------------------------");
+		println("* Inventory *");
+		println("Gold coins: " + money);
+		for (int i = 0; i < inventory.size(); i++) {
+			if(inventory.get(i).getQuantity() == 0)
+				inventory.remove(inventory.get(i));
+			println(i + 1 + ". " + inventory.get(i));
+		}
+		println("--------------------------------------------------------------------");
+	}// End displayInventory
+	
+	public void displayStats() {
+		println("--------------------------------------------------------------------");
+		println("Name: " + name);
+		/* 
+		if (isAI) 
+			println("Control: AI");
+		else 
+			println("Control: Player");
+		 */
+		println("Level: " + level + " Next level: "+ experience+"/"+xpToLevel() + " Unspent Points: " + abilityPoints);
+		println("Health: " + health +"/"+ maxHealth);
+		println("Mana: " + mana +"/"+ maxMana);
+		println("Melee: " + melee + " Defense: " + defense);
+		println("Intellect: " + intellect + " Perception: " + perception);
+	}
 	
 }// End Class Entity

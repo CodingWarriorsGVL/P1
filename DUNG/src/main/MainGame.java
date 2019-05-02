@@ -6,6 +6,7 @@ import java.util.Scanner;
 import characters.MagicSpell;
 import characters.Player;
 import display.Display;
+import display.WordProcessing;
 
 import static characters.Player.*;
 import static item.Armor.*;
@@ -50,6 +51,7 @@ public class MainGame {
 			Scanner input;
 			input = new Scanner(new File("src/data/DUNG ASCII Logo.txt"));
 			while (input.hasNextLine()) {
+				//println(WordProcessing.rainbowfy(input.nextLine()));
 				println(input.nextLine());
 			}
 			input.close();
@@ -113,7 +115,9 @@ public class MainGame {
 		//int move;
 		Room currentRoom;
 		//boolean isEnemyAlive;
-
+		
+		Display.println(WordProcessing.rainbowfy("======================= The Adventure Beigns ======================="));
+		
 		while (play) {
 			//print(player.getPosition());
 
