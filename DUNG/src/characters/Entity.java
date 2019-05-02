@@ -1,6 +1,6 @@
 package characters;
 
-import display.Display;
+import display.*;
 
 import static display.Display.println;
 
@@ -250,7 +250,7 @@ public class Entity {
 				experience = 0;
 			level += 1;
 			if (isAI == false) // Only tells you when non AI controlled entities leveled. Since there is no way to check if they are on your team yet.
-				Display.print("<font color = d000ff>" +name+ " has leveled up to level "+level+"!</font>\n");
+				Display.println(WordProcessing.rainbowfy(name+ " has leveled up to level "+level+"!"));
 		}
 	}
 
