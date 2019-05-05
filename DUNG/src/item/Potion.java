@@ -3,7 +3,7 @@ package item;
 import java.util.Random;
 
 import characters.Entity;
-import display.Display;
+import static display.Display.*;
 
 public class Potion extends Item {
 
@@ -50,40 +50,40 @@ public class Potion extends Item {
 	@Override
 	public boolean consume(Item i, Entity e){
 		
-		if(i.isConsumable == true && i.getQuantity() > 0 && i.equals(healthPotion) && e.getHealth() < e.getMaxHealth()) {
+		// e.removeInventory(i); // Removes 1 of i from e.
+		
+		if(i.isConsumable == true && i.equals(healthPotion) && e.getHealth() < e.getMaxHealth()) {
 			int healAmount = ((Potion)i).heal();
-			i.setQuantity(i.getQuantity() - 1);
+			//i.setQuantity(i.getQuantity() - 1);
 			if(healAmount > e.getMaxHealth() - e.getHealth()) {
-				System.out.println("You used a health potion healing yourself for " + (e.getMaxHealth() - e.getHealth())
-						+ " health points.");
+				println("You used a health potion healing yourself for " + (e.getMaxHealth() - e.getHealth()) + " health points.");
 				e.setHealth(e.getMaxHealth());
 			}
 			else {
 				e.setHealth(e.getHealth() + healAmount);
-				System.out.println("You used a health potion healing yourself for " + healAmount + " health points.");
+				println("You used a health potion healing yourself for " + healAmount + " health points.");
 			}
-			System.out.println("You now have " + e.getHealth() + " health points.");
+			println("You now have " + e.getHealth() + " health points.");
 			return true;
 		}
 		
-		else if(i.isConsumable == true && i.getQuantity() > 0 && i.equals(manaPotion) && e.getMana() < e.getMaxMana()) {
+		else if(i.isConsumable == true && i.equals(manaPotion) && e.getMana() < e.getMaxMana()) {
 			int healAmount = ((Potion)i).heal();
-			i.setQuantity(i.getQuantity() - 1);
+			//i.setQuantity(i.getQuantity() - 1);
 			if(healAmount > e.getMaxMana() - e.getMana()) {
-				System.out.println("You used a mana potion healing yourself for " + (e.getMaxMana() - e.getMana())
-						+ " mana points.");
+				println("You used a mana potion healing yourself for " + (e.getMaxMana() - e.getMana()) + " mana points.");
 				e.setMana(e.getMaxMana());
 			}
 			else {
 				e.setMana(e.getMana() + healAmount);
-				System.out.println("You used a mana potion healing yourself for " + healAmount + " mana points.");
+				println("You used a mana potion healing yourself for " + healAmount + " mana points.");
 			}
-			System.out.println("You now have " + e.getHealth() + " mana points.");
+			println("You now have " + e.getHealth() + " mana points.");
 			return true;
 		}
 		
 		else {
-			Display.debug("You can not use this item.");
+			debug("You can not use this item.");
 			return false;
 		}
 	}
@@ -92,7 +92,7 @@ public class Potion extends Item {
 		return new Potion(name, dropChance, sellValue, buyValue, healAmount, equippedItemSlot, quantity, isConsumable);
 	}
 	
-	public Potion clone(Potion potion) {
+	public static Potion clone(Potion potion) {
 		return potion.clone();
 	}
 	

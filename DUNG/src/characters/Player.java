@@ -42,36 +42,36 @@ public class Player extends Entity {
 	// Other Methods
 
 	public void displayEquippedItems() {
-		println("--------------------------------------------------------------------");
+		printbar();
 		println("* Equipped Items *");
 		for (int i = 0; i < equippedItems.length; i++) {
 			println(equippedItems[i]);
 		}
-		println("--------------------------------------------------------------------");
+		printbar();
 	}
 
 
 
 	public void displayEquippedSpells() {
-		println("--------------------------------------------------------------------");
+		printbar();
 		println("* Equipped Spells *");
 		for (int i = 0; i < equippedSpells.length; i++) {
 			if (equippedSpells[i] != null) {
 				println((i+1) + ". " + equippedSpells[i].getName());
 			}
 		}
-		println("--------------------------------------------------------------------");
+		printbar();
 	}
 
 	public void displaySpells() {
 
-		println("--------------------------------------------------------------------");
+		printbar();
 		println("* Spell  Book *");
 
 		for (int i = 0; i < spells.size(); i++) {
 			println(i + 1 + ". " + ((MagicSpell) spells.get(i)).getName());
 		}
-		println("--------------------------------------------------------------------");
+		printbar();
 
 	}// End displayEquippedSpells
 
@@ -252,7 +252,7 @@ public class Player extends Entity {
 		boolean spendingPoints = true;
 		String answer;
 		Player player = this; // Yes this is bad, but it was FAST, TODO correct variables.
-
+		
 		while(spendingPoints){
 			int spendablePoints = player.getAbilityPoints();
 			int input = 0;
@@ -260,7 +260,7 @@ public class Player extends Entity {
 
 			println("# Ok " + player.getName() + " you have " + spendablePoints + " points to spend in: Health, Mana, "
 					+ "Melee, Defense, Intellect, and Perception. #"
-					+ "\n# Use them wisley! #");
+					+ "\n# Use them wisely! #");
 
 			if(spendablePoints > 0) {									
 				do {
@@ -349,29 +349,31 @@ public class Player extends Entity {
 			}
 
 			println("\n# Ok " + player.getName() + " here is your character build. #");
-			println("--------------------------------------------------------------------");
+			printbar();
 			displayStats();
-			println("--------------------------------------------------------------------");
+			printbar();
 
 
 			answer = input("\n# Are you happy with your character build? #", "Yes", "No", "Back");;
 			if(answer.equals("No")) {
 				spendingPoints = true;
+				// TODO Revert the spent points and stay.
 			} else if (answer.equals("Yes")) {
 				spendingPoints = false; 
-				// TODO Set spent points in stone. 
+				// TODO Set spent points in stone and leave. 
+				player.setAbilityPoints(spendablePoints);
 			} else if (answer.equals("Back")) {
 				spendingPoints = false;
-				// TODO Revert the spent points
+				// TODO Revert the spent points and bail.
 			}
 			
-			player.setAbilityPoints(spendablePoints);
+			
 		}//End while(spendingPoints)
 	}
 
 	public void characterMenu() {
 		String input;
-		Display.println("--------------------------------------------------------------------");
+		Display.printbar();
 		input = Display.input("Character Menu, Choose an option (Inventory, Spells, Attributes, Back)", "Inventory", "Spells", "Attributes", "Back");
 
 		if (input.toLowerCase().charAt(0)=='i') {

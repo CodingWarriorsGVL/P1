@@ -176,7 +176,7 @@ public class Combat extends Instance {
 
 			if (currentInitiative < lastInitiative) { // Tick at the end of the turn of the first person currently in the initiative (but not the first time)
 				//gameTick(1); // Do we have a status effect system in the works? if not we can remove this.
-				Display.println("Game ticks.");
+				Display.debug("Game ticks."); // If status effects are added, consider main print.
 				checkDead();
 			}
 			lastInitiative = currentInitiative;
@@ -357,7 +357,7 @@ public class Combat extends Instance {
 			for(Entity i: team.get(victor)) {
 				if (i.isAlive()) {
 					for(Item j: droppedLoot)
-						i.getInventory().add(j);
+						i.setInventory(j);
 					i.setMoney(i.getMoney() + moneyDroped); 
 					Display.print(i.getName() + " picks up all of the loot, and " + moneyDroped + " coins.\n");
 					break;

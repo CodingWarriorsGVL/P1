@@ -177,12 +177,33 @@ public class MainGame {
 			if (currentRoom.getWest() instanceof Door) {
 				println("You can go west");
 			}
-			println("You can quit");
-			println("Change equipped items.");
 			*/
+			/*
+			String inputOptions[] = new String[6];
+			inputOptions[0] = "Quit";
+			inputOptions[1] = "Character Menu";
+			if (currentRoom.getNorth() instanceof Door) 
+				inputOptions[2] = "North";
+			if (currentRoom.getEast() instanceof Door) 
+				inputOptions[3] = "East";
+			if (currentRoom.getSouth() instanceof Door) 
+				inputOptions[4] = "South";
+			if (currentRoom.getWest() instanceof Door) 
+				inputOptions[5] = "West";
+			*/
+			// TODO make it take the correction options for directions here, for some reason the override below is not working.
+			String inputOptions[] = {"Quit", "Character Menu", "North", "East", "South", "West"}; 
+			if (!(currentRoom.getNorth() instanceof Door)) 
+				inputOptions[2] = "";
+			if (!(currentRoom.getEast() instanceof Door)) 
+				inputOptions[3] = "";
+			if (!(currentRoom.getSouth() instanceof Door)) 
+				inputOptions[4] = "";
+			if (!(currentRoom.getWest() instanceof Door)) 
+				inputOptions[5] = "";
 
-
-			String input = input("Where would you like to go?", "North", "East", "South", "West", "Quit", "Character Menu");
+			//String input = input("Where would you like to go?", inputOptions);
+			String input = input("Where would you like to go?", "Quit", "Character Menu", "North", "East", "South", "West");
 
 			if (input.toLowerCase().charAt(0)=='n') {
 				player1.setYPosition(player1.getYPosition() - 1);

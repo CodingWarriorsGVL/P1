@@ -2,7 +2,7 @@ package characters;
 
 import display.*;
 
-import static display.Display.println;
+import static display.Display.*;
 
 import java.util.ArrayList;
 import item.Armor;
@@ -22,8 +22,9 @@ public class Entity {
 	int meleeDamage = melee;
 	int blocking = defense;
 	
-	public ArrayList<Item> inventory = new ArrayList<Item>();
-	public ArrayList<MagicSpell> spells = new ArrayList<MagicSpell>();
+	protected ArrayList<Item> inventory = new ArrayList<Item>();
+	protected ArrayList<Integer> inventoryCount = new ArrayList<Integer>();
+	protected ArrayList<MagicSpell> spells = new ArrayList<MagicSpell>();
 	
 	final int LEVEL_TIER_INCREASE = 5, ABILITY_POINTS_PER = 10; // Sets the level up conditions.
 
@@ -135,10 +136,31 @@ public class Entity {
 	public ArrayList<MagicSpell> getSpells() {
 		return spells;
 	}
-
+	
 	public void setInventory(Item item) {
-		inventory.add(item);
-		item.setQuantity(item.getQuantity() + 1); // What is this mess?
+		setInventory(item, 1);
+	}
+	
+	public void setInventory(Item item, int count) {
+		if (!inventory.contains(item)) {
+			inventory.add(item);
+			inventoryCount.add(count);
+		}
+		else inventoryCount.set(inventory.lastIndexOf(item), inventoryCount.get(inventory.lastIndexOf(item))+count );
+		//item.setQuantity(item.getQuantity() + 1); // What is this mess?
+	}
+	
+	public void removeInventory(Item item) {
+		removeInventory(item, 1);
+	}
+	
+	public void removeInventory(Item item, int count) {
+		if (inventoryCount.get(inventory.lastIndexOf(item)) > 0)
+			inventoryCount.set(inventory.lastIndexOf(item), inventoryCount.get(inventory.lastIndexOf(item))-count );
+		if (inventoryCount.get(inventory.lastIndexOf(item)) <= 0) {
+			inventoryCount.remove(inventory.lastIndexOf(item));
+			inventory.remove(item);
+		}
 	}
 
 	public ArrayList<Item> getInventory() {
@@ -244,7 +266,7 @@ public class Entity {
 	public void levelUp(int numLvls) {
 		for (int i=0; i<numLvls; i++) { // Allows for multiple levels to be given at once.
 			//abilityPoints = (int)(abilityPoints + Math.ceil(level/5.0)*10);
-			abilityPoints = (int)(abilityPoints + Math.ceil(level/LEVEL_TIER_INCREASE)*ABILITY_POINTS_PER);
+			abilityPoints = (int)(abilityPoints + Math.ceil(level/(double)LEVEL_TIER_INCREASE)*ABILITY_POINTS_PER);
 			experience -= xpToLevel(); // Subtracts the level up from your xp pool.
 			if (experience < 0) // This is mostly as catch that should happen if forced to level to keep you from having negative xp.
 				experience = 0;
@@ -302,31 +324,31 @@ public class Entity {
 	}
 	
 	public void displayInventory() {
-		println("--------------------------------------------------------------------");
+		printbar();
 		println("* Inventory *");
 		println("Gold coins: " + money);
 		for (int i = 0; i < inventory.size(); i++) {
-			if(inventory.get(i).getQuantity() == 0)
-				inventory.remove(inventory.get(i));
-			println(i + 1 + ". " + inventory.get(i));
+			//if(inventory.get(i).getQuantity() == 0)
+			//	inventory.remove(inventory.get(i));
+			println((i+1)+". " + inventory.get(i) + " " + inventoryCount.get(i));
 		}
-		println("--------------------------------------------------------------------");
+		printbar();
 	}// End displayInventory
 	
 	public void displayStats() {
-		println("--------------------------------------------------------------------");
-		println("Name: " + name);
+		//printbar();
+		//println("Name: " + name);
+		printbar(name);
 		/* 
 		if (isAI) 
 			println("Control: AI");
 		else 
 			println("Control: Player");
 		 */
-		println("Level: " + level + " Next level: "+ experience+"/"+xpToLevel() + " Unspent Points: " + abilityPoints);
-		println("Health: " + health +"/"+ maxHealth);
-		println("Mana: " + mana +"/"+ maxMana);
-		println("Melee: " + melee + " Defense: " + defense);
-		println("Intellect: " + intellect + " Perception: " + perception);
+		println("Level: " + level + " \t\t" + "Next level: "+ experience+"/"+xpToLevel() + " \t" + "Unspent Points: " + abilityPoints);
+		println("Health: " + health +"/"+ maxHealth + "\t\t" + "Mana: " + mana +"/"+ maxMana);
+		println("Melee: " + melee + " \t\t" + "Intellect: " + intellect);
+		println("Defense: " + defense + "\t\t" + "Perception: " + perception);
 	}
 	
 }// End Class Entity

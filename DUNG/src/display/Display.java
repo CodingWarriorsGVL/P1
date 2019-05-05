@@ -117,6 +117,23 @@ public class Display {
 		println("<font color = "+INPUTMESSAGECOLOR+">"+str+"</font>"); 
 		boolean isValid = false;
 		String r = "";
+		
+		// Clean Options
+		int c = 0, j = 0;
+		for (int i=0; i<options.length; i++) {
+			if (!options[i].equals(""))
+				c++;
+		}
+		String[] optionsTemp = new String[c];
+		for (int i=0; i<c; i++) {
+			if (!options[i].equals("")){
+				optionsTemp[j] = options[i];
+				j++;
+			}
+		}
+		options = optionsTemp;
+		
+		// Read Loop
 		do {
 			while (wasRead) {
 				try {
@@ -260,6 +277,27 @@ public class Display {
 	}
 	public static void println(Staircase stair) {
 		println("Staircase to another floor!");
+	}
+
+	public static void printbar() {
+		println("----------------------------------------------------------------------"); // 70 long
+	}
+
+	public static void printbar(String str) {
+		if (str.length() == 0) // If this string comes in empty for some reason, it prints a normal full bar, instead of printing one with 2 spaces in the middle.
+			printbar();
+		else {
+			String output = "";
+			int dashes = 70-(str.length()+2);
+			for (int i=0; i<dashes/2; i++) // Dashes
+				output += "-";
+			output += " " + str + " "; // Puts string in middle of bar with spaces.
+			for (int i=0; i<dashes/2; i++) // Dashes
+				output += "-";
+			if (str.length()%2 == 1) // Correction for odd number of characters in string
+				output += "-";
+			println(output);
+		}
 	}
 
 
