@@ -6,7 +6,8 @@ import java.util.Scanner;
 import characters.MagicSpell;
 import characters.Player;
 import display.Display;
-import display.WordProcessing;
+import static display.Display.*;
+import static display.WordProcessing.*;
 
 import static characters.Player.*;
 import static item.Armor.*;
@@ -28,19 +29,14 @@ import characters.*;
 import item.*;
 import java.util.ArrayList;
 
-import static display.Display.*;
-
 import static navigation.Generator.*;
 
 public class MainGame {
 
-	//Dungeon dungeon;
-	//Entity player;
 	Scanner scan;
 
 	int ENEMY_WAIT = 1;
 
-	//This is my random comment somewhere
 	public Player player1;
 	public Dungeon dungeon;
 
@@ -63,7 +59,7 @@ public class MainGame {
 	}
 
 	public MainGame() {
-		
+
 		player1 = buildCharacter();
 
 		dungeon = generateDungeon();//new Dungeon("Scary Dungeon", 1);   //Quick and dirty dungeon build, all wall and door objects are the same which would mess up locking/unlocking, in the doors case
@@ -76,12 +72,13 @@ public class MainGame {
 		dungeon.getFloor(0).setRoom(new Room(wall, wall, door, door),  1, 0);
 		dungeon.getFloor(0).setRoom(new Room(door, door, wall, wall),  0, 1);
 		dungeon.getFloor(0).setRoom(new Room(door, wall, wall, door),  1, 1);
-		*/
+		 */
 		player1.setXPosition(5);
 		player1.setYPosition(9);
 
 		//dungeon.getFloor(0).getRoom(1, 1).addInstances(testInstance); // Place Instance Somewhere.
 		dungeon.getFloor(0).getRoom(5, 8).addEntities(getGiantRoach(), getGiantMouse());
+		dungeon.getFloor(0).getRoom(5, 1).addEntities(getSkeleton(), getSkeleton(), getSkeleton(), getSkeleton(), getSkeleton());
 
 		//String name = getName();
 		//player = new Entity(name, map);
@@ -107,16 +104,12 @@ public class MainGame {
 		player1.setInventory(testShield);
 		player1.setInventory(testSword);
 		player1.setInventory(axe);
+		
+		Room currentRoom;
+
+		println(rainbowfy(bar("The Adventure Beigns")));
 
 		boolean play = true;
-
-
-		//Entity enemy;
-		//int move;
-		Room currentRoom;
-		//boolean isEnemyAlive;
-		
-		Display.println(WordProcessing.rainbowfy("======================= The Adventure Beigns ======================="));
 		
 		while (play) {
 			//print(player.getPosition());
@@ -126,110 +119,97 @@ public class MainGame {
 
 			// Activate Instances.
 			//This seems like best location for now, just after you have entered the room.
-//			for (Instance i: currentRoom.getInstances()) {
-//
-//				i.addEntity(player1, 0);
-//				if (i.checkActive()) {
-//					i.launch();
-//					if (player1.isAlive() == false) {
-//						print(player1.getName() + " is dead. \nGame Over\n");
-//						play = false;
-//						break;
-//					}
-//				}
-//			}
-			
+			//			for (Instance i: currentRoom.getInstances()) {
+			//
+			//				i.addEntity(player1, 0);
+			//				if (i.checkActive()) {
+			//					i.launch();
+			//					if (player1.isAlive() == false) {
+			//						print(player1.getName() + " is dead. \nGame Over\n");
+			//						play = false;
+			//						break;
+			//					}
+			//				}
+			//			}
+
+			// Generate a combat from all entities in the room.
 			Instance combat = new Combat();
 			combat.addEntity(player1, 0);
-			
-			for (Entity i: currentRoom.getEnties()) {
-				if (i instanceof Enemy) {
+			for (Entity i: currentRoom.getEnties())
+				if (i instanceof Enemy && i.isAlive())
 					combat.addEntity(i, 1);	
-				}
+			
+			if (combat.checkActive()) // If a combat is valid
+				combat.launch(); // Play the combat.
+			
+			if (!player1.isAlive()) { // If the player is Dead
+				println(player1.getName() + " is dead."); // Tells you, you are dead.
+				play = false; // Stops loop.
+				break; // Gets out of loop.
 			}
 			
-			if (combat.checkActive()) {
-				combat.launch();
-				if (player1.isAlive() == false) {
-					print(player1.getName() + " is dead. \nGame Over\n");
-					play = false;
-					break;
-				}
-			}
-			
-			if (!player1.isAlive()) { 
-				play = false;
-				break;
-			}
+			println("");
 			println(currentRoom);
-			/*
-			println("Your options are:");
 
-			if (currentRoom.getNorth() instanceof Door) {
-				println("You can go north");
-			}
-			if (currentRoom.getEast() instanceof Door) {
-				println("You can go east");
-			}
-			if (currentRoom.getSouth() instanceof Door) {
-				println("You can go south");
-			}
-			if (currentRoom.getWest() instanceof Door) {
-				println("You can go west");
-			}
-			*/
-			/*
-			String inputOptions[] = new String[6];
+			// Generate the Options List for the room you are in.
+			String inputOptions[] = new String[9]; // Number here can be as high as you want, but needed to at least cover all the options following.
 			inputOptions[0] = "Quit";
-			inputOptions[1] = "Character Menu";
 			if (currentRoom.getNorth() instanceof Door) 
-				inputOptions[2] = "North";
+				inputOptions[1] = "North";
 			if (currentRoom.getEast() instanceof Door) 
-				inputOptions[3] = "East";
+				inputOptions[2] = "East";
 			if (currentRoom.getSouth() instanceof Door) 
-				inputOptions[4] = "South";
+				inputOptions[3] = "South";
 			if (currentRoom.getWest() instanceof Door) 
-				inputOptions[5] = "West";
-			*/
-			// TODO make it take the correction options for directions here, for some reason the override below is not working.
-			String inputOptions[] = {"Quit", "Character Menu", "North", "East", "South", "West"}; 
-			if (!(currentRoom.getNorth() instanceof Door)) 
-				inputOptions[2] = "";
-			if (!(currentRoom.getEast() instanceof Door)) 
-				inputOptions[3] = "";
-			if (!(currentRoom.getSouth() instanceof Door)) 
-				inputOptions[4] = "";
-			if (!(currentRoom.getWest() instanceof Door)) 
-				inputOptions[5] = "";
+				inputOptions[4] = "West";
+			inputOptions[5] = "Inventory";
+			inputOptions[6] = "Spells";
+			inputOptions[7] = "Attributes";
+			inputOptions[8] = "Condition";
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {};
+			String input = input("What would you like to do?", inputOptions);
+			//String input = input("Where would you like to go?", "Quit", "North", "East", "South", "West");
 
-			//String input = input("Where would you like to go?", inputOptions);
-			String input = input("Where would you like to go?", "Quit", "Character Menu", "North", "East", "South", "West");
-
-			if (input.toLowerCase().charAt(0)=='n') {
+			// What the inputs do.
+			if (input.equals("North")) {
 				player1.setYPosition(player1.getYPosition() - 1);
 			}
-			else if (input.toLowerCase().charAt(0)=='e') {
+			else if (input.equals("East")) {
 				player1.setXPosition(player1.getXPosition() + 1);
 			}
-			else if (input.toLowerCase().charAt(0)=='s') {
+			else if (input.equals("South")) {
 				player1.setYPosition(player1.getYPosition() + 1);
 			}
-			else if (input.toLowerCase().charAt(0)=='w') {
+			else if (input.equals("West")) {
 				player1.setXPosition(player1.getXPosition() - 1);
 			}
 			
-			else if (input.toLowerCase().charAt(0)=='q') {
+			else if (input.equals("Quit")) {
 				play = false;
 			}
-			else if (input.toLowerCase().charAt(0)=='c') {
-				player1.characterMenu();
+			else if (input.equals("Inventory")) {
+				player1.characterInventory();
 			}
-
-			//getClass().int move = player.getMove();
-			//player.Move(move);
-
-		}
-		Display.println("Game Over");
+			else if (input.equals("Spells")) {
+				player1.changeEquippedSpells();
+			}
+			else if (input.equals("Attributes")) {
+				player1.spendPoints();
+			}
+			else if (input.equals("Condition")) {
+				player1.displayStats();
+				player1.displayEquippedItems();
+				player1.displayEquippedSpells();
+			}
+			
+		} // End Play Loop
+		endGame();
+	}
+	
+	public void endGame() { // Anything needed at the end to wrap up a finished game, either from quiting or losing.
+		printbar("<font color = red size = 5>Game Over</font>");
 	}
 
 

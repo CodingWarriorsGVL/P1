@@ -7,8 +7,6 @@ import static display.Display.*;
 import java.util.ArrayList;
 import item.Armor;
 import item.Item;
-import item.Potion;
-import item.Weapon;
 
 public class Entity {
 	
@@ -207,7 +205,7 @@ public class Entity {
 	public int getMana() {
 		return mana;
 	}
-
+	/*
 	public void setMeleeDamage(Item[] equippedItems) {
 		meleeDamage = 0;
 		meleeDamage = ((Weapon) equippedItems[WEAPON]).getAttack() + melee;
@@ -216,7 +214,8 @@ public class Entity {
 	public int getMeleeDamage() {
 		return meleeDamage;
 	}
-
+	*/
+	/*
 	public void setBlocking(Item[] equippedItems) {
 		int equipmentDefense = 0;
 		blocking = 0;
@@ -225,9 +224,19 @@ public class Entity {
 		}
 		blocking = equipmentDefense + defense;
 	}
-
+	
 	public int getBlocking() {
 		return blocking;
+	}
+	*/
+	public int getBlocking() {
+		int equipmentDefense = 0;
+		blocking = 0;
+		for (int i = 0; i < 3; i++) {
+			if (equippedItems[i] != null)
+				equipmentDefense += ((Armor) equippedItems[i]).getDefense();
+		}
+		return blocking = equipmentDefense + defense;
 	}
 	
 	public void setMoney(int money) {
@@ -290,12 +299,12 @@ public class Entity {
 	
 	public void useItem(Item item, String action, ArrayList<Entity> targets) {
 		//Display.debug(action);
-		if (action.equals("drop")) {
+		if (action.equals("Drop")) {
 			//droppedLoot.add(item); // Drops it on the ground for someone to pick up at the end of combat (not recommended). TODO fix
 			this.getInventory().remove(item);
 			Display.println(this.getName() + " drops " + item.getName() + " on the ground.");
 		}
-		else if (action.equals("use")) {
+		else if (action.equals("Use")) {
 			if (item.isEquipable()) {
 				this.setEquippedItems(item); 
 				Display.println(getName() + " equips " + item.getName() + ".");
@@ -307,7 +316,7 @@ public class Entity {
 			}
 			// else if (item.isTargetable()) { 
 		}
-		else if (action.equals("give")) {
+		else if (action.equals("Give")) {
 			targets.get(0).getInventory().add(item);
 			this.getInventory().remove(item);
 			Display.println(this.getName() + " gives " + item.getName() + " to " + targets.get(0).getName() + ".");
@@ -324,20 +333,17 @@ public class Entity {
 	}
 	
 	public void displayInventory() {
-		printbar();
-		println("* Inventory *");
+		printbar("Inventory");
 		println("Gold coins: " + money);
 		for (int i = 0; i < inventory.size(); i++) {
 			//if(inventory.get(i).getQuantity() == 0)
 			//	inventory.remove(inventory.get(i));
 			println((i+1)+". " + inventory.get(i) + " " + inventoryCount.get(i));
 		}
-		printbar();
+		//printbar();
 	}// End displayInventory
 	
 	public void displayStats() {
-		//printbar();
-		//println("Name: " + name);
 		printbar(name);
 		/* 
 		if (isAI) 
@@ -349,6 +355,25 @@ public class Entity {
 		println("Health: " + health +"/"+ maxHealth + "\t\t" + "Mana: " + mana +"/"+ maxMana);
 		println("Melee: " + melee + " \t\t" + "Intellect: " + intellect);
 		println("Defense: " + defense + "\t\t" + "Perception: " + perception);
+	}
+	
+	public Entity clone() { // Added, but probably not needed for now.
+		Entity clone = new Entity(name, maxHealth, maxMana, melee, defense, intellect, perception, level, isAI);
+		clone.abilityPoints = abilityPoints; // Do they need to keep these points?
+		clone.experience = experience; // This would suggest only for very exact clones.
+		clone.money = money; // Inventory can be wiped.
+		clone.equippedItems = equippedItems;
+		clone.equippedSpells = equippedSpells;
+		clone.spells = spells;
+		clone.inventory = inventory; // Inventory can be wiped.
+		clone.inventoryCount = inventoryCount; // Inventory can be wiped.
+		clone.blocking = blocking;
+		clone.meleeDamage = meleeDamage;
+		return clone;
+	}
+	
+	public static Entity clone(Entity entity) { // Static copy of clone.
+		return entity.clone();
 	}
 	
 }// End Class Entity

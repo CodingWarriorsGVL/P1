@@ -3,7 +3,8 @@
 package instance;
 
 import java.util.ArrayList;
-import display.Display;
+import static display.Display.*;
+import static display.WordProcessing.*;
 import characters.Entity;
 import item.*;
 import characters.*;
@@ -15,6 +16,7 @@ public class Combat extends Instance {
 	private boolean allDead = false; //changes to true if everyone dies at the same time and is an extra check at the end to prevent an infinite loop.
 	private Entity currentEntity; //the Entity currently taking a turn.
 	private final int DAMAGE_REDUCTION_MULTIPLIER = 500;
+	private final static Weapon noWeapon = new Weapon("melee", 0, 0, 0, 0, 0, false); // Static filler weapon for if an Entity attacks without one.
 
 	public void launch() {
 		currentTeam = 0;
@@ -23,9 +25,9 @@ public class Combat extends Instance {
 		int lastInitiative = 0;
 		RPGAction currentAction;
 
-		Display.println("<font color = red>Entering Combat!</font>");
-		//Display.setInstance(this); // Updates the current instance. Marked out from a previous project, but something that might need to stay.
-		//Display.print("Current location: " + /*environment +*/ ".\n");
+		println("<font color = red>" + bar("Entering Combat!") + "</font>");
+		//setInstance(this); // Updates the current instance. Marked out from a previous project, but something that might need to stay.
+		//print("Current location: " + /*environment +*/ ".\n");
 
 		while (checkActive()) { 
 
@@ -39,11 +41,11 @@ public class Combat extends Instance {
 			for (int i=0; i<team.size(); i++) // Find the team of the current Entity.
 				if (team.get(i).contains(currentEntity)) 
 					currentTeam = i;
-			//Display.print("Team of current combatant: " + currentTeam + "\n");
+			//print("Team of current combatant: " + currentTeam + "\n");
 
 			if ((currentInitiative < lastInitiative) || (turnCount == 0))  { // Tick at the end of the turn of the first person currently in the initiative (but not the first time)
 				turnCount++;
-				Display.print("\nTurn " + turnCount + ".\n");
+				printbar("Turn " + turnCount );
 			}
 
 			// Action Decision Time
@@ -59,10 +61,10 @@ public class Combat extends Instance {
 			if (currentEntity.isAI()) {
 				// A very rudimentary and temporary AI. Random function to attack someone in the potentialTargets list.
 				int whoToAtk =  (int)Math.round((float)(Math.random()*(potentialTargets.size()-1))); //choose a random person to attack
-				//Display.debug("Random Target: " + whoToAtk);
+				//debug("Random Target: " + whoToAtk);
 				ArrayList<Entity> tempTargets = new ArrayList<Entity>();
 				tempTargets.add(potentialTargets.get(whoToAtk));
-				currentAction = new RPGAction("attack", tempTargets);
+				currentAction = new RPGAction("Attack", tempTargets);
 			}
 
 			// Start Player Action Menu
@@ -70,21 +72,21 @@ public class Combat extends Instance {
 				//refreshGUI();
 				do {
 					ArrayList<Entity> targets = new ArrayList<Entity>();
-					String tempActionType = Display.input("Choose an action for " + currentEntity.getName() + ": ", "attack", "special", "run", "inventory");
-					//Display.println(tempActionType);
-					if (tempActionType.equals("attack")) {
+					String tempActionType = input("Choose an action for " + currentEntity.getName() + ": ", "Attack", "Special", "Run", "Inventory");
+					//println(tempActionType);
+					if (tempActionType.equals("Attack")) {
 						targets.add(potentialTargets.get(Player.pickTarget(potentialTargets)-1));
 						currentAction = new RPGAction(tempActionType, targets);
 					}
 
-					else if (tempActionType.equals("special")) {
+					else if (tempActionType.equals("Special")) {
 						// List spells
 						for (MagicSpell i: currentEntity.getEquippedSpells())
-							Display.println(i.getName() + ": " + i.getManaCost() + " mana.");
+							println(i.getName() + ": " + i.getManaCost() + " mana.");
 						// Choose spell
 						int tempSpellNum;
 						do {
-							tempSpellNum = Display.inputInt("You have " + currentEntity.getMana()+"/"+currentEntity.getMaxMana() + " mana. Choose a spell 1 - " + currentEntity.getEquippedSpells().length + ": ")-1;
+							tempSpellNum = inputInt("You have " + currentEntity.getMana()+"/"+currentEntity.getMaxMana() + " mana. Choose a spell 1 - " + currentEntity.getEquippedSpells().length + ": ")-1;
 						} while (currentEntity.getEquippedSpells()[tempSpellNum] == null);
 
 						if (currentEntity.getMana() >= currentEntity.getEquippedSpells()[tempSpellNum].getManaCost()) {
@@ -114,35 +116,35 @@ public class Combat extends Instance {
 							else if (tempTargetType.equals("all")) {
 								targets.addAll(spellPotentialTargets); // Just hits everyone.
 							}
-						} else Display.println("Not enough mana to cast that spell.");
+						} else println("Not enough mana to cast that spell.");
 						currentAction = new RPGAction(tempActionType, targets, tempSpellNum); 
 					}
 
-					else if (tempActionType.equals("run")) {
+					else if (tempActionType.equals("Run")) {
 						currentAction = new RPGAction(tempActionType, null);
 					}
 
-					else if(tempActionType.equals("inventory")) {
+					else if(tempActionType.equals("Inventory")) {
 						String actionOnItem;
 						Item choosenItem;
 						int itemNum;
 
 						currentEntity.displayInventory();
-						itemNum = Display.inputInt("Choose an item number: ");
+						itemNum = inputInt("Choose an item number: ");
 						choosenItem = currentEntity.getInventory().get(itemNum-1);
 						String inputOptions[] = new String[3];
-						Display.print("What would you like to do?");
+						print("What would you like to do?");
 						if (choosenItem.isConsumable() || choosenItem.isEquipable())
-							inputOptions[0] = "use";
-							//Display.print("Use, ");
-						//Display.print("Drop, Give");
-						inputOptions[1] = "drop";
-						inputOptions[2] = "give";
+							inputOptions[0] = "Use";
+							//print("Use, ");
+						//print("Drop, Give");
+						inputOptions[1] = "Drop";
+						inputOptions[2] = "Give";
 						do {
-							actionOnItem = Display.input("", inputOptions);
-						} while (!((actionOnItem.equals("use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // Watch the parentheses 
+							actionOnItem = input("", inputOptions);
+						} while (!((actionOnItem.equals("Use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("Drop") || actionOnItem.equals("Give"))); // Watch the parentheses 
 
-						if (false /*choosenItem.isTargetable()*/ || actionOnItem.equals("give")) {
+						if (false /*choosenItem.isTargetable()*/ || actionOnItem.equals("Give")) {
 							targets.add(initiativeList.get(Player.pickTarget(initiativeList)-1));
 						}
 						else targets.add(currentEntity);
@@ -151,44 +153,42 @@ public class Combat extends Instance {
 					}
 
 					else {
-						Display.println("Invalid input, please enter again...");
+						println("Invalid input, please enter again...");
 						currentAction = new RPGAction("", null);
 					}
 				} while(!currentAction.isValid());
 			}
 
-			Display.debug(currentAction.toString()); // More debug to see what is happening in the background.
+			debug(currentAction.toString()); // More debug to see what is happening in the background.
 			// Redirect to perform currentAction
-			if (currentAction.getActionType().equals("attack"))
-				Display.print(fight(currentEntity, currentAction.getTargets().get(0)));
-			else if (currentAction.getActionType().equals("special"))
-				Display.print(useSpecial(currentEntity, currentAction));
-			else if (currentAction.getActionType().equals("run")) {
+			if (currentAction.getActionType().equals("Attack"))
+				print(fight(currentEntity, currentAction.getTargets().get(0)));
+			else if (currentAction.getActionType().equals("Special"))
+				print(useSpecial(currentEntity, currentAction));
+			else if (currentAction.getActionType().equals("Run")) {
 				if (run(currentEntity))
 					currentInitiative--;
 			}
-			else if (currentAction.getActionType().equals("inventory"))
+			else if (currentAction.getActionType().equals("Inventory"))
 				accessInventory(currentEntity, currentAction);
 
 			checkDead();
 
 
-
 			if (currentInitiative < lastInitiative) { // Tick at the end of the turn of the first person currently in the initiative (but not the first time)
 				//gameTick(1); // Do we have a status effect system in the works? if not we can remove this.
-				Display.debug("Game ticks."); // If status effects are added, consider main print.
+				debug("Game ticks."); // If status effects are added, consider main print.
 				checkDead();
 			}
 			lastInitiative = currentInitiative;
 
-			if (turnCount == 20) { //error catch so we can see what happened easier
-				Display.println("Too many turns have happened. Exiting loop prematurely.");
+			if (turnCount == 50) { // Error catch so we can see what happened easier
+				println("Too many turns have happened. Exiting loop prematurely.");
 				break; 
 			}
-			//Display.print(output);
-		}
+		} // end of Combat turn loop
 		endCombat();
-		Display.print("End of combat.\n\n");
+		println(bar("End of combat"));
 	}
 
 	public String fight(Entity attacker, Entity defender) {
@@ -197,16 +197,15 @@ public class Combat extends Instance {
 		Weapon weapon;
 
 		if (defender.isAlive()) {
-			//damage = (int)(Math.random()*(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)+(attacker.getStatI(attacker.getEquippedItems()[4].getStatS("primaryStat"))/2)) + attacker.getEquippedItems()[4].getAttack();
 			if (attacker.getEquippedItems()[4] != null)
 				weapon = (Weapon)attacker.getEquippedItems()[4];
-			else weapon = new Weapon("melee", 0, 0, 0, 0, 0, false); // May seem excessive to make a new one each time, and we could just have one per a combat.
+			else weapon = noWeapon;
 			damage = (int)(Math.random()*((weapon.getAttack()+attacker.getMelee())/2) + (weapon.getAttack()+attacker.getMelee())/2 +1); // Damage will be from half weapon attack + melee to full weapon attack + melee.
 			if (damage < 0) damage = 0;
 			double damageReduction = (defender.getBlocking()+DAMAGE_REDUCTION_MULTIPLIER)/DAMAGE_REDUCTION_MULTIPLIER; // Move blocking up to entity?
 			damageFinal = (int) (damage/damageReduction);
 
-			if (Math.random()*attacker.getMelee()+(attacker.getMelee()/2) > Math.random()*defender.getPerception()+(defender.getPerception()/2)) { // DP vs AM/2 + 1-AM
+			if (Math.random()*attacker.getMelee()+(attacker.getMelee()/2) > Math.random()*defender.getPerception()+(defender.getPerception()/2)) { // Hit Chance: DP vs AM/2 + 1-AM
 				defender.damage(damageFinal);
 				output += attacker.getName() + " strikes at " + defender.getName() + " with " + attacker.getEquippedItems()[4].getName() + " dealing " + damageFinal + " damage.\n"; 
 				output += defender.getName() + " now has " + defender.getHealth() +"/"+ defender.getMaxHealth() + " health points.\n";
@@ -260,22 +259,22 @@ public class Combat extends Instance {
 	public boolean run(Entity runner) {
 		//runner compare perception stats against those of people of other team, roll number, if beats them:
 		int highestEnemyDex = 0;
-		Display.print(runner.getName() + " attempts to run from combat... ");
+		print(runner.getName() + " attempts to run from combat... ");
 		for (int i=0; i<team.size(); i++)
 			for (int j=0; j<team.get(i).size(); j++) //should add something here to skip over the entire currentTeam
 				if (currentTeam != i)
 					if (team.get(i).get(j).getPerception() > highestEnemyDex) // TODO replace perception with something that makes more sense?
 						highestEnemyDex = team.get(i).get(j).getPerception();
 		int runAttempt = (int)Math.round(Math.random()*runner.getPerception()*2); // TODO Adjust equation
-		Display.debug(runAttempt + "\n");
+		debug(runAttempt + "\n");
 		if (runAttempt >= highestEnemyDex) {
-			Display.print(" Sucess!\n");
+			print(" Sucess!\n");
 			initiativeList.remove(runner);
 			team.get(currentTeam).remove(runner);
 			return true;
 		}
 		else {
-			Display.print(" Failure.\n");
+			print(" Failure.\n");
 			return false;
 		}
 	}
@@ -307,7 +306,7 @@ public class Combat extends Instance {
 			isActive = false;
 		if (deadTeams >= team.size())
 			allDead = true;
-		//Display.debug("Check active return: isActive: " + isActive + ". deadTeams: " + deadTeams + ". allDead: " + allDead);
+		//debug("Check active return: isActive: " + isActive + ". deadTeams: " + deadTeams + ". allDead: " + allDead);
 		return isActive; 
 	}
 
@@ -315,7 +314,7 @@ public class Combat extends Instance {
 		for (int i=0; i<team.size(); i++) {
 			for (int j=0; j<team.get(i).size(); j++) {
 				if (!team.get(i).get(j).isAlive() && !dead.contains(team.get(i).get(j))) {
-					Display.print(team.get(i).get(j).getName() + " has died.\n");
+					print(team.get(i).get(j).getName() + " has died.\n");
 					dead.add(team.get(i).get(j));
 				}
 			}
@@ -324,8 +323,8 @@ public class Combat extends Instance {
 
 	public void endCombat() { //combat clean up
 		if (allDead == false) {
-			Display.print("Team " + victor + " is the victor.\n");
-			Display.print("There are " + dead.size() + " dead.\n");
+			print("Team " + victor + " is the victor.\n");
+			print("There are " + dead.size() + " dead.\n");
 
 			int xpPreSplit = 0;
 			for (Entity i: dead) // total up the xp value of the kills.
@@ -342,9 +341,7 @@ public class Combat extends Instance {
 				if (i.isAlive())
 					i.addXP(xpSplit);
 
-			Display.print(xpPreSplit + "xp is split between all " + xpSplitWays + " of the victors recieve who each recieve " + xpSplit + "xp.\n");
-			//Display.print(dead.toString() + "\n");
-			//Display.print("\n");
+			print(xpPreSplit + "xp is split between all " + xpSplitWays + " of the victors recieve who each recieve " + xpSplit + "xp.\n");
 
 			// All dead loot goes in one pile that the victor can pick it up.
 			for(Entity i: dead) 
@@ -359,7 +356,7 @@ public class Combat extends Instance {
 					for(Item j: droppedLoot)
 						i.setInventory(j);
 					i.setMoney(i.getMoney() + moneyDroped); 
-					Display.print(i.getName() + " picks up all of the loot, and " + moneyDroped + " coins.\n");
+					print(i.getName() + " picks up all of the loot, and " + moneyDroped + " coins.\n");
 					break;
 				}
 			}
@@ -368,7 +365,7 @@ public class Combat extends Instance {
 				i.clearInventory();
 		}
 		else {
-			Display.print("All teams are dead.\nOops!\n");
+			println("All teams are dead.\nOops!");
 		}
 		//refresh GUI
 	}
