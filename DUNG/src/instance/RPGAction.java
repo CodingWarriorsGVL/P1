@@ -44,13 +44,13 @@ public class RPGAction { //Wrapper to hold player and AI actions from their figu
 	}
 	
 	public boolean isValid() {
-		if ((action.equals("attack")) && (targets.size() != 0))
+		if ((action.equals("Attack")) && (targets.size() != 0))
 			return true;
-		else if ( (action.equals("special")) && (targets.size() != 0) && (specialNum != null) )
+		else if ( (action.equals("Special")) && (targets.size() != 0) && (specialNum != null) )
 			return true;
-		else if ( (action.equals("inventory")) && (targets.size() != 0) && (inventoryAction.equals("use") || inventoryAction.equals("drop") || inventoryAction.equals("give")) && (inventorySlot != null))
+		else if ( (action.equals("Inventory")) && (targets.size() != 0) && (inventoryAction.equals("Use") || inventoryAction.equals("Drop") || inventoryAction.equals("Give")) && (inventorySlot != null))
 			return true;
-		else if ((action.equals("run")))
+		else if ((action.equals("Run")))
 			return true;
 		else return false;
 	}

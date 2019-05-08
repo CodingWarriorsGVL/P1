@@ -2,13 +2,11 @@ package characters;
 
 import display.*;
 
-import static display.Display.println;
+import static display.Display.*;
 
 import java.util.ArrayList;
 import item.Armor;
 import item.Item;
-import item.Potion;
-import item.Weapon;
 
 public class Entity {
 	
@@ -22,8 +20,8 @@ public class Entity {
 	int meleeDamage = melee;
 	int blocking = defense;
 	
-	public ArrayList<Item> inventory = new ArrayList<Item>();
-	public ArrayList<MagicSpell> spells = new ArrayList<MagicSpell>();
+	public Inventory inventory = new Inventory();
+	protected ArrayList<MagicSpell> spells = new ArrayList<MagicSpell>();
 	
 	final int LEVEL_TIER_INCREASE = 5, ABILITY_POINTS_PER = 10; // Sets the level up conditions.
 
@@ -135,19 +133,9 @@ public class Entity {
 	public ArrayList<MagicSpell> getSpells() {
 		return spells;
 	}
-
-	public void setInventory(Item item) {
-		inventory.add(item);
-		item.setQuantity(item.getQuantity() + 1); // What is this mess?
-	}
-
-	public ArrayList<Item> getInventory() {
-		return inventory;
-	}
 	
-	public void clearInventory() {
-		inventory = new ArrayList<Item>();
-		money = 0;
+	public Inventory inventory() {
+		return inventory;
 	}
 	
 	public void removeEquippedItems(int location) {
@@ -185,7 +173,7 @@ public class Entity {
 	public int getMana() {
 		return mana;
 	}
-
+	/*
 	public void setMeleeDamage(Item[] equippedItems) {
 		meleeDamage = 0;
 		meleeDamage = ((Weapon) equippedItems[WEAPON]).getAttack() + melee;
@@ -194,7 +182,8 @@ public class Entity {
 	public int getMeleeDamage() {
 		return meleeDamage;
 	}
-
+	*/
+	/*
 	public void setBlocking(Item[] equippedItems) {
 		int equipmentDefense = 0;
 		blocking = 0;
@@ -203,9 +192,19 @@ public class Entity {
 		}
 		blocking = equipmentDefense + defense;
 	}
-
+	
 	public int getBlocking() {
 		return blocking;
+	}
+	*/
+	public int getBlocking() {
+		int equipmentDefense = 0;
+		blocking = 0;
+		for (int i = 0; i < 3; i++) {
+			if (equippedItems[i] != null)
+				equipmentDefense += ((Armor) equippedItems[i]).getDefense();
+		}
+		return blocking = equipmentDefense + defense;
 	}
 	
 	public void setMoney(int money) {
@@ -244,13 +243,13 @@ public class Entity {
 	public void levelUp(int numLvls) {
 		for (int i=0; i<numLvls; i++) { // Allows for multiple levels to be given at once.
 			//abilityPoints = (int)(abilityPoints + Math.ceil(level/5.0)*10);
-			abilityPoints = (int)(abilityPoints + Math.ceil(level/LEVEL_TIER_INCREASE)*ABILITY_POINTS_PER);
+			abilityPoints = (int)(abilityPoints + Math.ceil(level/(double)LEVEL_TIER_INCREASE)*ABILITY_POINTS_PER);
 			experience -= xpToLevel(); // Subtracts the level up from your xp pool.
 			if (experience < 0) // This is mostly as catch that should happen if forced to level to keep you from having negative xp.
 				experience = 0;
 			level += 1;
 			if (isAI == false) // Only tells you when non AI controlled entities leveled. Since there is no way to check if they are on your team yet.
-				Display.println(WordProcessing.rainbowfy(name+ " has leveled up to level "+level+"!"));
+				Display.println(WordProcessing.wildRainbowfy(name+ " has leveled up to level "+level+"!"));
 		}
 	}
 
@@ -268,12 +267,12 @@ public class Entity {
 	
 	public void useItem(Item item, String action, ArrayList<Entity> targets) {
 		//Display.debug(action);
-		if (action.equals("drop")) {
+		if (action.equals("Drop")) {
 			//droppedLoot.add(item); // Drops it on the ground for someone to pick up at the end of combat (not recommended). TODO fix
-			this.getInventory().remove(item);
+			this.inventory().remove(item);
 			Display.println(this.getName() + " drops " + item.getName() + " on the ground.");
 		}
-		else if (action.equals("use")) {
+		else if (action.equals("Use")) {
 			if (item.isEquipable()) {
 				this.setEquippedItems(item); 
 				Display.println(getName() + " equips " + item.getName() + ".");
@@ -285,9 +284,9 @@ public class Entity {
 			}
 			// else if (item.isTargetable()) { 
 		}
-		else if (action.equals("give")) {
-			targets.get(0).getInventory().add(item);
-			this.getInventory().remove(item);
+		else if (action.equals("Give")) {
+			targets.get(0).inventory().add(item);
+			this.inventory().remove(item);
 			Display.println(this.getName() + " gives " + item.getName() + " to " + targets.get(0).getName() + ".");
 		}
 		else Display.debug("action input wrong");
@@ -302,31 +301,46 @@ public class Entity {
 	}
 	
 	public void displayInventory() {
-		println("--------------------------------------------------------------------");
-		println("* Inventory *");
+		printbar("Inventory");
 		println("Gold coins: " + money);
 		for (int i = 0; i < inventory.size(); i++) {
-			if(inventory.get(i).getQuantity() == 0)
-				inventory.remove(inventory.get(i));
-			println(i + 1 + ". " + inventory.get(i));
+			//if(inventory.get(i).getQuantity() == 0)
+			//	inventory.remove(inventory.get(i));
+			println((i+1)+". " + inventory.get(i) + "\t" + inventory.getCount(i));
 		}
-		println("--------------------------------------------------------------------");
+		//printbar();
 	}// End displayInventory
 	
 	public void displayStats() {
-		println("--------------------------------------------------------------------");
-		println("Name: " + name);
+		printbar(name);
 		/* 
 		if (isAI) 
 			println("Control: AI");
 		else 
 			println("Control: Player");
 		 */
-		println("Level: " + level + " Next level: "+ experience+"/"+xpToLevel() + " Unspent Points: " + abilityPoints);
-		println("Health: " + health +"/"+ maxHealth);
-		println("Mana: " + mana +"/"+ maxMana);
-		println("Melee: " + melee + " Defense: " + defense);
-		println("Intellect: " + intellect + " Perception: " + perception);
+		println("Level: " + level + " \t\t" + "Next level: "+ experience+"/"+xpToLevel() + " \t" + "Unspent Points: " + abilityPoints);
+		println("Health: " + health +"/"+ maxHealth + "\t\t" + "Mana: " + mana +"/"+ maxMana);
+		println("Melee: " + melee + " \t\t" + "Intellect: " + intellect);
+		println("Defense: " + defense + "\t\t" + "Perception: " + perception);
+	}
+	
+	public Entity clone() { // Added, but probably not needed for now.
+		Entity clone = new Entity(name, maxHealth, maxMana, melee, defense, intellect, perception, level, isAI);
+		clone.abilityPoints = abilityPoints; // Do they need to keep these points?
+		clone.experience = experience; // This would suggest only for very exact clones.
+		clone.money = money; // Inventory can be wiped.
+		clone.equippedItems = equippedItems;
+		clone.equippedSpells = equippedSpells;
+		clone.spells = spells;
+		clone.inventory.add(inventory); // Inventory can be wiped.
+		clone.blocking = blocking;
+		clone.meleeDamage = meleeDamage;
+		return clone;
+	}
+	
+	public static Entity clone(Entity entity) { // Static copy of clone.
+		return entity.clone();
 	}
 	
 }// End Class Entity

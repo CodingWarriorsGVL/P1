@@ -25,6 +25,7 @@ import navigation.Room;
 import navigation.RoomFeature;
 import navigation.Staircase;
 import navigation.Wall;
+import static display.WordProcessing.*;
 
 public class Display {
 
@@ -117,6 +118,24 @@ public class Display {
 		println("<font color = "+INPUTMESSAGECOLOR+">"+str+"</font>"); 
 		boolean isValid = false;
 		String r = "";
+
+		// Clean Options
+		/*
+		int c = 0, j = 0;
+		for (int i=0; i<options.length; i++) {
+			if (!options[i].equals(""))
+				c++;
+		}
+		String[] optionsTemp = new String[c];
+		for (int i=0; i<c; i++) {
+			if (!options[i].equals("")){
+				optionsTemp[j] = options[i];
+				j++;
+			}
+		}
+		options = optionsTemp;
+		 */
+		// Read Loop
 		do {
 			while (wasRead) {
 				try {
@@ -128,10 +147,14 @@ public class Display {
 			if (options.length==0) {
 				isValid = true;
 			}
+			//for (int i=0; i<options.length; i++) {
+				//String option = options[i];
 			for (String option : options) {
-				if (lastOut.substring(0, Math.min(lastOut.length(), option.length())).equalsIgnoreCase(option.substring(0, Math.min(lastOut.length(), option.length())))) {
-					isValid = true;
-					r = option;
+				if (option != null) {
+					if (lastOut.substring(0, Math.min(lastOut.length(), option.length())).equalsIgnoreCase(option.substring(0, Math.min(lastOut.length(), option.length())))) {
+						isValid = true;
+						r = option;
+					}
 				}
 			}
 			if (lastOut.equalsIgnoreCase("help")) {
@@ -141,18 +164,24 @@ public class Display {
 				else {
 					print("<font color = "+HELPCOLOR+">Options: ");
 					for (String o : options) 
-						print(o + ", ");
-					print("\n</font>");
+						if (o != null)
+							print(o + ", ");
+					println("</font>");
 				}
 				isValid = false;
 				wasRead = true;
 			}
 		} while (!isValid);
 		wasRead = true;
-		println("<font color = "+USERINPUTCOLOR+">"+ lastOut + ": " + r +"</font>"); 
-		if (r != "")
+		//println("<font color = "+USERINPUTCOLOR+">"+ lastOut + ": " + r +"</font>"); 
+		if (r != "") {
+			println("<font color = "+USERINPUTCOLOR+">"+ r +"</font>"); 
 			return r;
-		else return lastOut;
+		}
+		else {
+			println("<font color = "+USERINPUTCOLOR+">"+ lastOut +"</font>"); 
+			return lastOut;
+		}
 	}
 
 	public static int inputInt(String str) {
@@ -262,5 +291,10 @@ public class Display {
 		println("Staircase to another floor!");
 	}
 
-
+	public static void printbar() {
+		println(bar());
+	}
+	public static void printbar(String str) {
+		println(bar(str));
+	}
 }

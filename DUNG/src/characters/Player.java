@@ -3,17 +3,15 @@ package characters;
 import java.util.ArrayList;
 
 import display.Display;
-import item.Armor;
 import item.Item;
-import item.Weapon;
 import static item.Armor.*;
 import static characters.DamageSpell.*;
 import static item.Weapon.*;
 import static item.Potion.*;
-import static item.Currency.*;
 import navigation.Room;
 
 import static display.Display.*;
+import static display.WordProcessing.*;
 
 public class Player extends Entity {
 
@@ -22,7 +20,7 @@ public class Player extends Entity {
 	int yPosition;
 	Room currentRoom;
 
-	static Player player;
+	static Player player; // But why? This wasn't even public.
 
 	public Player(String name, int health, int mana, int melee, int defense, int intellect, int perception, int level) {
 		super(name, health, mana, melee, defense, intellect, perception, level, false);
@@ -38,45 +36,39 @@ public class Player extends Entity {
 	}
 
 
-
 	// Other Methods
 
 	public void displayEquippedItems() {
-		println("--------------------------------------------------------------------");
-		println("* Equipped Items *");
+		printbar("Equipped Items");
+		//println("* Equipped Items *");
 		for (int i = 0; i < equippedItems.length; i++) {
 			println(equippedItems[i]);
 		}
-		println("--------------------------------------------------------------------");
+		//printbar();
 	}
 
-
-
 	public void displayEquippedSpells() {
-		println("--------------------------------------------------------------------");
-		println("* Equipped Spells *");
+		printbar("Equipped Spells");
+		//println("* Equipped Spells *");
 		for (int i = 0; i < equippedSpells.length; i++) {
 			if (equippedSpells[i] != null) {
 				println((i+1) + ". " + equippedSpells[i].getName());
 			}
 		}
-		println("--------------------------------------------------------------------");
+		//printbar();
 	}
 
 	public void displaySpells() {
-
-		println("--------------------------------------------------------------------");
-		println("* Spell  Book *");
+		printbar("Spell Book");
 
 		for (int i = 0; i < spells.size(); i++) {
 			println(i + 1 + ". " + ((MagicSpell) spells.get(i)).getName());
 		}
-		println("--------------------------------------------------------------------");
+		//printbar();
 
 	}// End displayEquippedSpells
 
-
-	public void changeEquippedItems() {
+	public void changeEquippedItems() { // Not currently in use.
 
 		boolean equippingItems = true;
 		int input;
@@ -96,10 +88,10 @@ public class Player extends Entity {
 				this.setEquippedItems(((Item) inventory.get(input - 1)));
 				inventory.remove(((Item) inventory.get(input - 1)));
 
-				this.setMeleeDamage(equippedItems);
-				this.setBlocking(equippedItems);
+				//this.setMeleeDamage(equippedItems);
+				//this.setBlocking(equippedItems);
 
-				println("* Your new Attack Rating is: " + this.getMeleeDamage() + " *");
+				//println("* Your new Attack Rating is: " + this.getMeleeDamage() + " *");
 				println("* Your new Defense Rating is: " + this.getBlocking() + " *");
 			}
 
@@ -117,7 +109,6 @@ public class Player extends Entity {
 
 	}// End changeEquippedItems
 	public void changeEquippedSpells() {
-
 		boolean equippingSpells = true;
 		int input;
 
@@ -214,14 +205,14 @@ public class Player extends Entity {
 		player.setEquippedItems(ruggedLeggings);
 		player.setEquippedItems(ruggedShield);
 		player.setEquippedItems(testSword);
-		player.setBlocking(player.getEquippedItems());
-		player.setMeleeDamage(player.getEquippedItems());
+		//player.setBlocking(player.getEquippedItems());
+		//player.setMeleeDamage(player.getEquippedItems());
 
 
-		player.setInventory(healthPotion);
+		player.inventory.add(healthPotion, 3);
 		//player.setInventory(goldCoin);
 
-		healthPotion.setQuantity(3);
+		//healthPotion.setQuantity(3);
 		//goldCoin.setQuantity(10);
 
 		player.setMoney(10); // Gives 10 gold coins to work with.
@@ -232,8 +223,9 @@ public class Player extends Entity {
 		player.displayEquippedItems();
 		player.displayInventory();
 
-		println("# Wait! Before you leave out on your adventure, I wanted to tell you that you have 2 starter spells. #");
-		println("# These are your starter spells. #");
+		//println("<font color =909f90><b># Wait! Before you leave out on your adventure, I wanted to tell you that you have 2 starter spells. #</b></font>");
+		println(randomColorfy("# Wait! Before you leave out on your adventure, I wanted to tell you that you have 2 starter spells. #"));
+		//println("# These are your starter spells. #");
 		player.setEquippedSpells(0, fireBolt);
 		player.setEquippedSpells(1, lightHealing);
 		player.setSpells(fireBolt);
@@ -251,138 +243,122 @@ public class Player extends Entity {
 	public void spendPoints() {
 		boolean spendingPoints = true;
 		String answer;
-		Player player = this; // Yes this is bad, but it was FAST, TODO correct variables.
-
+		
 		while(spendingPoints){
-			int spendablePoints = player.getAbilityPoints();
+			int spendablePoints = getAbilityPoints();
 			int input = 0;
 			answer = " ";
 
-			println("# Ok " + player.getName() + " you have " + spendablePoints + " points to spend in: Health, Mana, "
-					+ "Melee, Defense, Intellect, and Perception. #"
-					+ "\n# Use them wisley! #");
+			println("Ok " + getName() + " you have " + spendablePoints + " points to spend in: Health, Mana, Melee, Defense, Intellect, and Perception."
+					+ "\nUse them wisely!");
 
 			if(spendablePoints > 0) {									
 				do {
-					input = inputInt("\n# How many points would you like to add in health? #");	
+					input = inputInt("\nHow many points would you like to add in health?");	
 					if(spendablePoints >= input) {
-						player.setHealth(input + player.getHealth());
-						player.setMaxHealth(input + player.getMaxHealth());							
+						setHealth(input + getHealth());
+						setMaxHealth(input + getMaxHealth());							
 					}
 					else 
-						Display.println("You do not have enough spendable points for the quantity that you entered.");
+						println("You do not have enough spendable points for the quantity that you entered.");
 				}while(input > spendablePoints);	
 				spendablePoints -= input;
 				input = 0;
-				println("# You now have " + spendablePoints + " points left. #");
+				println("You now have " + spendablePoints + " points left.");
 			}
 
 			if(spendablePoints > 0){
 				do {
-					input = inputInt("\n# How many points would you like to add in mana? #");
+					input = inputInt("\nHow many points would you like to add in mana?");
 					if(spendablePoints >= input) {
-						player.setMana(input + player.getMana()); // This can be cheesed!
-						player.setMaxMana(input + player.getMaxMana());
+						setMana(input + getMana()); // This can be cheesed!
+						setMaxMana(input + getMaxMana());
 					}
 					else
-						Display.println("You do not have enough spendable points for the quantity you entered.");
+						println("You do not have enough spendable points for the quantity you entered.");
 				}while(input > spendablePoints);
 				spendablePoints -= input;
-				println("# You now have " + spendablePoints + " points left. #");
+				println("You now have " + spendablePoints + " points left.");
 				input = 0;
 			}
 
 			if(spendablePoints > 0){
 				do {
-					input = inputInt("\n# How many points would you like to add in melee? #");
+					input = inputInt("\nHow many points would you like to add in melee?");
 					if(spendablePoints >= input) {
-						player.setMelee(input + player.getMelee());
+						setMelee(input + getMelee());
 					}	
 					else 
-						Display.println("You do not have enough spendable points for the quantity that you entered.");
+						println("You do not have enough spendable points for the quantity that you entered.");
 				}while(input > spendablePoints);	
 				spendablePoints -= input;
-				println("# You now have " + spendablePoints + " points left. #");
+				println("You now have " + spendablePoints + " points left.");
 				input = 0;
 			}
 
 			if(spendablePoints > 0){			
 				do {
-					input = inputInt("\n# How many points would you like to add in defense? #");
+					input = inputInt("\nHow many points would you like to add in defense?");
 					if(spendablePoints >= input) {
-						player.setDefense(input + player.getDefense());
+						setDefense(input + getDefense());
 					}
 					else 
-						Display.println("You do not have enough spendable points for the quantity that you entered.");
+						println("You do not have enough spendable points for the quantity that you entered.");
 				}while(input > spendablePoints);
 				spendablePoints -= input;
-				println("# You now have " + spendablePoints + " points left. #");
+				println("You now have " + spendablePoints + " points left.");
 				input = 0;
 			}
 
 			if(spendablePoints > 0){
 				do {				
-					input = inputInt("\n# How many points would you like to add in intellect? #");
+					input = inputInt("\nHow many points would you like to add in intellect?");
 					if(spendablePoints >= input) {
-						player.setIntellect(input + player.getIntellect());
+						setIntellect(input + getIntellect());
 					}
 					else 
-						Display.println("You do not have enough spendable points for the quantity that you entered.");
+						println("You do not have enough spendable points for the quantity that you entered.");
 				}while(input > spendablePoints);
 				spendablePoints -= input;
-				println("# You now have " + spendablePoints + " points left. #");
+				println("You now have " + spendablePoints + " points left.");
 				input = 0;
 			}
 
 			if(spendablePoints > 0){
 				do {
-					input = inputInt("\n# How many points would you like to add in perception? #");
+					input = inputInt("\nHow many points would you like to add in perception?");
 					if(spendablePoints >= input) {
-						player.setPerception(input + player.getPerception());				
+						setPerception(input + getPerception());				
 					}
 					else 
-						Display.println("You do not have enough spendable points for the quantity that you entered.");
+						println("You do not have enough spendable points for the quantity that you entered.");
 				}while(input > spendablePoints);
 				spendablePoints -= input;
-				println("# You now have " + spendablePoints + " points left. #");
+				println("You now have " + spendablePoints + " points left.");
 				input = 0;
 			}
 
-			println("\n# Ok " + player.getName() + " here is your character build. #");
-			println("--------------------------------------------------------------------");
+			println("\nOk " + player.getName() + " here is your character build.");
+			printbar();
 			displayStats();
-			println("--------------------------------------------------------------------");
+			printbar();
 
 
-			answer = input("\n# Are you happy with your character build? #", "Yes", "No", "Back");;
+			answer = input("\nAre you happy with your character build?", "Yes", "No", "Back");;
 			if(answer.equals("No")) {
 				spendingPoints = true;
+				// TODO Revert the spent points and stay.
 			} else if (answer.equals("Yes")) {
 				spendingPoints = false; 
-				// TODO Set spent points in stone. 
+				// TODO Set spent points in stone and leave. 
+				player.setAbilityPoints(spendablePoints);
 			} else if (answer.equals("Back")) {
 				spendingPoints = false;
-				// TODO Revert the spent points
+				// TODO Revert the spent points and bail.
 			}
 			
-			player.setAbilityPoints(spendablePoints);
+			
 		}//End while(spendingPoints)
-	}
-
-	public void characterMenu() {
-		String input;
-		Display.println("--------------------------------------------------------------------");
-		input = Display.input("Character Menu, Choose an option (Inventory, Spells, Attributes, Back)", "Inventory", "Spells", "Attributes", "Back");
-
-		if (input.toLowerCase().charAt(0)=='i') {
-			characterInventory();
-		}
-		else if (input.toLowerCase().charAt(0)=='s') {
-			changeEquippedSpells();
-		}
-		else if (input.toLowerCase().charAt(0)=='a') {
-			spendPoints();
-		}
 	}
 
 	public void characterInventory() {
@@ -397,26 +373,26 @@ public class Player extends Entity {
 
 		this.displayInventory();
 		itemNum = Display.inputInt("Choose an item number: ");
-		choosenItem = this.getInventory().get(itemNum-1);
+		choosenItem = this.inventory().get(itemNum-1);
 
 		Display.print("What would you like to do? Options: ");
 		String inputOptions[] = new String[3];
 		if (choosenItem.isConsumable() || choosenItem.isEquipable())
-			inputOptions[0] = "use";
+			inputOptions[0] = "Use";
 			//Display.print("Use, ");
 		//Display.print("Drop, Give");
-		inputOptions[1] = "drop";
-		inputOptions[2] = "give";
+		inputOptions[1] = "Drop";
+		inputOptions[2] = "Give";
 		do {
 			actionOnItem = Display.input("", inputOptions);
-		} while (!((actionOnItem.equals("use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("drop") || actionOnItem.equals("give"))); // Watch the parentheses 
+		} while (!((actionOnItem.equals("Use") && (choosenItem.isConsumable() || choosenItem.isEquipable())) || actionOnItem.equals("Drop") || actionOnItem.equals("Give"))); // Watch the parentheses 
 
-		if (/*choosenItem.isTargetable() ||*/ actionOnItem.equals("give")) {
+		if (/*choosenItem.isTargetable() ||*/ actionOnItem.equals("Give")) {
 			targets.add(potentialTargets.get(pickTarget(potentialTargets)-1));
 		}
 		else targets.add(this);
 
-		useItem(getInventory().get(itemNum-1), actionOnItem, targets);
+		useItem(inventory().get(itemNum-1), actionOnItem, targets);
 	}
 
 	public static int pickTarget(ArrayList<Entity> targetList) {
