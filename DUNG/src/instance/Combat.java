@@ -12,7 +12,8 @@ import characters.*;
 public class Combat extends Instance {
 	protected int victor; // Number of the team that has won this Combat
 	protected ArrayList<Entity> dead = new ArrayList<Entity>(); //holds all the dead people, for counting and looting
-	protected ArrayList<Item> droppedLoot = new ArrayList<Item>(); //for clean up looting inventories.
+	//protected ArrayList<Item> droppedLoot = new ArrayList<Item>(); //for clean up looting inventories.
+	protected Inventory droppedLoot = new Inventory(); //for clean up looting inventories.
 	private boolean allDead = false; //changes to true if everyone dies at the same time and is an extra check at the end to prevent an infinite loop.
 	private Entity currentEntity; //the Entity currently taking a turn.
 	private final int DAMAGE_REDUCTION_MULTIPLIER = 500;
@@ -131,7 +132,7 @@ public class Combat extends Instance {
 
 						currentEntity.displayInventory();
 						itemNum = inputInt("Choose an item number: ");
-						choosenItem = currentEntity.getInventory().get(itemNum-1);
+						choosenItem = currentEntity.inventory().get(itemNum-1);
 						String inputOptions[] = new String[3];
 						print("What would you like to do?");
 						if (choosenItem.isConsumable() || choosenItem.isEquipable())
@@ -280,7 +281,7 @@ public class Combat extends Instance {
 	}
 
 	public void accessInventory(Entity currentEntity, RPGAction currentAction) {
-		currentEntity.useItem(currentEntity.getInventory().get(currentAction.getInventorySlot()), currentAction.getInventoryAction(), currentAction.getTargets());
+		currentEntity.useItem(currentEntity.inventory().get(currentAction.getInventorySlot()), currentAction.getInventoryAction(), currentAction.getTargets());
 	}
 
 	public boolean checkActive() { // TODO redo something here, I think there might be issue.
@@ -344,17 +345,15 @@ public class Combat extends Instance {
 			print(xpPreSplit + "xp is split between all " + xpSplitWays + " of the victors recieve who each recieve " + xpSplit + "xp.\n");
 
 			// All dead loot goes in one pile that the victor can pick it up.
-			for(Entity i: dead) 
-				for(Item j: i.getInventory())
-					droppedLoot.add(j);
+			for(Entity i: dead) // Tally up all inventories into one pile.
+				droppedLoot.add(i.inventory());
 			int moneyDroped = 0;
-			for (Entity i: dead)
+			for (Entity i: dead) // Tally up all the money.
 				moneyDroped += i.getMoney();
 
 			for(Entity i: team.get(victor)) {
 				if (i.isAlive()) {
-					for(Item j: droppedLoot)
-						i.setInventory(j);
+					i.inventory().add(droppedLoot);
 					i.setMoney(i.getMoney() + moneyDroped); 
 					print(i.getName() + " picks up all of the loot, and " + moneyDroped + " coins.\n");
 					break;
@@ -362,7 +361,7 @@ public class Combat extends Instance {
 			}
 			
 			for (Entity i: dead)
-				i.clearInventory();
+				i.inventory().clear();
 		}
 		else {
 			println("All teams are dead.\nOops!");

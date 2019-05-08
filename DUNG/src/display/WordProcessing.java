@@ -1,5 +1,7 @@
 package display;
 
+import java.awt.Color;
+
 public class WordProcessing { // Refactor name if you have something better.
 	
 	private static final String BAR = "="; // The character used in break bars across the screen.
@@ -29,14 +31,25 @@ public class WordProcessing { // Refactor name if you have something better.
 			return output;
 		}
 	}
-	
-	public static String rainbowfy(String str) { // Makes each color in a string a fading color, randomly.
+	public static String rainbowfy(String str) {
 		String output = "";
-		int offset = (int)(Math.random()*255);
+		int offset = (int)(Math.random()*360);
+		char[] strAry = str.toCharArray();
+		for (int i=0; i<strAry.length; i++) {
+			String c = strAry[i] + "";
+			output += randomColorfy(c,i+offset);
+		}
+		return output;
+	}
+	
+	public static String wildRainbowfy(String str) { // Makes each color in a string a fading color, randomly.
+		String output = "";
+		int offset = (int)(Math.random()*1988);
 		// Process each character.
-		for (int i=0; i<str.toCharArray().length; i++) {
-			char c = str.toCharArray()[i];
-			output += "<font color="+ trueRandomColor(i+offset)+">"+c+"</font>";
+		char[] strAry = str.toCharArray();
+		for (int i=0; i<strAry.length; i++) {
+			String c = strAry[i] + "";
+			output += wildRandomColorfy(c,i+offset);
 		}
 		return output;
 	}
@@ -70,8 +83,12 @@ public class WordProcessing { // Refactor name if you have something better.
 		return hexCode;
 	}
 	
-	public static String randomColorfy(String str) { // Turns a string into a random color.
+	public static String wildRandomColorfy(String str) { // Turns a string into a random color. Seedless
 		str = "<font color = " + trueRandomColor() + ">" + str + "</font>";
+		return str;
+	}
+	public static String wildRandomColorfy(String str, int seed) { // Turns a string into a random color.
+		str = "<font color = " + trueRandomColor(seed) + ">" + str + "</font>";
 		return str;
 	}
 	
@@ -85,6 +102,24 @@ public class WordProcessing { // Refactor name if you have something better.
 		return RGBtoHex(r,g,b);
 	}
 	public static String trueRandomColor() { // Overload, sets a random color seed if not given.
-		return trueRandomColor((int)(Math.random()*255));
+		return trueRandomColor((int)(Math.random()*1988)); // 1989 is least common multiple of 9,13,and 17
+	}
+	
+	public static String randomColorfy(String str) { // Turns a string into a random color. Seedless
+		str = "<font color = " + randomColor() + ">" + str + "</font>";
+		return str;
+	}
+	public static String randomColorfy(String str, int seed) { // Turns a string into a random color.
+		str = "<font color = " + randomColor(seed) + ">" + str + "</font>";
+		return str;
+	}
+	
+	public static String randomColor(int seed) {
+		Color color = Color.getHSBColor(seed/90f, 1, 1); //90 instead of 360, means it fades a little faster
+		return RGBtoHex(color.getRed(), color.getGreen(), color.getBlue());
+	}
+	public static String randomColor() {
+		Color color = Color.getHSBColor((float)Math.random(), 1, 1);
+		return RGBtoHex(color.getRed(), color.getGreen(), color.getBlue());
 	}
 }

@@ -209,10 +209,10 @@ public class Player extends Entity {
 		//player.setMeleeDamage(player.getEquippedItems());
 
 
-		player.setInventory(healthPotion);
+		player.inventory.add(healthPotion, 3);
 		//player.setInventory(goldCoin);
 
-		healthPotion.setQuantity(3);
+		//healthPotion.setQuantity(3);
 		//goldCoin.setQuantity(10);
 
 		player.setMoney(10); // Gives 10 gold coins to work with.
@@ -373,7 +373,7 @@ public class Player extends Entity {
 
 		this.displayInventory();
 		itemNum = Display.inputInt("Choose an item number: ");
-		choosenItem = this.getInventory().get(itemNum-1);
+		choosenItem = this.inventory().get(itemNum-1);
 
 		Display.print("What would you like to do? Options: ");
 		String inputOptions[] = new String[3];
@@ -392,7 +392,7 @@ public class Player extends Entity {
 		}
 		else targets.add(this);
 
-		useItem(getInventory().get(itemNum-1), actionOnItem, targets);
+		useItem(inventory().get(itemNum-1), actionOnItem, targets);
 	}
 
 	public static int pickTarget(ArrayList<Entity> targetList) {

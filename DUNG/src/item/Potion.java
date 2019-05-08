@@ -97,7 +97,8 @@ public class Potion extends Item {
 	}
 	
 	public String toString() {
-		return name + ": " + quantity;
+		//return name + ": " + quantity;
+		return name;
 	}
 
 }// End Class Potion

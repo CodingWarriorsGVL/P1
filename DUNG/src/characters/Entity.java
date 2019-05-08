@@ -20,8 +20,7 @@ public class Entity {
 	int meleeDamage = melee;
 	int blocking = defense;
 	
-	protected ArrayList<Item> inventory = new ArrayList<Item>();
-	protected ArrayList<Integer> inventoryCount = new ArrayList<Integer>();
+	public Inventory inventory = new Inventory();
 	protected ArrayList<MagicSpell> spells = new ArrayList<MagicSpell>();
 	
 	final int LEVEL_TIER_INCREASE = 5, ABILITY_POINTS_PER = 10; // Sets the level up conditions.
@@ -135,39 +134,8 @@ public class Entity {
 		return spells;
 	}
 	
-	public void setInventory(Item item) {
-		setInventory(item, 1);
-	}
-	
-	public void setInventory(Item item, int count) {
-		if (!inventory.contains(item)) {
-			inventory.add(item);
-			inventoryCount.add(count);
-		}
-		else inventoryCount.set(inventory.lastIndexOf(item), inventoryCount.get(inventory.lastIndexOf(item))+count );
-		//item.setQuantity(item.getQuantity() + 1); // What is this mess?
-	}
-	
-	public void removeInventory(Item item) {
-		removeInventory(item, 1);
-	}
-	
-	public void removeInventory(Item item, int count) {
-		if (inventoryCount.get(inventory.lastIndexOf(item)) > 0)
-			inventoryCount.set(inventory.lastIndexOf(item), inventoryCount.get(inventory.lastIndexOf(item))-count );
-		if (inventoryCount.get(inventory.lastIndexOf(item)) <= 0) {
-			inventoryCount.remove(inventory.lastIndexOf(item));
-			inventory.remove(item);
-		}
-	}
-
-	public ArrayList<Item> getInventory() {
+	public Inventory inventory() {
 		return inventory;
-	}
-	
-	public void clearInventory() {
-		inventory = new ArrayList<Item>();
-		money = 0;
 	}
 	
 	public void removeEquippedItems(int location) {
@@ -281,7 +249,7 @@ public class Entity {
 				experience = 0;
 			level += 1;
 			if (isAI == false) // Only tells you when non AI controlled entities leveled. Since there is no way to check if they are on your team yet.
-				Display.println(WordProcessing.rainbowfy(name+ " has leveled up to level "+level+"!"));
+				Display.println(WordProcessing.wildRainbowfy(name+ " has leveled up to level "+level+"!"));
 		}
 	}
 
@@ -301,7 +269,7 @@ public class Entity {
 		//Display.debug(action);
 		if (action.equals("Drop")) {
 			//droppedLoot.add(item); // Drops it on the ground for someone to pick up at the end of combat (not recommended). TODO fix
-			this.getInventory().remove(item);
+			this.inventory().remove(item);
 			Display.println(this.getName() + " drops " + item.getName() + " on the ground.");
 		}
 		else if (action.equals("Use")) {
@@ -317,8 +285,8 @@ public class Entity {
 			// else if (item.isTargetable()) { 
 		}
 		else if (action.equals("Give")) {
-			targets.get(0).getInventory().add(item);
-			this.getInventory().remove(item);
+			targets.get(0).inventory().add(item);
+			this.inventory().remove(item);
 			Display.println(this.getName() + " gives " + item.getName() + " to " + targets.get(0).getName() + ".");
 		}
 		else Display.debug("action input wrong");
@@ -338,7 +306,7 @@ public class Entity {
 		for (int i = 0; i < inventory.size(); i++) {
 			//if(inventory.get(i).getQuantity() == 0)
 			//	inventory.remove(inventory.get(i));
-			println((i+1)+". " + inventory.get(i) + " " + inventoryCount.get(i));
+			println((i+1)+". " + inventory.get(i) + "\t" + inventory.getCount(i));
 		}
 		//printbar();
 	}// End displayInventory
@@ -365,8 +333,7 @@ public class Entity {
 		clone.equippedItems = equippedItems;
 		clone.equippedSpells = equippedSpells;
 		clone.spells = spells;
-		clone.inventory = inventory; // Inventory can be wiped.
-		clone.inventoryCount = inventoryCount; // Inventory can be wiped.
+		clone.inventory.add(inventory); // Inventory can be wiped.
 		clone.blocking = blocking;
 		clone.meleeDamage = meleeDamage;
 		return clone;

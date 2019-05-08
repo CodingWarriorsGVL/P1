@@ -47,7 +47,7 @@ public class MainGame {
 			Scanner input;
 			input = new Scanner(new File("src/data/DUNG ASCII Logo.txt"));
 			while (input.hasNextLine()) {
-				//println(WordProcessing.rainbowfy(input.nextLine()));
+				//println(rainbowfy(input.nextLine()));
 				println(input.nextLine());
 			}
 			input.close();
@@ -98,16 +98,16 @@ public class MainGame {
 
 
 		//FOR TESTING PLAYER ITEM INVENTORY
-		player1.setInventory(testHelmet);
-		player1.setInventory(testArmor);
-		player1.setInventory(testLeggings);
-		player1.setInventory(testShield);
-		player1.setInventory(testSword);
-		player1.setInventory(axe);
+		player1.inventory.add(testHelmet);
+		player1.inventory.add(testArmor);
+		player1.inventory.add(testLeggings);
+		player1.inventory.add(testShield);
+		player1.inventory.add(testSword);
+		player1.inventory.add(axe);
 		
 		Room currentRoom;
 
-		println(rainbowfy(bar("The Adventure Beigns")));
+		println(wildRainbowfy(bar("The Adventure Beigns")));
 
 		boolean play = true;
 		
