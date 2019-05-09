@@ -51,8 +51,8 @@ public class MainGame {
 			Scanner input;
 			input = new Scanner(new File("src/data/DUNG ASCII Logo.txt"));
 			while (input.hasNextLine()) {
-				//println(WordProcessing.rainbowfy(input.nextLine()));
-				println(input.nextLine());
+				println(WordProcessing.rainbowfy(input.nextLine()));
+				//println(input.nextLine());
 			}
 			input.close();
 
