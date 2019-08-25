@@ -26,6 +26,7 @@ import navigation.RoomFeature;
 import navigation.Staircase;
 import navigation.Wall;
 import static display.WordProcessing.*;
+import main.*;
 
 public class Display {
 
@@ -41,7 +42,7 @@ public class Display {
 
 	private static String lastOut;
 	private static boolean wasRead;
-	private static boolean debugOn;
+	private static boolean debugOn = true;
 	private static String log;
 
 	// Appearance Settings:
@@ -54,6 +55,9 @@ public class Display {
 	private static final String INPUTMESSAGECOLOR = "1662e5"; // Color: a Blue
 	private static final String USERINPUTCOLOR = "00edff"; // Color: Cyan
 	private static final String DEBUGCOLOR = "ffff00"; // Color: Yellow
+	
+	private static final int PRINTSPEED = 20;
+	private static final boolean TEXTSCROLL = false;
 
 	public static void initialize() {
 		log = "<html> <pre> <font "+FONTDEFAULT+">"; 
@@ -65,7 +69,7 @@ public class Display {
 		input = new JTextField(100);
 
 		wasRead = true;
-		debugOn = false;
+		//debugOn = false;
 		input.addActionListener(
 				ae -> {
 					lastOut = input.getText();
@@ -105,9 +109,36 @@ public class Display {
 
 
 	public static void print(String str) {
+		console(str);
+		if (TEXTSCROLL) { // Time for a super quick and sloppy, lets make a textprint.
+			int index = 0;
+			String htmlOpen, htmlClose;
+			while (index < str.length()) {
+				char currentChar = str.charAt(index);
+				
+				if (currentChar == '<') {
+					//for (int j=index; str.charAt(j) != '>'; j++)
+					//	htmlOpen = str.substring(index, j) + '>';
+					int endIndex = str.indexOf(">", index);
+					htmlOpen = str.substring(index, endIndex);
+					index = endIndex+1;
+					currentChar = str.charAt(index);
+				}
+				
+				printUpdate(""+currentChar);
+				if (currentChar != ' ')
+					MainGame.gameSleep(1000/PRINTSPEED);
+				
+				index++;
+			}
+		}
+		else
+			printUpdate(str);
+	}
+	
+	private static void printUpdate(String str) {
 		log += str;
 		output.setText(log);
-
 	}
 
 	public static void println(String str) {
@@ -213,6 +244,29 @@ public class Display {
 		return out;
 	}
 
+	public static void debug(String str) {
+		if (debugOn) {
+			println("<font color = "+DEBUGCOLOR+">Debug: " + str +"</font>");
+		}
+		console(str);
+	}
+	
+	public static void console(String str) {
+		str.replaceAll("<br>", "/n"); //replace line breaks.
+	    String strRegEx = "<[^>]*>"; //match HTML tags. Taken from web.
+	    str.replaceAll(strRegEx, ""); // Find and remove < > and anything between them. 
+		System.out.print(str);
+	}
+	
+	// Fancy print methods.
+	public static void printbar() {
+		println(bar());
+	}
+	public static void printbar(String str) {
+		println(bar(str));
+	}
+	
+	// Object specific print methods.
 	public static void print(Entity ent) {
 		String name = ent.getName();
 		char firstletter = name.toLowerCase().charAt(0);
@@ -220,12 +274,6 @@ public class Display {
 			println("There is an " + name);
 		} else {
 			println("There is a " + name);
-		}
-	}
-
-	public static void debug(String str) {
-		if (debugOn) {
-			println("<font color = "+DEBUGCOLOR+">Debug: " + str +"</font>");
 		}
 	}
 
@@ -275,7 +323,6 @@ public class Display {
 		if (feature instanceof Staircase) {
 			println((Staircase)feature);
 		}
-
 	}
 
 	public static void println(Door door) {
@@ -289,12 +336,5 @@ public class Display {
 	}
 	public static void println(Staircase stair) {
 		println("Staircase to another floor!");
-	}
-
-	public static void printbar() {
-		println(bar());
-	}
-	public static void printbar(String str) {
-		println(bar(str));
 	}
 }

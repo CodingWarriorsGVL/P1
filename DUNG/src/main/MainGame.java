@@ -208,6 +208,17 @@ public class MainGame {
 		endGame();
 	}
 	
+	public static void gameSleep(int milliseconds) {
+		try {
+			gameSleep2(milliseconds);
+		}
+		catch (Exception InterruptedException) {};
+	}
+	
+	public static void gameSleep2(int milliseconds) throws InterruptedException {
+		//Thread.sleep(milliseconds);
+	}
+	
 	public void endGame() { // Anything needed at the end to wrap up a finished game, either from quiting or losing.
 		printbar("<font color = red size = 5>Game Over</font>");
 	}
