@@ -175,7 +175,7 @@ public class Player extends Entity {
 
 
 	public static Player buildCharacter() {	
-		String nameTemp = input("# Hello traveler, what is your name? #");
+		String nameTemp = input("# Hello traveler, what is your name? # (type 'help' at anytime)"); //TODO move help message somewhere else?
 		if (!nameTemp.equals("Speedy")) { // Fast character creation
 			player = new Player(" ", 0, 0, 0, 0, 0, 0, 1);
 			player.setAbilityPoints(240);
@@ -197,7 +197,7 @@ public class Player extends Entity {
 			player.spendPoints();
 
 
-		} else player = new Player("Speedy", 80, 30, 40, 40, 30, 40, 1);
+		} else player = new Player("Speedy", 60, 30, 40, 40, 30, 40, 1);
 		Display.println("\n# Now let's get you some starter gear! #");
 
 		player.setEquippedItems(ruggedHelmet);
@@ -247,6 +247,7 @@ public class Player extends Entity {
 		while(spendingPoints){
 			int spendablePoints = getAbilityPoints();
 			int input = 0;
+			int addHealth = 0, addMana = 0, addMelee = 0, addDefense = 0, addIntellect = 0, addPerception = 0;
 			answer = " ";
 
 			println("Ok " + getName() + " you have " + spendablePoints + " points to spend in: Health, Mana, Melee, Defense, Intellect, and Perception."
@@ -256,8 +257,9 @@ public class Player extends Entity {
 				do {
 					input = inputInt("\nHow many points would you like to add in health?");	
 					if(spendablePoints >= input) {
+						addHealth = input;
 						setHealth(input + getHealth());
-						setMaxHealth(input + getMaxHealth());							
+						setMaxHealth(input + getMaxHealth());
 					}
 					else 
 						println("You do not have enough spendable points for the quantity that you entered.");
@@ -271,6 +273,7 @@ public class Player extends Entity {
 				do {
 					input = inputInt("\nHow many points would you like to add in mana?");
 					if(spendablePoints >= input) {
+						addMana = input;
 						setMana(input + getMana()); // This can be cheesed!
 						setMaxMana(input + getMaxMana());
 					}
@@ -286,6 +289,7 @@ public class Player extends Entity {
 				do {
 					input = inputInt("\nHow many points would you like to add in melee?");
 					if(spendablePoints >= input) {
+						addMelee = input;
 						setMelee(input + getMelee());
 					}	
 					else 
@@ -300,6 +304,7 @@ public class Player extends Entity {
 				do {
 					input = inputInt("\nHow many points would you like to add in defense?");
 					if(spendablePoints >= input) {
+						addDefense = input;
 						setDefense(input + getDefense());
 					}
 					else 
@@ -314,6 +319,7 @@ public class Player extends Entity {
 				do {				
 					input = inputInt("\nHow many points would you like to add in intellect?");
 					if(spendablePoints >= input) {
+						addIntellect = input;
 						setIntellect(input + getIntellect());
 					}
 					else 
@@ -328,7 +334,8 @@ public class Player extends Entity {
 				do {
 					input = inputInt("\nHow many points would you like to add in perception?");
 					if(spendablePoints >= input) {
-						setPerception(input + getPerception());				
+						addPerception = input;	
+						setPerception(input + getPerception());	
 					}
 					else 
 						println("You do not have enough spendable points for the quantity that you entered.");
@@ -348,13 +355,30 @@ public class Player extends Entity {
 			if(answer.equals("No")) {
 				spendingPoints = true;
 				// TODO Revert the spent points and stay.
+				setHealth(getHealth() - addHealth);
+				setMaxHealth(getMaxHealth() - addHealth);
+				setMana(getMana() - addMana); // This can be cheesed!
+				setMaxMana(getMaxMana() - addMana);
+				setMelee(getMelee() - addMelee);
+				setDefense(getDefense() - addDefense);
+				setIntellect(getIntellect() - addIntellect);
+				setPerception(getPerception() - addPerception);	
 			} else if (answer.equals("Yes")) {
 				spendingPoints = false; 
 				// TODO Set spent points in stone and leave. 
+				
 				player.setAbilityPoints(spendablePoints);
 			} else if (answer.equals("Back")) {
 				spendingPoints = false;
 				// TODO Revert the spent points and bail.
+				setHealth(getHealth() - addHealth);
+				setMaxHealth(getMaxHealth() - addHealth);
+				setMana(getMana() - addMana); // This can be cheesed!
+				setMaxMana(getMaxMana() - addMana);
+				setMelee(getMelee() - addMelee);
+				setDefense(getDefense() - addDefense);
+				setIntellect(getIntellect() - addIntellect);
+				setPerception(getPerception() - addPerception);	
 			}
 			
 			
