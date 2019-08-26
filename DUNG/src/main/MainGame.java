@@ -41,9 +41,21 @@ public class MainGame {
 	public Dungeon dungeon;
 
 	public static void main(String[] args) {
-		Display.initialize();
+		Display.initialize(); // creates display window.
 		// Print Logo
-		try {
+		int failures = 0; //number of failed attempts to load logo.
+		try { // Attempt to load src version.
+			Scanner input;
+			input = new Scanner(new File("data/DUNG ASCII Logo.txt"));
+			while (input.hasNextLine()) {
+				//println(rainbowfy(input.nextLine()));
+				println(input.nextLine());
+			}
+			input.close();
+		} catch (FileNotFoundException e) {
+			failures++;
+		}
+		try { // Attempt to load .jar version
 			Scanner input;
 			input = new Scanner(new File("src/data/DUNG ASCII Logo.txt"));
 			while (input.hasNextLine()) {
@@ -51,10 +63,13 @@ public class MainGame {
 				println(input.nextLine());
 			}
 			input.close();
-
 		} catch (FileNotFoundException e) {
-			println("Error Loading Logo");
+			failures++;
 		}
+		
+		if (failures == 2)
+			println("Error Loading Logo");
+		
 		new MainGame();
 	}
 
