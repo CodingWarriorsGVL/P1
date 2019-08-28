@@ -324,7 +324,12 @@ public class Combat extends Instance {
 
 	public void endCombat() { //combat clean up
 		if (allDead == false) {
-			print("Team " + victor + " is the victor.\n");
+			
+			if (victor == 0) 
+				print("You are the victor.\n");
+			else print("The enemy team is the victor.\n");
+			
+			
 			print("There are " + dead.size() + " dead.\n");
 
 			int xpPreSplit = 0;

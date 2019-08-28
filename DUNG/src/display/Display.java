@@ -42,7 +42,7 @@ public class Display {
 
 	private static String lastOut;
 	private static boolean wasRead;
-	private static boolean debugOn = true;
+	private static boolean debugOn = false;
 	private static String log;
 
 	// Appearance Settings:
@@ -55,9 +55,9 @@ public class Display {
 	private static final String INPUTMESSAGECOLOR = "1662e5"; // Color: a Blue
 	private static final String USERINPUTCOLOR = "00edff"; // Color: Cyan
 	private static final String DEBUGCOLOR = "ffff00"; // Color: Yellow
-	
-	private static final int PRINTSPEED = 20;
-	private static final boolean TEXTSCROLL = false;
+
+	private static final int PRINTSPEED = 100; // Characters per Second
+	private static final boolean TEXTSCROLL = true;
 
 	public static void initialize() {
 		log = "<html> <pre> <font "+FONTDEFAULT+">"; 
@@ -92,7 +92,7 @@ public class Display {
 
 		outputScroll.setViewportView(output);
 		outputScroll.setPreferredSize(new Dimension(1280,620));
-		// outputScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // Disables the Horizontal scroll bar. Might be needed for word wrap.
+		outputScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // Disables the Horizontal scroll bar. Might be needed for word wrap.
 		DefaultCaret caret = (DefaultCaret)output.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
@@ -110,33 +110,56 @@ public class Display {
 
 	public static void print(String str) {
 		console(str);
-		if (TEXTSCROLL) { // Time for a super quick and sloppy, lets make a textprint.
+		if (TEXTSCROLL) { // Time for a super quick and sloppy, lets make a typed output.
+			//TODO slow typed text.
+			// As of right now if this is enabled, it seems to mostly work, but the screen flickers horribly as it updates, instead of adding text nicely.
 			int index = 0;
-			String htmlOpen, htmlClose;
+			String htmlOpen = "", htmlClose = "";
+			int htmlCloseStartIndex = -1;
+			String currentChar;
 			while (index < str.length()) {
-				char currentChar = str.charAt(index);
-				
-				if (currentChar == '<') {
-					//for (int j=index; str.charAt(j) != '>'; j++)
-					//	htmlOpen = str.substring(index, j) + '>';
-					int endIndex = str.indexOf(">", index);
-					htmlOpen = str.substring(index, endIndex);
-					index = endIndex+1;
-					currentChar = str.charAt(index);
+				if (index == htmlCloseStartIndex) {
+					index += htmlClose.length();
 				}
-				
-				printUpdate(""+currentChar);
-				if (currentChar != ' ')
-					MainGame.gameSleep(1000/PRINTSPEED);
-				
-				index++;
+				else {
+					currentChar = ""+ str.charAt(index);
+
+					if ((currentChar == "<") && (str.charAt(index+1) != '/')) {
+						if (str.indexOf("<br>", index) == index) {
+							printUpdate("<br>");
+							index+=4;
+						}
+						else {
+							int endIndex = str.indexOf(">", index);
+							htmlOpen = str.substring(index, endIndex);
+							index = endIndex+1;
+							currentChar = ""+ str.charAt(index);
+
+							htmlCloseStartIndex = str.indexOf("</", index);
+							htmlClose = str.substring(htmlCloseStartIndex, str.indexOf(">", htmlCloseStartIndex));
+						}
+					}
+
+					if (index < htmlCloseStartIndex) { //TODO This is likely in wrong place
+						if (log.endsWith(htmlClose))
+							log = log.substring(0, log.length()-htmlClose.length()); //remove htmlClose from log, 
+						log += currentChar + htmlClose;//add currentChar +htmlClose to log 
+						output.setText(log);
+					}
+					else {
+						printUpdate(currentChar);
+					}
+					if (currentChar.charAt(0) != ' ')
+						MainGame.gameSleep(1000/PRINTSPEED);
+					index++;
+				}
 			}
 		}
-		else
+		else // If TEXTSCROLL is false.
 			printUpdate(str);
 	}
-	
-	private static void printUpdate(String str) {
+
+	private static void printUpdate(String str) { // Good old default print statement.
 		log += str;
 		output.setText(log);
 	}
@@ -179,7 +202,7 @@ public class Display {
 				isValid = true;
 			}
 			//for (int i=0; i<options.length; i++) {
-				//String option = options[i];
+			//String option = options[i];
 			for (String option : options) {
 				if (option != null) {
 					if (lastOut.substring(0, Math.min(lastOut.length(), option.length())).equalsIgnoreCase(option.substring(0, Math.min(lastOut.length(), option.length())))) {
@@ -189,7 +212,7 @@ public class Display {
 				}
 			}
 			if (lastOut.equalsIgnoreCase("help")) {
-				println(lastOut);
+				println("<font color = "+USERINPUTCOLOR+">"+ lastOut +"</font>");
 				if (options.length==0)
 					println("<font color = "+HELPCOLOR+">Any input is valid.</font>"); 
 				else {
@@ -250,14 +273,14 @@ public class Display {
 		}
 		console(str);
 	}
-	
+
 	public static void console(String str) {
-		str.replaceAll("<br>", "/n"); //replace line breaks.
-	    String strRegEx = "<[^>]*>"; //match HTML tags. Taken from web.
-	    str.replaceAll(strRegEx, ""); // Find and remove < > and anything between them. 
+		str = str.replaceAll("<br>", "\n"); //replace line breaks.
+		String strRegEx = "<[^>]*>"; //match HTML tags. Taken from web.
+		str = str.replaceAll(strRegEx, ""); // Find and remove < > and anything between them. 
 		System.out.print(str);
 	}
-	
+
 	// Fancy print methods.
 	public static void printbar() {
 		println(bar());
@@ -265,7 +288,7 @@ public class Display {
 	public static void printbar(String str) {
 		println(bar(str));
 	}
-	
+
 	// Object specific print methods.
 	public static void print(Entity ent) {
 		String name = ent.getName();
